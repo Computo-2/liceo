@@ -1,7 +1,8 @@
----
-// No necesitas importar nada aquí por ahora
----
 <style>
+  * {
+    box-sizing: border-box;
+  }
+
   footer {
     background: linear-gradient(135deg, #004e92, #202fb4);
     color: #ffffff;
@@ -11,12 +12,14 @@
     position: relative;
     width: 100%;
     margin-top: auto;
-    overflow: hidden;
+    overflow: hidden; /* Evita desbordamiento */
+    min-height: 200px; /* Evita que el footer se colapse si no hay mucho contenido */
   }
 
   .footer-container {
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%; /* Asegura que ocupe el 100% del ancho disponible dentro del contenedor */
   }
 
   .footer-logo {
