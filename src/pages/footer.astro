@@ -1,0 +1,73 @@
+---
+// No necesitas importar nada aquí por ahora
+---
+<style>
+  footer {
+    background: linear-gradient(135deg, #004e92, #202fb4);
+    color: #ffffff;
+    padding: 2rem 1rem;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    width: 100%;
+    margin-top: auto;
+  }
+
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .footer-logo:hover {
+    transform: scale(1.05);
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .footer-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .footer-links a:hover {
+    color: #4fc3f7;
+  }
+
+  .footer-bottom {
+    font-size: 0.9rem;
+    color: #cccccc;
+    margin-top: 1rem;
+  }
+</style>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-logo">Liceo Michoacano</div>
+
+    <div class="footer-links">
+      <a href="/sobre-nosotros">Sobre Nosotros</a>
+      <a href="/oferta-educativa">Oferta Educativa</a>
+      <a href="/contacto">Contacto</a>
+      <a href="/avisos">Avisos</a>
+    </div>
+
+    <div class="footer-bottom">
+      © {new Date().getFullYear()} Liceo Michoacano. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
