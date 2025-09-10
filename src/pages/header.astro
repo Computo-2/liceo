@@ -1,0 +1,57 @@
+---
+// Puedes pasar props si lo deseas
+const { title = "Mi Sitio Web" } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="container">
+    <h1>{title}</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/about">Acerca</a></li>
+        <li><a href="/contact">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: #111;
+    color: #fff;
+    padding: 1rem 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+</style>
