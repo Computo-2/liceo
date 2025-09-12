@@ -1,28 +1,35 @@
 ---
-import Footer from './footer.astro';
-import Header from './header.astro';
-import Portada   from './portada.astro';
-import Hero   from './hero.astro';
-import Calendario from './calendario.astro';
+import Footer from "./footer.astro";
+import Header from "./header.astro";
+import Portada from "./portada.astro";
+import Hero from "./hero.astro";
+import Calendario from "./calendario.astro";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<link rel="icon" href="/favicon.gif" type="image/svg+xml" />
-		<title>Liceo Michoacano</title>
-		<style>
-    		html, body {
-      		margin: 0;
-     		padding: 0;
-    		}
-  		</style>
-	</head>
-	<body>
-		<Header title="Header Sitio" />
-		<Portada />
-		<Hero />
-		<Calendario />
-		<Footer />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.gif" type="image/svg+xml" />
+    <title>Liceo Michoacano</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        overflow-x: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <Header title="Header Sitio" />
+    <Portada />
+    <Hero />
+    <Calendario />
+    <Footer />
+  </body>
 </html>
