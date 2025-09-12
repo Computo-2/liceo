@@ -1,55 +1,62 @@
 <style>
-    section {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 72vh;
-        overflow: hidden;
-        font-family: 'Arial', sans-serif;
-        font-size: 2rem;
-    }
-    
-    .video-fondo {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100vw;
-        height: 56.25vw;
-        min-height: 100vh;
-        min-width: 177.78vh;
-        z-index: -1;
-        pointer-events: none;
-    }
-    
-    .video-fondo iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-        object-fit: cover;
-    }
-    
-    section h1 {
-        color: #fff;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        z-index: 1;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(5px);
-    }
+  section {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 72vh;
+    overflow: hidden;
+    font-family: "Arial", sans-serif;
+    font-size: 2rem;
+  }
+  
+  .video-fondo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 56.25vw;
+    min-height: 100vh;
+    min-width: 177.78vh;
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  .video-fondo iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: cover;
+  }
+  
+  .imagen-container {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1;
+  }
+  
+  .imagen-container img {
+    width: 300px;
+    height: auto;
+    max-width: 100%;
+  }
+  
 </style>
-
 <section>
-    <div class="video-fondo">
-        <iframe src="https://player.vimeo.com/video/1116858454?background=1&autoplay=1&muted=1&loop=1"
-                allow="autoplay; fullscreen"
-                allowfullscreen>
-        </iframe>
-    </div>
-    <h1>Portada</h1>
+  <div class="video-fondo">
+    <iframe
+      src="https://player.vimeo.com/video/1116858454?background=1&autoplay=1&muted=1&loop=1"
+      allow="autoplay; fullscreen"
+      allowfullscreen
+    >
+    </iframe>
+  </div>
+  <div class="imagen-container">
+    <img src="/CONTACTANOS.svg" alt="Liceo Michoacano" />
+  </div>
 </section>
