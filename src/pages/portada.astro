@@ -1,21 +1,55 @@
 <style>
     section {
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 60vh;
-        background-image: url('https://i0.wp.com/primeraplana.mx/wp-content/uploads/2020/10/73417d3c-cacf-4058-9249-a62ae5e470f3.jpg?fit=1280%2C751&ssl=1');
+        height: 72vh;
+        overflow: hidden;
         font-family: 'Arial', sans-serif;
         font-size: 2rem;
     }
+    
+    .video-fondo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100vw;
+        height: 56.25vw; /* 16:9 aspect ratio */
+        min-height: 100vh;
+        min-width: 177.78vh; /* 16:9 aspect ratio */
+        z-index: -1;
+        pointer-events: none;
+    }
+    
+    .video-fondo iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        object-fit: cover;
+    }
+    
     section h1 {
-color: #000;
+        color: #fff;
         padding: 1rem 2rem;
         border-radius: 8px;
+        z-index: 1;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
     }
 </style>
+
 <section>
-    <h1>
-        Portada
-    </h1>
+    <div class="video-fondo">
+        <iframe src="https://player.vimeo.com/video/1116858454?background=1&autoplay=1&muted=1&loop=1"
+                allow="autoplay; fullscreen"
+                allowfullscreen>
+        </iframe>
+    </div>
+    <h1>Portada</h1>
 </section>
