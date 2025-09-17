@@ -3,7 +3,7 @@ import Footer from "./footer.astro";
 import Header from "./header.astro";
 import Portada from "./portada.astro";
 import Hero from "./hero.astro";
-import Calendario from "./calendario.astro";
+import Calendario from "./calendario.jsx";
 ---
 
 <html lang="en">
@@ -29,7 +29,7 @@ import Calendario from "./calendario.astro";
     <Header title="Header Sitio" />
     <Portada />
     <Hero />
-    <Calendario />
+    <Calendario client:load />
     <Footer />
   </body>
 </html>
