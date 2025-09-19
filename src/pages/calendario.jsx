@@ -204,7 +204,7 @@ export default function CalendarioCitas() {
             h-10 md:h-12 rounded-lg font-medium transition-all duration-200 relative
             ${disabled ? 'opacity-30 cursor-not-allowed text-gray-400' : 'hover:scale-105 cursor-pointer'}
             ${isSelected ? 'bg-blue-600 text-white shadow-lg scale-105 ring-2 ring-blue-300' : ''}
-            ${!disabled && !isSelected && wednesday ? 'bg-white text-blue-900 hover:bg-blue-50' : ''}
+            ${!disabled && !isSelected && wednesday ? 'text-blue-900 hover:bg-blue-50' : ''}
             ${!disabled && !isSelected && !wednesday ? 'text-blue-900 hover:bg-blue-50' : ''}
           `}
         >
@@ -257,18 +257,18 @@ export default function CalendarioCitas() {
                         onClick={() => changeMonth(-1)}
                         className="p-0 flex items-center justify-center"
                         aria-label="Mes anterior"
-                        style={{marginRight: '1px'}}
+                        style={{marginRight: '5px'}}
                       >
                         <div className="w-0 h-0 border-t-[18px] border-t-transparent border-r-[28px] border-r-black-500 border-b-[18px] border-b-transparent"></div>
                       </button>
-                      <h2 className="flex-1 text-lg md:text-4xl font-medium text-black-900 text-center px-0.5 m-4" style={{ fontFamily: 'FuturaPT, Arial, sans-serif' }} >
+                      <h2 className="text-lg md:text-5xl font-medium text-black-900 text-center px-0.5" style={{ fontFamily: 'FuturaPT, Arial, sans-serif' }} >
                         {monthNames[currentDate.getMonth()]}
                       </h2>
                       <button 
                         onClick={() => changeMonth(1)}
                         className="p-0 flex items-center justify-center"
                         aria-label="Mes siguiente"
-                        style={{marginLeft: '1px'}}
+                        style={{marginLeft: '5px'}}
                       >
                         <div className="w-0 h-0 border-t-[18px] border-t-transparent border-l-[28px] border-l-black-500 border-b-[18px] border-b-transparent"></div>
                       </button>
