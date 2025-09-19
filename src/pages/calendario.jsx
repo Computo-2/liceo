@@ -246,10 +246,10 @@ export default function CalendarioCitas() {
               <img 
                 src="/paper_calendar.svg"
                 alt="Fondo calendario"
-                className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none scale-110 md:scale-125"
+                className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none scale-110 md:scale-125 pt-8"
                 style={{ zIndex: 0 }}
               />
-              <div className="relative flex flex-col items-center justify-center w-full h-full" style={{ zIndex: 1 }}>
+              <div className="relative flex flex-col items-center justify-center w-full h-full max-w-xs" style={{ zIndex: 1 }}>
                 <div className="flex items-center justify-between mb-4 w-full max-w-md mx-auto">
                   <button 
                     onClick={() => changeMonth(-1)}
@@ -257,8 +257,8 @@ export default function CalendarioCitas() {
                   >
                     <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                   </button>
-                  <h2 className="text-lg md:text-2xl font-bold text-blue-900 text-center">
-                    {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                  <h2 className="text-lg md:text-4xl text-black-900 text-center "style={{ fontFamily: 'FuturaPT, Arial, sans-serif' }} >
+                    {monthNames[currentDate.getMonth()]}
                   </h2>
                   <button 
                     onClick={() => changeMonth(1)}
@@ -269,7 +269,7 @@ export default function CalendarioCitas() {
                 </div>
                 <div className="grid grid-cols-7 gap-1 md:gap-2 mb-2 w-full max-w-md mx-auto">
                   {dayNames.map(day => (
-                    <div key={day} className="text-center text-xs md:text-sm font-bold text-blue-700">
+                    <div key={day} className="text-center text-xs md:text-sm font-bold text-black-700">
                       {day}
                     </div>
                   ))}
