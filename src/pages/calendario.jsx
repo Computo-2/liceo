@@ -257,7 +257,7 @@ export default function CalendarioCitas() {
                   >
                     <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                   </button>
-                  <h2 className="text-lg md:text-4xl text-black-900 text-center "style={{ fontFamily: 'FuturaPT, Arial, sans-serif' }} >
+                  <h2 className="text-lg md:text-4xl text-black-900 text-center" style={{ fontFamily: 'FuturaPT, Arial, sans-serif' }} >
                     {monthNames[currentDate.getMonth()]}
                   </h2>
                   <button 
