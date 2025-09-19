@@ -1,13 +1,19 @@
 @import "tailwindcss";
 @font-face {
   font-family: 'FuturaPT';
-  src: url('/fonts/FuturaPT-Book.ttf') format('truetype');
+  src: url('/fonts/FuturaPTBook.otf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'FuturaPT';
-  src: url('/fonts/FuturaPT-Bold.ttf') format('truetype');
+  src: url('/fonts/FuturaPTBold.otf') format('truetype');
   font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FuturaPT';
+  src: url('/fonts/FuturaPTMedium.otf') format('truetype');
+  font-weight: medium;
   font-style: normal;
 }

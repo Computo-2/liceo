@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Clock, User, Mail, Phone, ChevronLeft, ChevronRight, X, Check } from 'lucide-react';
 import '../styles/global.css';
 
+
 export default function CalendarioCitas() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
@@ -251,25 +252,31 @@ export default function CalendarioCitas() {
               />
               <div className="relative flex flex-col items-center justify-center w-full h-full max-w-xs" style={{ zIndex: 1 }}>
                 <div className="flex items-center justify-between mb-4 w-full max-w-md mx-auto">
-                  <button 
-                    onClick={() => changeMonth(-1)}
-                    className="p-1 md:p-2 hover:bg-blue-100 rounded-lg transition-colors bg-white/60"
-                  >
-                    <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
-                  </button>
-                  <h2 className="text-lg md:text-4xl text-black-900 text-center" style={{ fontFamily: 'FuturaPT, Arial, sans-serif' }} >
-                    {monthNames[currentDate.getMonth()]}
-                  </h2>
-                  <button 
-                    onClick={() => changeMonth(1)}
-                    className="p-1 md:p-2 hover:bg-blue-100 rounded-lg transition-colors bg-white/60"
-                  >
-                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
-                  </button>
+                    <div className="flex items-center justify-center gap-[2px] w-full">
+                      <button 
+                        onClick={() => changeMonth(-1)}
+                        className="p-0 flex items-center justify-center"
+                        aria-label="Mes anterior"
+                        style={{marginRight: '1px'}}
+                      >
+                        <div className="w-0 h-0 border-t-[18px] border-t-transparent border-r-[28px] border-r-black-500 border-b-[18px] border-b-transparent"></div>
+                      </button>
+                      <h2 className="flex-1 text-lg md:text-4xl font-medium text-black-900 text-center px-0.5" style={{ fontFamily: 'FuturaPT, Arial, sans-serif' }} >
+                        {monthNames[currentDate.getMonth()]}
+                      </h2>
+                      <button 
+                        onClick={() => changeMonth(1)}
+                        className="p-0 flex items-center justify-center"
+                        aria-label="Mes siguiente"
+                        style={{marginLeft: '1px'}}
+                      >
+                        <div className="w-0 h-0 border-t-[18px] border-t-transparent border-l-[28px] border-l-black-500 border-b-[18px] border-b-transparent"></div>
+                      </button>
+                    </div>
                 </div>
                 <div className="grid grid-cols-7 gap-1 md:gap-2 mb-2 w-full max-w-md mx-auto">
                   {dayNames.map(day => (
-                    <div key={day} className="text-center text-xs md:text-sm font-bold text-black-700">
+                    <div key={day} className="text-center text-xs md:text-sm text-black-700">
                       {day}
                     </div>
                   ))}
