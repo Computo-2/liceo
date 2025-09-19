@@ -212,7 +212,7 @@ export default function CalendarioCitas() {
             <img 
               src="/icon_exp.svg" 
               alt="" 
-              className="absolute inset-0 w-full h-full object-contain opacity-30 pointer-events-none"
+              className="absolute inset-0 w-full h-full object-contain pointer-events-none"
             />
           )}
           <span className="relative z-10">{day}</span>
@@ -261,7 +261,7 @@ export default function CalendarioCitas() {
                       >
                         <div className="w-0 h-0 border-t-[18px] border-t-transparent border-r-[28px] border-r-black-500 border-b-[18px] border-b-transparent"></div>
                       </button>
-                      <h2 className="flex-1 text-lg md:text-4xl font-medium text-black-900 text-center px-0.5" style={{ fontFamily: 'FuturaPT, Arial, sans-serif' }} >
+                      <h2 className="flex-1 text-lg md:text-4xl font-medium text-black-900 text-center px-0.5 m-4" style={{ fontFamily: 'FuturaPT, Arial, sans-serif' }} >
                         {monthNames[currentDate.getMonth()]}
                       </h2>
                       <button 
@@ -398,7 +398,7 @@ export default function CalendarioCitas() {
                       value={formData.nombre}
                       onChange={(e) => setFormData({...formData, nombre: e.target.value})}
                       className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="Juan Pérez"
+                      placeholder="Tu nombre..."
                     />
                     {formErrors.nombre && (
                       <span className="text-xs text-red-500">{formErrors.nombre}</span>
@@ -432,7 +432,7 @@ export default function CalendarioCitas() {
                       value={formData.telefono}
                       onChange={(e) => setFormData({...formData, telefono: e.target.value})}
                       className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="(443) 123-4567"
+                      placeholder="Tu número de celular..."
                     />
                     {formErrors.telefono && (
                       <span className="text-xs text-red-500">{formErrors.telefono}</span>
