@@ -4,6 +4,7 @@ import Header from "./header.astro";
 import Portada from "./portada.astro";
 import Hero from "./hero.astro";
 import Calendario from "./calendario.jsx";
+import Carga from "./loadingScreen.jsx";
 ---
 
 <html lang="en">
@@ -26,6 +27,7 @@ import Calendario from "./calendario.jsx";
     </style>
   </head>
   <body>
+    <Carga client:load />
     <Header title="Header Sitio" />
     <Portada />
     <Calendario client:load />

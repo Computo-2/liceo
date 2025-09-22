@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
-  Clock,
   User,
   Mail,
   Phone,
-  ChevronLeft,
-  ChevronRight,
   X,
   Check,
 } from "lucide-react";
@@ -73,11 +70,12 @@ export default function CalendarioCitas() {
   const getLastFridayOfMonth = (year, month) => {
     const lastDay = new Date(year, month + 1, 0).getDate();
     const lastDate = new Date(year, month, lastDay);
-    
+
     // Buscar el último viernes
     for (let day = lastDay; day >= 1; day--) {
       const date = new Date(year, month, day);
-      if (date.getDay() === 5) { // 5 = viernes
+      if (date.getDay() === 5) {
+        // 5 = viernes
         return day;
       }
     }
@@ -108,7 +106,7 @@ export default function CalendarioCitas() {
     );
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     // Crear fecha máxima correctamente - último día del mes 11 meses adelante
     const maxDate = new Date(today.getFullYear(), today.getMonth() + 11 + 1, 0);
 
@@ -197,7 +195,11 @@ export default function CalendarioCitas() {
   const handleSubmit = () => {
     if (!validateForm()) return;
 
-    if (selectedDate && !isExperienceDay(selectedDate.getDate()) && selectedTime) {
+    if (
+      selectedDate &&
+      !isExperienceDay(selectedDate.getDate()) &&
+      selectedTime
+    ) {
       const dateKey = `${
         selectedDate.toISOString().split("T")[0]
       }_${selectedTime}`;
@@ -246,104 +248,112 @@ export default function CalendarioCitas() {
   };
 
   const renderCalendar = () => {
-  const daysInMonth = getDaysInMonth(currentDate);
-  const firstDay = getFirstDayOfMonth(currentDate);
-  const days = [];
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    const daysInMonth = getDaysInMonth(currentDate);
+    const firstDay = getFirstDayOfMonth(currentDate);
+    const days = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  for (let i = 0; i < firstDay; i++) {
-    days.push(<div key={`empty-${i}`} className="h-8 md:h-10"></div>);
-  }
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const disabled = isDateDisabled(day);
-    const wednesday = isWednesday(day);
-    const lastFriday = isLastFridayOfMonth(day);
-    const experienceDay = isExperienceDay(day);
-    const isSelected =
-      selectedDate &&
-      selectedDate.getDate() === day &&
-      selectedDate.getMonth() === currentDate.getMonth();
-
-    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-    const isPast = date < today;
-
-    // Asesor académico: Lunes a sábado, NO experiencia, NO deshabilitado
-    const isAcademicAdvisorDay =
-      !experienceDay &&
-      !disabled &&
-      date.getDay() >= 1 &&
-      date.getDay() <= 6;
-
-    // Día inhabilitado: domingo, pasado, O miércoles/último viernes pasado
-    const isInhabilDay = disabled || (experienceDay && isPast);
-
-    let backgroundColor = "";
-
-    if (isAcademicAdvisorDay) {
-      backgroundColor = "#8697bf"; // Asesor académico
-    } else if (isInhabilDay) {
-      backgroundColor = "#cbcacc"; // Inhabilitado
+    for (let i = 0; i < firstDay; i++) {
+      days.push(<div key={`empty-${i}`} className="h-8 md:h-10"></div>);
     }
 
-    days.push(
-      <button
-        key={day}
-        onClick={() => handleDayClick(day)}
-        disabled={disabled}
-        className={`
+    for (let day = 1; day <= daysInMonth; day++) {
+      const disabled = isDateDisabled(day);
+      const wednesday = isWednesday(day);
+      const lastFriday = isLastFridayOfMonth(day);
+      const experienceDay = isExperienceDay(day);
+      const isSelected =
+        selectedDate &&
+        selectedDate.getDate() === day &&
+        selectedDate.getMonth() === currentDate.getMonth();
+
+      const date = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        day
+      );
+      const isPast = date < today;
+
+      // Asesor académico: Lunes a sábado, NO experiencia, NO deshabilitado
+      const isAcademicAdvisorDay =
+        !experienceDay && !disabled && date.getDay() >= 1 && date.getDay() <= 6;
+
+      // Día inhabilitado: domingo, pasado, O miércoles/último viernes pasado
+      const isInhabilDay = disabled || (experienceDay && isPast);
+
+      let backgroundColor = "";
+
+      if (isAcademicAdvisorDay) {
+        backgroundColor = "#8697bf"; // Asesor académico
+      } else if (isInhabilDay) {
+        backgroundColor = "#cbcacc"; // Inhabilitado
+      }
+
+      days.push(
+        <button
+          key={day}
+          onClick={() => handleDayClick(day)}
+          disabled={disabled}
+          className={`
           h-10 md:h-12 rounded-lg font-medium transition-all duration-200 relative flex items-center justify-center
-          ${disabled ? "cursor-not-allowed text-gray-400" : "hover:scale-105 cursor-pointer"}
-          ${isSelected ? "bg-blue-600 text-white shadow-lg scale-105 ring-2 ring-blue-300" : ""}
+          ${
+            disabled
+              ? "cursor-not-allowed text-gray-400"
+              : "hover:scale-105 cursor-pointer"
+          }
+          ${
+            isSelected
+              ? "bg-blue-600 text-white shadow-lg scale-105 ring-2 ring-blue-300"
+              : ""
+          }
         `}
-      >
-        {/* Fondo circular si aplica */}
-        {(isAcademicAdvisorDay || isInhabilDay) && !experienceDay && (
-          <span
-            className="absolute w-8 h-8 md:w-10 md:h-10 rounded-full"
-            style={{
-              backgroundColor: backgroundColor,
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              zIndex: 0,
-            }}
-          />
-        )}
+        >
+          {/* Fondo circular si aplica */}
+          {(isAcademicAdvisorDay || isInhabilDay) && !experienceDay && (
+            <span
+              className="absolute w-8 h-8 md:w-10 md:h-10 rounded-full"
+              style={{
+                backgroundColor: backgroundColor,
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 0,
+              }}
+            />
+          )}
 
-        {/* Ícono de experiencia para días futuros, círculo gris para días pasados */}
-        {experienceDay && (
-          <>
-            {!isPast ? (
-              <img
-                src="/icon_exp.svg"
-                alt=""
-                className="absolute inset-0 w-full h-full object-contain pointer-events-none"
-              />
-            ) : (
-              <span
-                className="absolute w-8 h-8 md:w-10 md:h-10 rounded-full"
-                style={{
-                  backgroundColor: "#cbcacc",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  zIndex: 0,
-                }}
-              />
-            )}
-          </>
-        )}
+          {/* Ícono de experiencia para días futuros, círculo gris para días pasados */}
+          {experienceDay && (
+            <>
+              {!isPast ? (
+                <img
+                  src="/icon_exp.svg"
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+                />
+              ) : (
+                <span
+                  className="absolute w-8 h-8 md:w-10 md:h-10 rounded-full"
+                  style={{
+                    backgroundColor: "#cbcacc",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    zIndex: 0,
+                  }}
+                />
+              )}
+            </>
+          )}
 
-        <span className="relative z-10">{day}</span>
-      </button>
-    );
-  }
+          <span className="relative z-10">{day}</span>
+        </button>
+      );
+    }
 
-  return days;
-};
-
+    return days;
+  };
 
   return (
     <div
@@ -364,109 +374,107 @@ export default function CalendarioCitas() {
           {/* Calendario alineado sobre el fondo de papel */}
           {/* Responsive: en móvil, las imágenes van arriba y en fila horizontal; en desktop, a la derecha y grandes */}
           {/* Calendario alineado sobre el fondo de papel */}
-<div className="w-full flex flex-col-reverse lg:flex-row gap-8 items-center justify-center">
-  {/* Calendario con fondo más grande */}
-  <div className="relative flex items-center justify-center min-h-[500px] w-full max-w-2xl">
-    <img
-      src="/paper_calendar.svg"
-      alt="Fondo calendario"
-      className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none scale-110 md:scale-125 pt-8"
-      style={{ zIndex: 0 }}
-    />
-    <div
-      className="relative flex flex-col items-center justify-start w-full h-full max-w-xs scale-90"
-      style={{ zIndex: 1 }}
-    >
-      {/* Encabezado del mes + botones */}
-      <div className="flex items-center justify-between mb-4 w-full max-w-md mx-auto min-h-[3.5rem]">
-        <div className="relative flex items-center justify-center gap-[2px] w-full">
-  {/* Flecha izquierda */}
-  <button
-    onClick={() => changeMonth(-1)}
-    className="p-0 flex items-center justify-center"
-    aria-label="Mes anterior"
-    style={{ marginRight: "5px" }}
-  >
-    <div className="w-0 h-0 border-t-[18px] border-t-transparent border-r-[28px] border-r-black-500 border-b-[18px] border-b-transparent"></div>
-  </button>
+          <div className="w-full flex flex-col-reverse lg:flex-row gap-8 items-center justify-center">
+            {/* Calendario con fondo más grande */}
+            <div className="relative flex items-center justify-center min-h-[500px] w-full max-w-2xl">
+              <img
+                src="/paper_calendar.svg"
+                alt="Fondo calendario"
+                className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none scale-110 md:scale-125 pt-8"
+                style={{ zIndex: 0 }}
+              />
+              <div
+                className="relative flex flex-col items-center justify-start w-full h-full max-w-xs scale-90"
+                style={{ zIndex: 1 }}
+              >
+                {/* Encabezado del mes + botones */}
+                <div className="flex items-center justify-between mb-4 w-full max-w-md mx-auto min-h-[3.5rem]">
+                  <div className="relative flex items-center justify-center gap-[2px] w-full">
+                    {/* Flecha izquierda */}
+                    <button
+                      onClick={() => changeMonth(-1)}
+                      className="p-0 flex items-center justify-center"
+                      aria-label="Mes anterior"
+                      style={{ marginRight: "5px" }}
+                    >
+                      <div className="w-0 h-0 border-t-[18px] border-t-transparent border-r-[28px] border-r-black-500 border-b-[18px] border-b-transparent"></div>
+                    </button>
 
-  {/* Nombre del mes */}
-  <h2
-    className="text-lg md:text-5xl font-medium text-black-900 text-center px-0.5"
-    style={{
-      fontFamily: "FuturaPT, Arial, sans-serif",
-      minHeight: "3.5rem",
-    }}
-  >
-    {monthNames[currentDate.getMonth()]}
-  </h2>
+                    {/* Nombre del mes */}
+                    <h2
+                      className="text-lg md:text-5xl font-medium text-black-900 text-center px-0.5"
+                      style={{
+                        fontFamily: "FuturaPT, Arial, sans-serif",
+                        minHeight: "3.5rem",
+                      }}
+                    >
+                      {monthNames[currentDate.getMonth()]}
+                    </h2>
 
-  {/* Flecha derecha */}
-  <button
-    onClick={() => changeMonth(1)}
-    className="p-0 flex items-center justify-center"
-    aria-label="Mes siguiente"
-    style={{ marginLeft: "5px" }}
-  >
-    <div className="w-0 h-0 border-t-[18px] border-t-transparent border-l-[28px] border-l-black-500 border-b-[18px] border-b-transparent"></div>
-  </button>
+                    {/* Flecha derecha */}
+                    <button
+                      onClick={() => changeMonth(1)}
+                      className="p-0 flex items-center justify-center"
+                      aria-label="Mes siguiente"
+                      style={{ marginLeft: "5px" }}
+                    >
+                      <div className="w-0 h-0 border-t-[18px] border-t-transparent border-l-[28px] border-l-black-500 border-b-[18px] border-b-transparent"></div>
+                    </button>
 
-  {/* Año debajo del mes (sin afectar la alineación de las flechas) */}
-  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-[-5px] font-bold text-black-500 leading-none">
-    {currentDate.getFullYear() !== new Date().getFullYear() && (
-      <span>{currentDate.getFullYear()}</span>
-    )}
-  </div>
-</div>
+                    {/* Año debajo del mes (sin afectar la alineación de las flechas) */}
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-[-5px] font-bold text-black-500 leading-none">
+                      {currentDate.getFullYear() !==
+                        new Date().getFullYear() && (
+                        <span>{currentDate.getFullYear()}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
 
+                {/* Días de la semana */}
+                <div className="grid grid-cols-7 gap-1 md:gap-2 mb-2 w-full max-w-md mx-auto">
+                  {dayNames.map((day, index) => (
+                    <div
+                      key={`${day}-${index}`}
+                      className="text-center text-xs md:text-sm text-black-700"
+                    >
+                      {day}
+                    </div>
+                  ))}
+                </div>
 
-      </div>
+                {/* Celdas del calendario */}
+                <div className="grid grid-cols-7 gap-1 md:gap-2 w-full max-w-sm mx-auto min-h-[272px] md:min-h-[340px]">
+                  {renderCalendar()}
+                </div>
 
-      {/* Días de la semana */}
-      <div className="grid grid-cols-7 gap-1 md:gap-2 mb-2 w-full max-w-md mx-auto">
-        {dayNames.map((day, index) => (
-          <div
-            key={`${day}-${index}`}
-            className="text-center text-xs md:text-sm text-black-700"
-          >
-            {day}
+                {/* Simbología */}
+                <div className="flex items-center justify-center gap-2 mt-4 w-full">
+                  <div
+                    className="w-4 h-4 rounded-full"
+                    style={{ backgroundColor: "#cbcacc" }}
+                  ></div>
+                  <span className="text-xs md:text-sm text-black-700 font-medium">
+                    No disponible
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Imágenes laterales */}
+            <div className="flex flex-row lg:flex-col items-center justify-center gap-4 lg:gap-8 mb-6 lg:mb-0 w-full lg:w-auto">
+              <img
+                src="/simb_exp.svg"
+                alt="Experiencia"
+                className="w-full h-full object-contain"
+              />
+              <img
+                src="/simb_assist.svg"
+                alt="Asesor"
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
-        ))}
-      </div>
-
-      {/* Celdas del calendario */}
-      <div className="grid grid-cols-7 gap-1 md:gap-2 w-full max-w-sm mx-auto min-h-[272px] md:min-h-[340px]">
-        {renderCalendar()}
-      </div>
-
-      {/* Simbología */}
-      <div className="flex items-center justify-center gap-2 mt-4 w-full">
-        <div 
-          className="w-4 h-4 rounded-full"
-          style={{ backgroundColor: "#cbcacc" }}
-        ></div>
-        <span className="text-xs md:text-sm text-black-700 font-medium">
-          No disponible
-        </span>
-      </div>
-    </div>
-  </div>
-
-  {/* Imágenes laterales */}
-  <div className="flex flex-row lg:flex-col items-center justify-center gap-4 lg:gap-8 mb-6 lg:mb-0 w-full lg:w-auto">
-    <img
-      src="/simb_exp.svg"
-      alt="Experiencia"
-      className="w-full h-full object-contain"
-    />
-    <img
-      src="/simb_assist.svg"
-      alt="Asesor"
-      className="w-full h-full object-contain"
-    />
-  </div>
-</div>
-
         </div>
       </div>
 
