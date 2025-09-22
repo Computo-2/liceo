@@ -60,21 +60,16 @@ const LoadingScreen = () => {
       <div className="relative z-10 text-center">
         {/* Logo con animación */}
         <div className="mb-8 animate-pulse">
-          <div className="w-32 h-32 mx-auto bg-white rounded-full shadow-2xl flex items-center justify-center mb-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="w-60 h-60 mx-auto bg-white rounded-full shadow-2xl flex items-center justify-center mb-6 transform hover:scale-105 transition-transform duration-300">
             <img 
               src="/TheLiceoLogo.png" 
               alt="El Liceo Logo" 
-              className="w-24 h-24 object-contain"
+              className="w-60 h-60 object-contain"
             />
           </div>
         </div>
-
-        {/* Texto de carga */}
-        <h2 className="text-3xl font-bold text-white mb-4 animate-fade-in">
-          The liceo
-        </h2>
         
-        <p className="text-white/80 text-lg mb-8 animate-fade-in-delay">
+        <p className="text-white text-xl mb-8 animate-fade-in-delay">
           Cargando experiencia educativa...
         </p>
 
