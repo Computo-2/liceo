@@ -5,7 +5,6 @@ const LoadingScreen = () => {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    // Bloquear scroll mientras carga
     document.body.style.overflow = 'hidden';
 
     const timer = setTimeout(() => {
@@ -40,7 +39,7 @@ const LoadingScreen = () => {
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 bg-white rounded-full opacity-20 animate-bounce"
+            className="absolute w-3 h-3 bg-white rounded-full opacity-20 animate-bounce"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -53,9 +52,9 @@ const LoadingScreen = () => {
 
       {/* Contenido principal */}
       <div className="relative z-10 text-center px-4">
-        {/* Logo */}
-        <div className="mb-8 animate-pulse">
-          <div className="w-40 h-40 sm:w-48 sm:h-48 md:w-60 md:h-60 mx-auto bg-white rounded-full shadow-2xl flex items-center justify-center mb-6 transform hover:scale-105 transition-transform duration-300">
+        {/* Logo grande */}
+        <div className="mb-12 animate-pulse">
+          <div className="w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 mx-auto bg-white rounded-full shadow-2xl flex items-center justify-center mb-8 transform hover:scale-105 transition-transform duration-300">
             <img
               src="/TheLiceoLogo.png"
               alt="El Liceo Logo"
@@ -64,21 +63,21 @@ const LoadingScreen = () => {
           </div>
         </div>
 
-        {/* Texto */}
-        <p className="text-white text-base sm:text-lg md:text-xl mb-8 animate-fade-in-delay">
+        {/* Texto mucho más grande */}
+        <p className="text-white text-2xl sm:text-3xl md:text-4xl mb-12 animate-fade-in-delay font-semibold">
           Cargando experiencia educativa...
         </p>
 
-        {/* Barra de progreso */}
-        <div className="w-11/12 sm:w-3/4 md:w-64 mx-auto mb-8">
-          <div className="bg-white/20 rounded-full h-2 overflow-hidden">
+        {/* Barra de progreso más ancha y alta */}
+        <div className="w-4/5 sm:w-3/4 md:w-[30rem] mx-auto mb-12">
+          <div className="bg-white/20 rounded-full h-4 overflow-hidden">
             <div className="bg-white h-full rounded-full animate-loading-bar origin-left"></div>
           </div>
         </div>
 
-        {/* Spinner */}
+        {/* Spinner más grande */}
         <div className="flex justify-center">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
         </div>
       </div>
 
