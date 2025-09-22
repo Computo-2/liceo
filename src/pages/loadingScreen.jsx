@@ -1,124 +1,141 @@
 import React, { useState, useEffect } from 'react';
+import { BookOpen, GraduationCap, Users, Award } from 'lucide-react';
 
-const LoadingScreen = () => {
-  const [loading, setLoading] = useState(true);
-  const [fadeOut, setFadeOut] = useState(false);
+const LoadingScreen = ({ onLoadComplete }) => {
+  const [progress, setProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
+
+  const steps = [
+    { icon: BookOpen },
+    { icon: Users },
+    { icon: GraduationCap },
+    { icon: Award }
+  ];
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(() => onLoadComplete && onLoadComplete(), 500);
+          return 100;
+        }
+        return prev + 5; // Incremento más rápido para 2 segundos
+      });
+    }, 100); // Intervalo para completar en ~2 segundos
 
-    const timer = setTimeout(() => {
-      setFadeOut(true);
-      setTimeout(() => {
-        setLoading(false);
-        document.body.style.overflow = 'unset';
-      }, 500);
-    }, 3000);
+    return () => clearInterval(interval);
+  }, [onLoadComplete]);
 
-    return () => {
-      clearTimeout(timer);
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
+  useEffect(() => {
+    setCurrentStep(Math.floor(progress / 25));
+  }, [progress]);
 
-  if (!loading) return null;
+  const CurrentIcon = steps[currentStep].icon;
 
   return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-500 ${
-        fadeOut ? 'opacity-0' : 'opacity-100'
-      }`}
-      style={{
-        background: 'linear-gradient(135deg, #314e99 0%, #4a6cb8 100%)',
-        width: '100vw',
-        height: '100vh'
-      }}
-    >
-      {/* Partículas de fondo */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-3 h-3 bg-white rounded-full opacity-20 animate-bounce"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 2}s`,
-              animationDuration: `${2 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-      </div>
+    <div className="fixed inset-0 bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center z-50">
+      <div className="text-center max-w-lg mx-auto px-6">
+        {/* Logo Container - Sin fondo y mucho más grande */}
+        <div className="mb-16 relative">
+          <div className="w-80 h-80 mx-auto flex items-center justify-center mb-8 transform hover:scale-105 transition-transform duration-300">
+            <img 
+              src="/TheLiceoLogo.png" 
+              alt="The Liceo Logo" 
+              className="w-72 h-72 object-contain"
+            />
+          </div>
+          
+          {/* Animated rings around logo - mucho más grandes */}
+          <div className="absolute inset-0 w-80 h-80 mx-auto">
+            <div className="absolute inset-0 border-4 border-blue-200 rounded-full animate-ping opacity-20"></div>
+            <div className="absolute inset-2 border-2 border-blue-300 rounded-full animate-ping opacity-30 animation-delay-200"></div>
+          </div>
+        </div>
 
-      {/* Contenido principal */}
-      <div className="relative z-10 text-center px-4">
-        {/* Logo grande */}
-        <div className="mb-12 animate-pulse">
-          <div className="w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 mx-auto bg-white rounded-full shadow-2xl flex items-center justify-center mb-8 transform hover:scale-105 transition-transform duration-300">
-            <img
-              src="/TheLiceoLogo.png"
-              alt="El Liceo Logo"
-              className="w-4/5 h-4/5 object-contain"
+        {/* Progress Circle - más grande */}
+        <div className="relative w-32 h-32 mx-auto mb-8">
+          <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 24 24">
+            <circle 
+              cx="12" 
+              cy="12" 
+              r="10" 
+              stroke="rgba(49, 78, 153, 0.2)" 
+              strokeWidth="2" 
+              fill="none"
+            />
+            <circle 
+              cx="12" 
+              cy="12" 
+              r="10" 
+              stroke="#314e99" 
+              strokeWidth="2" 
+              fill="none"
+              strokeLinecap="round"
+              strokeDasharray="62.83"
+              strokeDashoffset={62.83 - (62.83 * progress) / 100}
+              className="transition-all duration-300 ease-out"
+            />
+          </svg>
+          
+          {/* Icon in center - sin pulse y más grande */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <CurrentIcon 
+              size={32} 
+              className="text-blue-600" 
+              style={{ color: '#314e99' }}
             />
           </div>
         </div>
 
-        {/* Texto mucho más grande */}
-        <p className="text-white text-2xl sm:text-3xl md:text-4xl mb-12 animate-fade-in-delay font-semibold">
-          Cargando experiencia educativa...
+        {/* Educational Elements - más grandes */}
+        <div className="flex justify-center space-x-6 opacity-60 mb-6">
+          {[BookOpen, Users, GraduationCap, Award].map((Icon, index) => (
+            <Icon 
+              key={index}
+              size={28} 
+              className={`transition-all duration-300 ${
+                index <= currentStep ? 'text-blue-600 scale-110' : 'text-gray-400'
+              }`}
+              style={{ color: index <= currentStep ? '#314e99' : undefined }}
+            />
+          ))}
+        </div>
+
+        {/* Subtitle - más grande */}
+        <p className="text-lg text-black-500 font-medium">
+          PREPARANDO TU EXPERIENCIA...
         </p>
-
-        {/* Barra de progreso más ancha y alta */}
-        <div className="w-4/5 sm:w-3/4 md:w-[30rem] mx-auto mb-12">
-          <div className="bg-white/20 rounded-full h-4 overflow-hidden">
-            <div className="bg-white h-full rounded-full animate-loading-bar origin-left"></div>
-          </div>
-        </div>
-
-        {/* Spinner más grande */}
-        <div className="flex justify-center">
-          <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-        </div>
       </div>
 
-      {/* Efecto de fondo inferior */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white/10 to-transparent"></div>
-
-      {/* Animaciones personalizadas */}
       <style jsx>{`
-        @keyframes fade-in-delay {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes loading-bar {
-          0% {
-            transform: scaleX(0);
-          }
-          70% {
-            transform: scaleX(0.7);
-          }
-          100% {
-            transform: scaleX(1);
-          }
-        }
-
-        .animate-fade-in-delay {
-          animation: fade-in-delay 1s ease-out 0.5s both;
-        }
-
-        .animate-loading-bar {
-          animation: loading-bar 3s ease-out;
+        .animation-delay-200 {
+          animation-delay: 200ms;
         }
       `}</style>
     </div>
   );
 };
 
-export default LoadingScreen;
+// Ejemplo de implementación completa
+export default function App() {
+  const [loading, setLoading] = useState(true);
+
+  const handleLoadComplete = () => {
+    setLoading(false);
+  };
+
+  if (loading) {
+    return <LoadingScreen onLoadComplete={handleLoadComplete} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">¡Bienvenido a The Liceo!</h1>
+        <p className="text-xl text-gray-600">La carga ha terminado exitosamente.</p>
+      </div>
+    </div>
+  );
+}
