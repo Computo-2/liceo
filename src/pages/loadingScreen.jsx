@@ -94,7 +94,6 @@ const LoadingScreen = ({ onLoadComplete }) => {
   );
 };
 
-// Ejemplo de implementación completa
 export default function App() {
   const [loading, setLoading] = useState(true);
 
@@ -106,12 +105,4 @@ export default function App() {
     return <LoadingScreen onLoadComplete={handleLoadComplete} />;
   }
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">¡Bienvenido a The Liceo!</h1>
-        <p className="text-xl text-gray-600">La carga ha terminado exitosamente.</p>
-      </div>
-    </div>
-  );
 }
