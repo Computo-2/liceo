@@ -210,8 +210,8 @@
 
  <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const toggleBtn = document.getElementById("product-toggle");
-    const menu = document.getElementById("product-menu");
+    const toggleBtn = document.getElementById("product-toggle")!;
+    const menu = document.getElementById("product-menu")!;
 
     toggleBtn.addEventListener("click", () => {
       menu.classList.toggle("hidden");
@@ -219,7 +219,7 @@
 
     // Opcional: cerrar al hacer clic fuera
     document.addEventListener("click", (e) => {
-      if (!toggleBtn.contains(e.target) && !menu.contains(e.target)) {
+      if (!toggleBtn.contains(e.target as Node) && !menu.contains(e.target as Node)) {
         menu.classList.add("hidden");
       }
     });
