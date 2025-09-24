@@ -1,12 +1,13 @@
 <br>
 <section class="relative w-full overflow-hidden">
+  
   <!-- Track -->
   <div
     id="review-carousel"
     class="flex will-change-transform select-none"
     style="transform: translate3d(0,0,0); transition: transform 0.7s ease;"
   >
-    <!-- Slides “base”: usa data-src, no iframe directo -->
+    <!-- Slides -->
     <div class="p-3 carousel-item">
       <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
         <div class="relative aspect-video bg-black">
@@ -15,15 +16,9 @@
             data-src="https://player.vimeo.com/video/1120240210?title=0&byline=0&portrait=0&autopause=1"
           ></div>
         </div>
-        <div class="p-5">
-          <p class="italic">“Testimonio de Ex Alumno 1.”</p>
-          <div class="mt-4 flex items-center">
-            <img src="https://via.placeholder.com/40" alt="Persona 1" class="w-10 h-10 rounded-full mr-3">
-            <div>
-              <p class="font-semibold">Ex Alumno 1</p>
-              <p class="text-sm text-gray-600">Ex Alumno</p>
-            </div>
-          </div>
+        <!-- Nombre simple -->
+        <div class="p-3 text-center">
+          <p class="font-semibold">Ex Alumno 1</p>
         </div>
       </div>
     </div>
@@ -36,15 +31,8 @@
             data-src="https://player.vimeo.com/video/1120215980?title=0&byline=0&portrait=0&autopause=1"
           ></div>
         </div>
-        <div class="p-5">
-          <p class="italic">“Testimonio de Ex Alumno 2.”</p>
-          <div class="mt-4 flex items-center">
-            <img src="https://via.placeholder.com/40" alt="Persona 2" class="w-10 h-10 rounded-full mr-3">
-            <div>
-              <p class="font-semibold">Ex Alumno 2</p>
-              <p class="text-sm text-gray-600">Ex Alumno</p>
-            </div>
-          </div>
+        <div class="p-3 text-center">
+          <p class="font-semibold">Ex Alumno 2</p>
         </div>
       </div>
     </div>
@@ -57,24 +45,35 @@
             data-src="https://player.vimeo.com/video/1120223031?title=0&byline=0&portrait=0&autopause=1"
           ></div>
         </div>
-        <div class="p-5">
-          <p class="italic">“Testimonio de Ex Alumno 3.”</p>
-          <div class="mt-4 flex items-center">
-            <img src="https://via.placeholder.com/40" alt="Persona 3" class="w-10 h-10 rounded-full mr-3">
-            <div>
-              <p class="font-semibold">Ex Alumno 3</p>
-              <p class="text-sm text-gray-600">Ex Alumno</p>
-            </div>
-          </div>
+        <div class="p-3 text-center">
+          <p class="font-semibold">Ex Alumno 3</p>
         </div>
       </div>
     </div>
-    <!-- No clones aquí; se crean por JS -->
   </div>
 <br>
   <!-- Controles -->
-  <button id="prev" class="absolute top-1/2 left-2 -translate-y-1/2 bg-white/70 p-2 rounded-full shadow">‹</button>
-  <button id="next" class="absolute top-1/2 right-2 -translate-y-1/2 bg-white/70 p-2 rounded-full shadow">›</button>
+  <div class="pointer-events-none absolute inset-y-0 left-0 right-0 z-20 flex items-center justify-between px-2 md:px-4">
+    <button
+      id="prev"
+      aria-label="Anterior"
+      class="pointer-events-auto inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur ring-1 ring-black/10 shadow-lg hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/70 transition"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+
+    <button
+      id="next"
+      aria-label="Siguiente"
+      class="pointer-events-auto inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/80 backdrop-blur ring-1 ring-black/10 shadow-lg hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/70 transition"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 6l6 6-6 6"/>
+      </svg>
+    </button>
+  </div>
 </section>
 
 <script type="module">
@@ -83,10 +82,10 @@
   const BTN_PREV = document.getElementById('prev');
 
   let slidesBase = Array.from(track.querySelectorAll('.carousel-item'));
-  let slides; // NodeList después de clonar
-  let index = 0; // arrancamos en el primer “real”, pero con clones delante
+  let slides;
+  let index = 0;
   let slideWidth = 0;
-  let visibleCount = 1; // 1 en móvil, 3 en md+
+  let visibleCount = 1;
   let clonesHead = [];
   let clonesTail = [];
   let isAnimating = false;
@@ -96,7 +95,6 @@
   }
 
   function setWidths() {
-    // Fijamos ancho real por item (sin depender de basis-1/3)
     const containerWidth = track.parentElement.clientWidth;
     slides = Array.from(track.querySelectorAll('.carousel-item'));
     slides.forEach((s) => {
@@ -108,7 +106,6 @@
   }
 
   function hydrateIframeIfNeeded(i) {
-    // hidrata solo los visibles
     const start = i;
     const end = i + visibleCount - 1;
     for (let k = start; k <= end; k++) {
@@ -136,20 +133,17 @@
       if (idx >= start && idx <= end) return;
       const iframe = s.querySelector('iframe');
       if (iframe && iframe.contentWindow) {
-        // API postMessage de Vimeo para pausar
         iframe.contentWindow.postMessage({ method: 'pause' }, '*');
       }
     });
   }
 
   function buildClones() {
-    // limpia clones anteriores
     clonesHead.forEach(n => n.remove());
     clonesTail.forEach(n => n.remove());
     clonesHead = [];
     clonesTail = [];
 
-    // clonamos N al principio y N al final
     const N = visibleCount;
     const firstN = slidesBase.slice(0, N).map(s => s.cloneNode(true));
     const lastN = slidesBase.slice(-N).map(s => s.cloneNode(true));
@@ -160,13 +154,11 @@
     clonesHead = firstN;
     clonesTail = lastN;
 
-    // refrescamos lista completa
     slides = Array.from(track.querySelectorAll('.carousel-item'));
     setWidths();
 
-    // colocamos índice inicial justo después de los clones “tail”
     index = clonesTail.length;
-    jumpTo(index); // sin transición
+    jumpTo(index);
     hydrateIframeIfNeeded(index);
   }
 
@@ -185,9 +177,7 @@
     disableTransition();
     index = i;
     applyTransform();
-    // forzamos el frame y re-habilitamos transición para siguientes movimientos
     requestAnimationFrame(() => {
-      // leer una prop fuerza reflow en algunos navegadores:
       void track.offsetHeight;
       enableTransition();
     });
@@ -206,20 +196,16 @@
     applyTransform();
   }
 
-  // Eventos
   BTN_NEXT.addEventListener('click', goNext);
   BTN_PREV.addEventListener('click', goPrev);
 
   track.addEventListener('transitionend', () => {
-    // loop: si caemos en clones, teletransportamos al equivalente real
     const total = slides.length;
     const baseLen = slidesBase.length;
-    // si nos pasamos al bloque final de clones
     if (index >= total - clonesHead.length) {
       const offset = index - (total - clonesHead.length);
       jumpTo(clonesTail.length + offset);
     }
-    // si nos pasamos al bloque inicial de clones
     if (index < clonesTail.length) {
       const offset = clonesTail.length - index;
       jumpTo(baseLen + clonesTail.length - offset);
@@ -234,13 +220,12 @@
     buildClones();
   }
 
-  // Resize / reflow seguro
   let resizeRaf;
   window.addEventListener('resize', () => {
     cancelAnimationFrame(resizeRaf);
     resizeRaf = requestAnimationFrame(() => {
       setWidths();
-      jumpTo(index); // mantiene vista actual
+      jumpTo(index);
     });
   });
 
