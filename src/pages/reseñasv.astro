@@ -1,11 +1,13 @@
+<br>
 <section class="relative w-full overflow-hidden">
+  
   <!-- Track -->
   <div
     id="review-carousel"
     class="flex will-change-transform select-none"
     style="transform: translate3d(0,0,0); transition: transform 0.7s ease;"
   >
-    <!-- Slides “base”: usa data-src, no iframe directo -->
+    <!-- Slides -->
     <div class="p-3 carousel-item">
       <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
         <div class="relative aspect-video bg-black">
@@ -14,15 +16,9 @@
             data-src="https://player.vimeo.com/video/1120240210?title=0&byline=0&portrait=0&autopause=1"
           ></div>
         </div>
-        <div class="p-5">
-          <p class="italic">“Testimonio de Ex Alumno 1.”</p>
-          <div class="mt-4 flex items-center">
-            <img src="https://via.placeholder.com/40" alt="Persona 1" class="w-10 h-10 rounded-full mr-3">
-            <div>
-              <p class="font-semibold">Ex Alumno 1</p>
-              <p class="text-sm text-gray-600">Ex Alumno</p>
-            </div>
-          </div>
+        <!-- Nombre simple -->
+        <div class="p-3 text-center">
+          <p class="font-semibold">Ex Alumno 1</p>
         </div>
       </div>
     </div>
@@ -35,15 +31,8 @@
             data-src="https://player.vimeo.com/video/1120215980?title=0&byline=0&portrait=0&autopause=1"
           ></div>
         </div>
-        <div class="p-5">
-          <p class="italic">“Testimonio de Ex Alumno 2.”</p>
-          <div class="mt-4 flex items-center">
-            <img src="https://via.placeholder.com/40" alt="Persona 2" class="w-10 h-10 rounded-full mr-3">
-            <div>
-              <p class="font-semibold">Ex Alumno 2</p>
-              <p class="text-sm text-gray-600">Ex Alumno</p>
-            </div>
-          </div>
+        <div class="p-3 text-center">
+          <p class="font-semibold">Ex Alumno 2</p>
         </div>
       </div>
     </div>
@@ -56,22 +45,14 @@
             data-src="https://player.vimeo.com/video/1120223031?title=0&byline=0&portrait=0&autopause=1"
           ></div>
         </div>
-        <div class="p-5">
-          <p class="italic">“Testimonio de Ex Alumno 3.”</p>
-          <div class="mt-4 flex items-center">
-            <img src="https://via.placeholder.com/40" alt="Persona 3" class="w-10 h-10 rounded-full mr-3">
-            <div>
-              <p class="font-semibold">Ex Alumno 3</p>
-              <p class="text-sm text-gray-600">Ex Alumno</p>
-            </div>
-          </div>
+        <div class="p-3 text-center">
+          <p class="font-semibold">Ex Alumno 3</p>
         </div>
       </div>
     </div>
-    <!-- No clones aquí; se crean por JS -->
   </div>
-
-  <!-- Controles (MODIFICADOS) -->
+<br>
+  <!-- Controles -->
   <div class="pointer-events-none absolute inset-y-0 left-0 right-0 z-20 flex items-center justify-between px-2 md:px-4">
     <button
       id="prev"
@@ -101,10 +82,10 @@
   const BTN_PREV = document.getElementById('prev');
 
   let slidesBase = Array.from(track.querySelectorAll('.carousel-item'));
-  let slides; // NodeList después de clonar
-  let index = 0; // arrancamos en el primer “real”, pero con clones delante
+  let slides;
+  let index = 0;
   let slideWidth = 0;
-  let visibleCount = 1; // 1 en móvil, 3 en md+
+  let visibleCount = 1;
   let clonesHead = [];
   let clonesTail = [];
   let isAnimating = false;
@@ -251,4 +232,3 @@
   // Init
   rebuildAll();
 </script>
-
