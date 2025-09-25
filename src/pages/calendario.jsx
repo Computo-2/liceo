@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  User,
-  Mail,
-  Phone,
-  X,
-  Check,
-} from "lucide-react";
+import { User, Mail, Phone, X, Check } from "lucide-react";
 import "../styles/global.css";
 
 export default function CalendarioCitas() {
@@ -374,7 +368,7 @@ export default function CalendarioCitas() {
           {/* Calendario alineado sobre el fondo de papel */}
           {/* Responsive: en móvil, las imágenes van arriba y en fila horizontal; en desktop, a la derecha y grandes */}
           {/* Calendario alineado sobre el fondo de papel */}
-          <div className="w-full flex flex-col lg:flex-row items-start justify-center gap-4 lg:gap-8">
+          <div className="w-full flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 lg:gap-8">
 
             {/* Calendario con fondo más grande */}
             <div className="relative flex items-center justify-center min-h-[500px] w-full max-w-[560px] -translate-x-0 lg:-translate-x-2">
@@ -463,7 +457,7 @@ export default function CalendarioCitas() {
             </div>
 
             {/* Imágenes laterales */}
-            <div
+<div
   className="
     order-first lg:order-last
     flex flex-row lg:flex-col
@@ -476,14 +470,25 @@ export default function CalendarioCitas() {
   <img
     src="/simb_exp.svg"
     alt="Experiencia"
-    className="w-[64px] sm:w-[80px] md:w-[96px] lg:w-[112px] h-auto object-contain"
+    className="
+      w-[144px] h-[144px] sm:w-[160px] sm:h-[160px] md:w-[192px] md:h-[192px] lg:w-[224px] lg:h-[224px]
+      object-contain
+      filter drop-shadow-[5px_5px_0px_rgba(255,255,255,0.4)]
+    "
   />
   <img
     src="/simb_assist.svg"
     alt="Asesor"
-    className="w-[64px] sm:w-[80px] md:w-[96px] lg:w-[112px] h-auto object-contain"
+    className="
+      w-[144px] h-[144px] sm:w-[160px] sm:h-[160px] md:w-[192px] md:h-[192px] lg:w-[224px] lg:h-[224px]
+      object-contain scale-110
+      filter drop-shadow-[5px_5px_0px_rgba(255,255,255,0.4)]
+    "
   />
 </div>
+
+
+
 
           </div>
         </div>
