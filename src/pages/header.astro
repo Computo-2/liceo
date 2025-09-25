@@ -1,5 +1,20 @@
 ---
 import ItemMenuHeaderMovil from '../components/ItemMenuHeaderMovil.astro';
+import ItemMenuHeaderPc from "../components/ItemMenuHeaderPc.astro";
+import * as Lucide from "lucide-react";
+
+const items = [
+  { href: "#", title: "Información", subtitle: "Para obtener más información sobre Liceo.", icon: "Info" },
+  { href: "#", title: "Facebook",    subtitle: "Visítanos en Facebook.",                    icon: "Facebook" },
+  { href: "#", title: "Tik Tok",     subtitle: "Conoce Liceo a través de nuestros videos.", icon: "Video" },
+  { href: "#", title: "Ubicación",   subtitle: "Dr. Miguel silva G. 55, Morelia.",          icon: "MapPin" },
+  { href: "#", title: "Testimonios", subtitle: "Experiencia de alumnos anteriores.",        icon: "Users" },
+];
+
+function getLucide(name: string) {
+  return (Lucide as any)[name] || null;
+}
+
 ---
 
 
@@ -41,71 +56,24 @@ import ItemMenuHeaderMovil from '../components/ItemMenuHeaderMovil.astro';
             class="w-screen max-w-md overflow-hidden shadow-xl border border-white/15 rounded-3xl bg-[#32509c] outline outline-1 -outline-offset-1 outline-white/10 [--anchor-gap:--spacing(3)] backdrop:bg-transparent open:block data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in motion-reduce:transition-none">
 
             <div class="p-4">
-              <!-- Item: Analytics -->
-              <a href="#" class="group mb-2 shadow-xl border border-white/15 relative flex items-center gap-x-4 rounded-xl p-4 hover:bg-white/5 focus:bg-white/5 focus:outline-none">
-                <span class="flex size-11 flex-none items-center justify-center rounded-lg bg-[#5b73b0] group-hover:bg-blue-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 text-gray-200 group-hover:text-white">
-                    <path d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </span>
-                <span class="flex-auto">
-                  <span class="block font-semibold text-white text-lg">Informacion</span>
-                  <span class="block mt-0.5 text-base text-gray-300">Para obtener mas informacion sobre Liceo.</span>
-                </span>
-              </a>
-
-              <!-- Item: Engagement -->
-              <a href="#" class="group mb-2 shadow-xl border border-white/15 relative flex items-center gap-x-4 rounded-xl p-4 hover:bg-white/5 focus:bg-white/5 focus:outline-none">
-                <span class="flex size-11 flex-none items-center justify-center rounded-lg bg-[#5b73b0] group-hover:bg-blue-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 text-gray-200 group-hover:text-white">
-                    <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </span>
-                <span class="flex-auto">
-                  <span class="block font-semibold text-white text-lg">Facebook</span>
-                  <span class="block mt-0.5 text-base text-gray-300">Visitanos en facebook para estar mas cerca de Liceo</span>
-                </span>
-              </a>
-
-              <!-- Item: Security -->
-              <a href="#" class="group mb-2 shadow-xl border border-white/15 relative flex items-center gap-x-4 rounded-xl p-4 hover:bg-white/5 focus:bg-white/5 focus:outline-none">
-                <span class="flex size-11 flex-none items-center justify-center rounded-lg bg-[#5b73b0] group-hover:bg-blue-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 text-gray-200 group-hover:text-white">
-                    <path d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </span>
-                <span class="flex-auto">
-                  <span class="block font-semibold text-white text-lg">Tik Tok</span>
-                  <span class="block mt-0.5 text-base text-gray-300">Conoce Liceo a travez de nuestros videos</span>
-                </span>
-              </a>
-
-              <!-- Item: Integrations -->
-              <a href="#" class="group mb-2 shadow-xl border border-white/15 relative flex items-center gap-x-4 rounded-xl p-4 hover:bg-white/5 focus:bg-white/5 focus:outline-none">
-                <span class="flex size-11 flex-none items-center justify-center rounded-lg bg-[#5b73b0] group-hover:bg-blue-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 text-gray-200 group-hover:text-white">
-                    <path d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </span>
-                <span class="flex-auto">
-                  <span class="block font-semibold text-white text-lg">Ubicacion</span>
-                  <span class="block mt-0.5 text-base text-gray-300">Estamos ubicados en Dr. Miguel silva G. 55, Centro historico de Morelia, 58000 Morelia Mich.</span>
-                </span>
-              </a>
-
-              <!-- Item: Automations -->
-              <a href="#" class="group mb-2 shadow-xl border border-white/15 relative flex items-center gap-x-4 rounded-xl p-4 hover:bg-white/5 focus:bg-white/5 focus:outline-none">
-                <span class="flex size-11 flex-none items-center justify-center rounded-lg bg-[#5b73b0] group-hover:bg-blue-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 text-gray-200 group-hover:text-white">
-                    <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </span>
-                <span class="flex-auto">
-                  <span class="block font-semibold text-white text-lg">Testimonios</span>
-                  <span class="block mt-0.5 text-base text-gray-300">Conoce la experiencia de alumnos anteriores</span>
-                </span>
-              </a>
+              {items.map((it) => {
+                const Icon = getLucide(it.icon);
+                return (
+               <ItemMenuHeaderPc
+                 href={it.href}
+                 title={it.title}
+                 subtitle={it.subtitle}
+                >
+               {Icon && (
+                <Icon
+                  slot="icon"
+                  class="size-10 text-xl text-white group-hover:text-white"
+               />
+               )}
+              </ItemMenuHeaderPc>
+                 );
+               })}
+               
             </div>
 
             <div class="grid grid-cols-2 divide-x divide-white/10 bg-gray-700/50">
@@ -162,110 +130,22 @@ import ItemMenuHeaderMovil from '../components/ItemMenuHeaderMovil.astro';
          outline outline-1 outline-white/10 ring-1 ring-white/10 shadow-2xl">
 
   <div class="p-6 md:p-8 space-y-4 md:space-y-6">
-
-    <a href="#"
-       class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
-              rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
-      <span class="flex items-center justify-center shadow-xl border border-white/15
-                   w-16 h-16 md:w-20 md:h-20
-                   rounded-xl bg-[#5b73b0] group-hover:bg-blue-500">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-             aria-hidden="true"
-             class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white">
-          <path d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </span>
-      <span class="text-left">
-        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Información</span>
-        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Para obtener mas información sobre Liceo.</span>
-      </span>
-    </a>
-
-  <ItemMenuHeaderMovil
-  href="#"
-  title="Testimonios"
-  subtitle="Conoce la experiencia de alumnos anteriores."
->
-  <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-       class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white" aria-hidden="true">
-    <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Z" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75" stroke-linecap="round" stroke-linejoin="round" />
-  </svg>
-  </ItemMenuHeaderMovil>
-
-    
-    <a href="#"
-       class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
-              rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
-      <span class="flex shadow-xl border border-white/15 items-center justify-center
-                   w-16 h-16 md:w-20 md:h-20
-                   rounded-xl bg-[#5b73b0] group-hover:bg-blue-500">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-             aria-hidden="true"
-             class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white">
-          <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </span>
-      <span class="text-left">
-        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Facebook</span>
-        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Visítanos en Facebook para estar mas cerca de Liceo.</span>
-      </span>
-    </a>
-    <a href="#"
-       class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
-              rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
-      <span class="flex shadow-xl border border-white/15 items-center justify-center
-                   w-16 h-16 md:w-20 md:h-20
-                   rounded-xl bg-[#5b73b0] group-hover:bg-blue-500">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-             aria-hidden="true"
-             class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white">
-          <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </span>
-      <span class="text-left">
-        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Tik Tok</span>
-        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Conoce Liceo a través de nuestros videos.</span>
-      </span>
-    </a>
-
-    <a href="#"
-       class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
-              rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
-      <span class="flex shadow-xl border border-white/15 items-center justify-center
-                   w-16 h-16 md:w-20 md:h-20
-                   rounded-xl bg-[#5b73b0] group-hover:bg-blue-500">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-             aria-hidden="true"
-             class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white">
-          <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </span>
-      <span class="text-left">
-        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Ubicación</span>
-        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Estamos ubicados en Dr. Miguel silva G. 55, Centro histórico de Morelia, 58000 Morelia Mich.</span>
-      </span>
-    </a>
-
-    <a href="#"
-       class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
-              rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
-      <span class="flex shadow-xl border border-white/15 items-center justify-center
-                   w-16 h-16 md:w-20 md:h-20
-                   rounded-xl bg-[#5b73b0] group-hover:bg-blue-500">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-             aria-hidden="true"
-             class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white">
-          <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </span>
-      <span class="text-left">
-        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Testimonios</span>
-        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Conoce la experiencia de alumnos anteriores.</span>
-      </span>
-    </a>
-  </div>
+  <div class="space-y-4">
+  {items.map((it) => {
+    const Icon = getLucide(it.icon);
+    return (
+      <ItemMenuHeaderMovil href={it.href} title={it.title} subtitle={it.subtitle}>
+        {Icon && (
+            <Icon
+              slot="icon"
+              class="size-10 text-xl text-gray-200 group-hover:text-white"
+            />
+          )}
+      </ItemMenuHeaderMovil>
+    );
+  })}
+</div>
+</div>
 
   <div class="grid grid-cols-2 divide-x divide-white/10 bg-gray-700/50">
     <a href="#"
