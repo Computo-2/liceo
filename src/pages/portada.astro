@@ -24,6 +24,7 @@
     border: 0;
     transform: translate(-50%, -50%);
     pointer-events: none;
+    transition: all 0.4s ease-in-out;
   }
 
   /* Degradado en la parte inferior */
@@ -64,6 +65,22 @@
 @media (min-width: 769px) and (max-width: 1024px) {
   .video-fondo iframe {
     top: 67%;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1400px) {
+  .video-fondo iframe {
+    width: 110vw;
+    height: 61vw;
+    top: 52%;
+  }
+}
+
+@media (min-width: 1921px) {
+  .video-fondo iframe {
+    width: 115vw;
+    height: 63vw;
+    top: 56%;
   }
 }
 

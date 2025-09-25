@@ -460,7 +460,7 @@ export default function CalendarioCitas() {
     src="/simb_exp.svg"
     alt="Experiencia"
     className="
-      w-[160px] h-[160px]   /* 📱 móvil base más grande */
+      w-[180px] h-[180px]   /* 📱 móvil base más grande */
       sm:w-[176px] sm:h-[176px]
       md:w-[200px] md:h-[200px]
       lg:w-[224px] lg:h-[224px]
@@ -472,7 +472,7 @@ export default function CalendarioCitas() {
     src="/simb_assist.svg"
     alt="Asesor"
     className="
-      w-[160px] h-[160px]   /* 📱 móvil base más grande */
+      w-[185px] h-[185px]   /* 📱 móvil base más grande */
       sm:w-[176px] sm:h-[176px]
       md:w-[200px] md:h-[200px]
       lg:w-[224px] lg:h-[224px]
