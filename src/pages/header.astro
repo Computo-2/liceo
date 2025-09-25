@@ -1,3 +1,8 @@
+---
+import ItemMenuHeaderMovil from '../components/ItemMenuHeaderMovil.astro';
+---
+
+
 <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
   <header class="fixed inset-x-0 top-0 z-40 bg-[#32509c] py-8 md:py-4 h-50 md:h-50 lg:h-auto shadow-xl border border-white/25">
     <nav aria-label="Principal" class="mx-auto flex max-w-9xl md:max-w-6x1 items-center justify-between px-6 md:px-4 lg:px-12">
@@ -145,19 +150,19 @@
             <div class="relative inline-block">
               <button id="product-toggle" class="flex items-center gap-x-1 text-xl md:text-4xl font-semibold text-white hover:text-blue-200 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2"
                       aria-controls="product-menu" aria-expanded="false">
-                Product
+                Experiencia Liceo
                 <svg viewBox="0 0 20 20" fill="currentColor" class="size-5 opacity-80" aria-hidden="true">
                   <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" />
                 </svg>
               </button>
               <div id="product-menu"
-  class="hidden fixed left-1/2 -translate-x-1/2 top-20 z-[3000]
+         class="hidden fixed left-1/2 -translate-x-1/2 top-20 z-[3000]
          w-[min(96vw,40rem)] md:w-[min(92vw,44rem)]
          overflow-hidden rounded-3xl bg-[#32509c]
          outline outline-1 outline-white/10 ring-1 ring-white/10 shadow-2xl">
 
   <div class="p-6 md:p-8 space-y-4 md:space-y-6">
-    <!-- Item -->
+
     <a href="#"
        class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
               rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
@@ -172,12 +177,24 @@
         </svg>
       </span>
       <span class="text-left">
-        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Analytics</span>
-        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Better understand your traffic</span>
+        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Información</span>
+        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Para obtener mas información sobre Liceo.</span>
       </span>
     </a>
 
-    <!-- Item -->
+  <ItemMenuHeaderMovil
+  href="#"
+  title="Testimonios"
+  subtitle="Conoce la experiencia de alumnos anteriores."
+>
+  <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+       class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white" aria-hidden="true">
+    <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Z" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+  </ItemMenuHeaderMovil>
+
+    
     <a href="#"
        class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
               rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
@@ -191,8 +208,61 @@
         </svg>
       </span>
       <span class="text-left">
-        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Engagement</span>
-        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Speak directly to customers</span>
+        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Facebook</span>
+        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Visítanos en Facebook para estar mas cerca de Liceo.</span>
+      </span>
+    </a>
+    <a href="#"
+       class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
+              rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
+      <span class="flex shadow-xl border border-white/15 items-center justify-center
+                   w-16 h-16 md:w-20 md:h-20
+                   rounded-xl bg-[#5b73b0] group-hover:bg-blue-500">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+             aria-hidden="true"
+             class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white">
+          <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="text-left">
+        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Tik Tok</span>
+        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Conoce Liceo a través de nuestros videos.</span>
+      </span>
+    </a>
+
+    <a href="#"
+       class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
+              rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
+      <span class="flex shadow-xl border border-white/15 items-center justify-center
+                   w-16 h-16 md:w-20 md:h-20
+                   rounded-xl bg-[#5b73b0] group-hover:bg-blue-500">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+             aria-hidden="true"
+             class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white">
+          <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="text-left">
+        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Ubicación</span>
+        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Estamos ubicados en Dr. Miguel silva G. 55, Centro histórico de Morelia, 58000 Morelia Mich.</span>
+      </span>
+    </a>
+
+    <a href="#"
+       class="group shadow-xl border border-white/15 flex items-center gap-x-5 md:gap-x-6
+              rounded-2xl p-5 md:p-6 hover:bg-white/5 focus:outline-none">
+      <span class="flex shadow-xl border border-white/15 items-center justify-center
+                   w-16 h-16 md:w-20 md:h-20
+                   rounded-xl bg-[#5b73b0] group-hover:bg-blue-500">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+             aria-hidden="true"
+             class="w-12 h-12 md:w-14 md:h-14 text-gray-200 group-hover:text-white">
+          <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="text-left">
+        <span class="block font-semibold text-white text-3xl md:text-4xl leading-tight">Testimonios</span>
+        <span class="block text-xl md:text-2xl text-gray-300 leading-snug">Conoce la experiencia de alumnos anteriores.</span>
       </span>
     </a>
   </div>
@@ -201,26 +271,26 @@
     <a href="#"
        class="group shadow-xl border border-white/15 flex items-center justify-center gap-x-2.5
               p-5 md:p-6 text-xl md:text-2xl font-semibold text-white
-              hover:bg-blue-500/70">Watch demo</a>
+              hover:bg-blue-500/70">WhastApp</a>
     <a href="#"
        class="group shadow-xl border border-white/15 flex items-center justify-center gap-x-2.5
               p-5 md:p-6 text-xl md:text-2xl font-semibold text-white
-              hover:bg-blue-500/70">Contact sales</a>
+              hover:bg-blue-500/70">Email</a>
   </div>
 </div>
 
             </div>
           </li>
-          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Features</a></li>
-          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Marketplace</a></li>
-          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Company</a></li>
+          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Agenda tu cita</a></li>
+          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Videos</a></li>
+          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Reseñas</a></li>
           <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Log in →</a></li>
         </ul>
       </div>
     </div>
   </header>
 
-  <!-- Scripts de interacción accesibles -->
+  <!-- Scripts para que funcione el menu desplegable del header en movil -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const mobileToggle = document.querySelector('[data-command="show-modal"][data-commandfor="mobile-menu"]');
