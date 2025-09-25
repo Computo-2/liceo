@@ -19,7 +19,7 @@
 
   .video-fondo iframe {
     position: absolute;
-    top: 75%;
+    top: 75%; /* por defecto en PC */
     left: 50%;
     border: 0;
     transform: translate(-50%, -50%);
@@ -52,6 +52,20 @@
       height: 100vh;
     }
   }
+
+  /* SOLO ajuste en móviles */
+  @media (max-width: 768px) {
+    .video-fondo iframe {
+      top: 69%;
+    }
+  }
+
+  /* Tablets (iPad, etc.) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .video-fondo iframe {
+    top: 67%;
+  }
+}
 
   .imagen-container {
     position: absolute;
