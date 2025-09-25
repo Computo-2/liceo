@@ -370,13 +370,14 @@ export default function CalendarioCitas() {
           AGENDA TU VISITA
         </h1>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="max-w-7xl mx-auto px-3">
           {/* Calendario alineado sobre el fondo de papel */}
           {/* Responsive: en móvil, las imágenes van arriba y en fila horizontal; en desktop, a la derecha y grandes */}
           {/* Calendario alineado sobre el fondo de papel */}
-          <div className="w-full flex flex-col-reverse lg:flex-row gap-8 items-center justify-center">
+          <div className="w-full flex flex-col lg:flex-row items-start justify-center gap-4 lg:gap-8">
+
             {/* Calendario con fondo más grande */}
-            <div className="relative flex items-center justify-center min-h-[500px] w-full max-w-2xl">
+            <div className="relative flex items-center justify-center min-h-[500px] w-full max-w-[560px] -translate-x-0 lg:-translate-x-2">
               <img
                 src="/paper_calendar.svg"
                 alt="Fondo calendario"
@@ -462,18 +463,28 @@ export default function CalendarioCitas() {
             </div>
 
             {/* Imágenes laterales */}
-            <div className="flex flex-row lg:flex-col items-center justify-center gap-4 lg:gap-8 mb-6 lg:mb-0 w-full lg:w-auto">
-              <img
-                src="/simb_exp.svg"
-                alt="Experiencia"
-                className="w-full h-full object-contain"
-              />
-              <img
-                src="/simb_assist.svg"
-                alt="Asesor"
-                className="w-full h-full object-contain"
-              />
-            </div>
+            <div
+  className="
+    order-first lg:order-last
+    flex flex-row lg:flex-col
+    items-center justify-center
+    gap-3 sm:gap-4 lg:gap-6
+    w-full lg:w-auto
+    mb-4 lg:mb-0
+  "
+>
+  <img
+    src="/simb_exp.svg"
+    alt="Experiencia"
+    className="w-[64px] sm:w-[80px] md:w-[96px] lg:w-[112px] h-auto object-contain"
+  />
+  <img
+    src="/simb_assist.svg"
+    alt="Asesor"
+    className="w-[64px] sm:w-[80px] md:w-[96px] lg:w-[112px] h-auto object-contain"
+  />
+</div>
+
           </div>
         </div>
       </div>
