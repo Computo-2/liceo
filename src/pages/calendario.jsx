@@ -368,7 +368,7 @@ export default function CalendarioCitas() {
           {/* Calendario alineado sobre el fondo de papel */}
           {/* Responsive: en móvil, las imágenes van arriba y en fila horizontal; en desktop, a la derecha y grandes */}
           {/* Calendario alineado sobre el fondo de papel */}
-          <div className="w-full flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 lg:gap-8">
+          <div className="w-full flex flex-col lg:flex-row items-center lg:items-start justify-center gap-2 sm:gap-3 lg:gap-8">
 
             {/* Calendario con fondo más grande */}
             <div className="relative flex items-center justify-center min-h-[500px] w-full max-w-[560px] -translate-x-0 lg:-translate-x-2">
@@ -397,14 +397,11 @@ export default function CalendarioCitas() {
 
                     {/* Nombre del mes */}
                     <h2
-                      className="text-lg md:text-5xl font-medium text-black-900 text-center px-0.5"
-                      style={{
-                        fontFamily: "FuturaPT, Arial, sans-serif",
-                        minHeight: "3.5rem",
-                      }}
-                    >
-                      {monthNames[currentDate.getMonth()]}
-                    </h2>
+  className="text-5xl md:text-5xl lg:text-5xl font-medium text-black-900 text-center px-0.5"
+  style={{ fontFamily: "FuturaPT, Arial, sans-serif", minHeight: "3.5rem" }}
+>
+  {monthNames[currentDate.getMonth()]}
+</h2>
 
                     {/* Flecha derecha */}
                     <button
@@ -457,21 +454,15 @@ export default function CalendarioCitas() {
             </div>
 
             {/* Imágenes laterales */}
-<div
-  className="
-    order-first lg:order-last
-    flex flex-row lg:flex-col
-    items-center justify-center
-    gap-3 sm:gap-4 lg:gap-6
-    w-full lg:w-auto
-    mb-4 lg:mb-0
-  "
->
+<div className="order-first lg:order-last flex flex-row lg:flex-col items-center justify-center gap-3 sm:gap-4 lg:gap-6 w-full lg:w-auto mb-2 lg:mb-0">
   <img
     src="/simb_exp.svg"
     alt="Experiencia"
     className="
-      w-[144px] h-[144px] sm:w-[160px] sm:h-[160px] md:w-[192px] md:h-[192px] lg:w-[224px] lg:h-[224px]
+      w-[160px] h-[160px]   /* 📱 móvil base más grande */
+      sm:w-[176px] sm:h-[176px]
+      md:w-[200px] md:h-[200px]
+      lg:w-[224px] lg:h-[224px]
       object-contain
       filter drop-shadow-[5px_5px_0px_rgba(255,255,255,0.4)]
     "
@@ -480,8 +471,11 @@ export default function CalendarioCitas() {
     src="/simb_assist.svg"
     alt="Asesor"
     className="
-      w-[144px] h-[144px] sm:w-[160px] sm:h-[160px] md:w-[192px] md:h-[192px] lg:w-[224px] lg:h-[224px]
-      object-contain scale-110
+      w-[160px] h-[160px]   /* 📱 móvil base más grande */
+      sm:w-[176px] sm:h-[176px]
+      md:w-[200px] md:h-[200px]
+      lg:w-[224px] lg:h-[224px]
+      object-contain scale-110 /* ⚖️ compensación para que luzca igual */
       filter drop-shadow-[5px_5px_0px_rgba(255,255,255,0.4)]
     "
   />
