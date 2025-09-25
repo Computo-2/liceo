@@ -4,9 +4,9 @@ import ItemMenuHeaderPc from "../components/ItemMenuHeaderPc.astro";
 import * as Lucide from "lucide-react";
 
 const items = [
-  { href: "#", title: "Información", subtitle: "Para obtener más información sobre Liceo.", icon: "Info" },
+  { href: "#", title: "Información", subtitle: "Más información sobre Liceo.", icon: "Info" },
   { href: "#", title: "Facebook",    subtitle: "Visítanos en Facebook.",                    icon: "Facebook" },
-  { href: "#", title: "Tik Tok",     subtitle: "Conoce Liceo a través de nuestros videos.", icon: "Video" },
+  { href: "#", title: "Tik Tok",     subtitle: "Conoce Liceo a través de videos.", icon: "Video" },
   { href: "#", title: "Ubicación",   subtitle: "Dr. Miguel silva G. 55, Morelia.",          icon: "MapPin" },
   { href: "#", title: "Testimonios", subtitle: "Experiencia de alumnos anteriores.",        icon: "Users" },
 ];
@@ -19,13 +19,14 @@ function getLucide(name: string) {
 
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
-  <header class="fixed inset-x-0 top-0 z-40 bg-[#32509c] py-8 md:py-4 h-50 md:h-50 lg:h-auto shadow-xl border border-white/25">
+
+  <header class="fixed inset-x-0 top-0 z-10 bg-[#32509c] py-5 md:py-4 lg:py-1 lg:-pb-5 h-25 md:h-30 lg:h-20 shadow-xl border border-white/25">
     <nav aria-label="Principal" class="mx-auto flex max-w-9xl md:max-w-6x1 items-center justify-between px-6 md:px-4 lg:px-12">
       <!-- Logo -->
       <div class="flex lg:flex-1 items-center md:mt-2">
         <a href="#" class="-m-1.5 p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg">
           <span class="sr-only" id="app-name">Liceo Michoacano</span>
-          <img src="/favicon.gif" alt="Liceo Michoacano" class="h-35 md:h-20 lg:h-25 w-auto" />
+          <img src="/favicon.gif" alt="Liceo Michoacano" class="h-15 md:h-20 lg:h-15 w-auto" />
         </a>
       </div>
 
@@ -34,7 +35,7 @@ function getLucide(name: string) {
          <button type="button" data-command="show-modal" data-commandfor="mobile-menu"
            class="-m-2 inline-flex items-center justify-center rounded-md p-4 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
            aria-controls="mobile-menu" aria-expanded="false" aria-label="Abrir menú principal">
-           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="mt-2 w-15 h-15">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="mt-2 w-10 h-10">
            <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
            </svg>
          </button>
@@ -83,9 +84,9 @@ function getLucide(name: string) {
           </el-popover>
         </div>
 
-        <a href="#" class="text-2xl md:text-xl font-semibold text-white hover:text-blue-200 hover:underline transition">Agenda tu cita</a>
-        <a href="#" class="text-2xl md:text-xl font-semibold text-white hover:text-blue-200 hover:underline transition">Videos</a>
-        <a href="#" class="text-2xl md:text-xl font-semibold text-white hover:text-blue-200 hover:underline transition">Reseñas</a>
+        <a href="#" class="text-md md:text-lg font-semibold text-white hover:text-blue-200 hover:underline transition">Agenda tu cita</a>
+        <a href="#" class="text-md md:text-lg font-semibold text-white hover:text-blue-200 hover:underline transition">Videos</a>
+        <a href="#" class="text-md md:text-lg font-semibold text-white hover:text-blue-200 hover:underline transition">Reseñas</a>
 
        </div>
 
@@ -96,27 +97,27 @@ function getLucide(name: string) {
     </nav>
 
     <!-- Menú móvil -->
-    <div id="mobile-menu" class="hidden shadow-xl border border-white/15 shadow-3xl border border-white fixed inset-x-0 top-0 h-auto z-50 bg-[#32509c] p-8 md:p-4 text-white transition data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out">
+    <div id="mobile-menu" class="hidden shadow-xl border border-white/15 shadow-3xl border border-white fixed inset-x-0 top-0 h-auto z-50 bg-[#32509c] p-4 md:p-4 text-white transition data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out">
       <div class="relative mx-auto max-w-6x1">
         <div class="flex items-center justify-between">
-          <a href="#" class="-m-4 -mt-1 p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg">
+          <a href="#" class="p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg">
             <span class="sr-only">Liceo Michoacano</span>
-            <img src="/favicon.gif" alt="Liceo Michoacano" class="h-20 lg:h-25 w-auto" />
+            <img src="/favicon.gif" alt="Liceo Michoacano" class="h-15 lg:h-25 w-auto" />
           </a>
           <button type="button" data-command="hide-modal" data-commandfor="mobile-menu"
                   class="h-20 text-white/90 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg p-2"
                   aria-controls="mobile-menu" aria-label="Cerrar menú">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-15 h-15" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-10 h-10" aria-hidden="true">
               <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
         </div>
 
-        <ul class="mt-10 space-y-6 text-center text-2xl font-semibold leading-relaxed">
+        <ul class="mt-10 space-y-6 text-center text-xl font-semibold leading-relaxed">
           <li>
             <!-- Desplegable Product (móvil) -->
             <div class="relative inline-block">
-              <button id="product-toggle" class="flex items-center gap-x-1 text-xl md:text-4xl font-semibold text-white hover:text-blue-200 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2"
+              <button id="product-toggle" class="flex items-center gap-x-1 text-sm md:text-lg font-semibold text-white hover:text-blue-200 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2"
                       aria-controls="product-menu" aria-expanded="false">
                 Experiencia Liceo
                 <svg viewBox="0 0 20 20" fill="currentColor" class="size-5 opacity-80" aria-hidden="true">
@@ -129,8 +130,8 @@ function getLucide(name: string) {
          overflow-hidden rounded-3xl bg-[#32509c]
          outline outline-1 outline-white/10 ring-1 ring-white/10 shadow-2xl">
 
-  <div class="p-6 md:p-8 space-y-4 md:space-y-6">
-  <div class="space-y-4">
+  <div class="p-3 md:p-4 space-y-4 md:space-y-6">
+  <div class="space-y-1">
   {items.map((it) => {
     const Icon = getLucide(it.icon);
     return (
@@ -138,7 +139,7 @@ function getLucide(name: string) {
         {Icon && (
             <Icon
               slot="icon"
-              class="size-10 text-xl text-gray-200 group-hover:text-white"
+              class="size-15 text-lg text-gray-200 group-hover:text-white"
             />
           )}
       </ItemMenuHeaderMovil>
@@ -150,21 +151,21 @@ function getLucide(name: string) {
   <div class="grid grid-cols-2 divide-x divide-white/10 bg-gray-700/50">
     <a href="#"
        class="group shadow-xl border border-white/15 flex items-center justify-center gap-x-2.5
-              p-5 md:p-6 text-xl md:text-2xl font-semibold text-white
+              p-2 md:p-3 text-sm md:text-xl font-semibold text-white
               hover:bg-blue-500/70">WhastApp</a>
     <a href="#"
-       class="group shadow-xl border border-white/15 flex items-center justify-center gap-x-2.5
-              p-5 md:p-6 text-xl md:text-2xl font-semibold text-white
+       class="group shadow-sm border border-white/15 flex items-center justify-center gap-x-2.5
+              p-2 md:p-3 text-sm md:text-xl font-semibold text-white
               hover:bg-blue-500/70">Email</a>
   </div>
 </div>
 
             </div>
           </li>
-          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Agenda tu cita</a></li>
-          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Videos</a></li>
-          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Reseñas</a></li>
-          <li><a href="#" class="hover:text-blue-200 text-lg md:text-4xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Log in →</a></li>
+          <li><a href="#" class="hover:text-blue-200 text-sm md:text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Agenda tu cita</a></li>
+          <li><a href="#" class="hover:text-blue-200 text-sm md:text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Videos</a></li>
+          <li><a href="#" class="hover:text-blue-200 text-sm md:text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Reseñas</a></li>
+          <li><a href="#" class="hover:text-blue-200 text-sm md:text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg px-2">Log in →</a></li>
         </ul>
       </div>
     </div>
