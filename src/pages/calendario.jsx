@@ -455,7 +455,7 @@ export default function CalendarioCitas() {
             </div>
 
             {/* Imágenes laterales */}
-<div className="order-first lg:order-last flex flex-row lg:flex-col items-center justify-center gap-3 sm:gap-4 lg:gap-6 w-full lg:w-auto mb-2 lg:mb-0">
+<div className="order-first lg:order-last flex flex-row lg:flex-col items-center justify-center gap-3 sm:gap-4 lg:gap-2 w-full lg:w-auto mb-2 lg:mb-0">
   <img
     src="/simb_exp.svg"
     alt="Experiencia"
@@ -463,7 +463,7 @@ export default function CalendarioCitas() {
       w-[180px] h-[180px]   /* 📱 móvil base más grande */
       sm:w-[176px] sm:h-[176px]
       md:w-[200px] md:h-[200px]
-      lg:w-[224px] lg:h-[224px]
+      lg:w-[270px] lg:h-[270px]
       object-contain
       filter drop-shadow-[5px_5px_0px_rgba(255,255,255,0.4)]
     "
@@ -475,7 +475,7 @@ export default function CalendarioCitas() {
       w-[185px] h-[185px]   /* 📱 móvil base más grande */
       sm:w-[176px] sm:h-[176px]
       md:w-[200px] md:h-[200px]
-      lg:w-[224px] lg:h-[224px]
+      lg:w-[270px] lg:h-[270px]
       object-contain scale-110 /* ⚖️ compensación para que luzca igual */
       filter drop-shadow-[5px_5px_0px_rgba(255,255,255,0.4)]
     "
