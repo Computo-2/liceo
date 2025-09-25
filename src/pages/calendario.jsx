@@ -360,9 +360,10 @@ export default function CalendarioCitas() {
       }}
     >
       <div className="max-w-7xl mx-auto relative">
-        <h1 className="text-3xl md:text-5xl font-bold text-white mb-8 text-center">
-          AGENDA TU VISITA
-        </h1>
+        <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-3 sm:mb-5 md:mb-8 text-center">
+  AGENDA TU VISITA
+</h1>
+
 
         <div className="max-w-7xl mx-auto px-3">
           {/* Calendario alineado sobre el fondo de papel */}
