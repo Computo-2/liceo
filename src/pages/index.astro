@@ -5,13 +5,15 @@ import Portada from "./portada.astro";
 import Hero from "./hero.astro";
 import Calendario from "./calendario.jsx";
 import Carga from "./loadingScreen.jsx";
-import Reseñas from "./reseñast.astro";
-import Reseñasv from "./reseñasv.astro";
+import Resenas from "./resenast.astro";
+import Resenasv from "./resenasv.astro";
+import Redes from "./redes.astro";
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/favicon.gif" type="image/svg+xml" />
     <title>Liceo Michoacano</title>
     <style>
@@ -29,12 +31,13 @@ import Reseñasv from "./reseñasv.astro";
     </style>
   </head>
   <body>
-
+    <Carga client:load />
     <Header />
     <Portada />
     <Calendario client:load/>
-    <Reseñas />
-    <Reseñasv />
+    <Resenas />
+    <Resenasv />
+    <Redes />
     <Footer />
   </body>
 </html>
