@@ -3,28 +3,26 @@ import TimelineCard from "../components/LineTimeCard.jsx";
 import { pilares } from "../data/pilares";
 ---
 
-<section class="bg-gray-50 py-12 sm:py-16">
+<section class="bg-gray-50 md:py-0 py-0">
   <div class="mx-auto max-w-7xl px-6">
-    <h2 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900">
+    <h2 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 mt-7">
       Conoce <span class="text-blue-600">nuestra historia</span>
     </h2>
 
-    <!-- Viewport fijo de la sección: no dejar que la página baje mientras se “apila” -->
-    <div id="stack-viewport" class="relative mt-6 h-[calc(100vh-2rem)] sm:h-[calc(100vh-3rem)] overflow-hidden">
-      <!-- Pista donde “viven” los grupos (se mueven por transform, no por scroll) -->
+    <div id="stack-viewport" class="relative -mt-10 -mx-5 md:mx-0 lg:h-[calc(80vh-2rem)] md:h-[calc(100vh-2rem)] h-[calc(80vh-3rem)] overflow-hidden">
       <div id="stack-stage" class="relative isolate">
         {pilares.map((sec, i) => (
           <div class="mt-10 relative stack-item" style={`z-index:${100 + i};`}>
             <div
               id={sec.id}
-              class="rounded-3xl border border-gray-200 bg-white/80 backdrop-blur p-6 sm:p-8 shadow-md"
-              data-sticky-offset="64"  <!-- 64px ≈ top-16 -->
+              class="rounded-3xl border border-gray-200 bg-white/80 backdrop-blur p-4 md:p-8 shadow-md"
+              data-sticky-offset="64"  
             >
-              <div class="-mx-4 sm:mx-0 px-4 sm:px-0 py-2 bg-white/70 rounded-2xl border-b border-gray-100">
-                <h3 class="text-3xl font-semibold tracking-tight text-gray-900">{sec.rango}</h3>
+              <div class="md:-mx-4 mx-0 md:px-4 px-0 py-2 bg-white/70 rounded-2xl border-b border-gray-100">
+                <h3 class="text-lg md:text-4xl font-semibold tracking-tight text-gray-900">{sec.rango}</h3>
               </div>
 
-              <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              <div class="mt-6 grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 md:gap-6 gap-5">
                 {sec.items.map((it) => (
                   <TimelineCard src={it.src} alt={it.alt} anio={it.anio}>
                     <Fragment set:html={it.html} />
@@ -35,172 +33,264 @@ import { pilares } from "../data/pilares";
           </div>
         ))}
       </div>
-      <!-- Espaciador visual abajo (no afecta lógica) -->
       <div class="h-6"></div>
     </div>
   </div>
 </section>
 
-<!-- Script inline para “traducir” la rueda en apilado vertical -->
 <script is:inline>
-  (() => {
-    const viewport = document.getElementById('stack-viewport');
-    const stage = document.getElementById('stack-stage');
-    if (!viewport || !stage) return;
+(() => {
+  const viewport = document.getElementById('stack-viewport');
+  const stage = document.getElementById('stack-stage');
+  if (!viewport || !stage) return;
 
-    // Estilos base del stage (contenedor absoluto)
-    stage.style.position = 'relative';
+  const items = Array.from(stage.querySelectorAll('.stack-item'));
+  if (!items.length) return;
 
-    // Ocultar overscroll/scrollbar dentro del viewport
-    const style = document.createElement('style');
-    style.textContent = `
-      #stack-viewport { overscroll-behavior: contain; }
-      #stack-viewport::-webkit-scrollbar { display: none; }
-      #stack-viewport { scrollbar-width: none; }
-    `;
-    document.head.appendChild(style);
+  const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
-    const items = Array.from(stage.querySelectorAll('.stack-item'));
-    if (!items.length) return;
 
-    // Offset fijo arriba (igualar a tu header ~ top-16 = 64px)
-    const stickyOffset =
-      parseInt(items[0].querySelector('[data-sticky-offset]')?.getAttribute('data-sticky-offset') || '64', 10);
+  const stickyOffset = parseInt(
+    items[0].querySelector('[data-sticky-offset]')?.getAttribute('data-sticky-offset') || '64',
+    10
+  );
+  const handoffPx = isMobile ? 120 : 72;
+  const wheelCap  = isMobile ? 40  : 80;
+  const keyJump   = isMobile ? 90  : 140;
+  const touchDamp = isMobile ? 0.65 : 0.9;
+  const minVertLock = 6;
+  const vertLockRatio = 1.25;
 
-    // Medir alturas reales de CADA grupo (la caja blanca interna)
-    const boxOf = (item) => item.firstElementChild; // div panel blanco
-    const measureHeights = () => items.map((it) => Math.ceil(boxOf(it).getBoundingClientRect().height));
-
-    // gap visual (tu mt-10 entre grupos)
-    const gapPx = (() => {
-      const m = getComputedStyle(items[0]).marginTop;
-      const v = parseFloat(m || '0');
-      return Number.isFinite(v) ? v : 0;
-    })();
-
-    // Posicionar ABSOLUTO cada item al mismo "top" (stickyOffset).
-    function applyAbsolutePositioning() {
-      items.forEach((it, i) => {
-        it.style.position = 'absolute';
-        it.style.left = '0';
-        it.style.right = '0';
-        it.style.top = stickyOffset + 'px'; // todos comparten el mismo ancla
-        it.style.willChange = 'transform';
-        it.style.zIndex = String(100 + i); // los de abajo (índice mayor) quedan por ENCIMA
-        // quitar márgenes verticales porque ya no están en flujo
-        it.style.marginTop = '0px';
-      });
-    }
-
-    // Distancias acumuladas hacia ABAJO para el estado inicial
-    // Cada item arranca desplazado "debajo" por la suma de alturas+gap de los anteriores.
-    let itemHeights = measureHeights();
-    const distancesDown = () => {
-      const d = [];
-      let acc = 0;
-      for (let i = 0; i < items.length; i++) {
-        d.push(acc);
-        acc += (itemHeights[i] + gapPx);
-      }
-      return d;
-    };
-
-    let dists = distancesDown();
-    const totalProgress = () => (items.length ? dists[dists.length - 1] + itemHeights[itemHeights.length - 1] : 0);
-
-    // Estado del “scroll virtual”
-    let progress = 0;
-    let active = true;
-
-    // Colocar transformaciones: cada item sube hasta top = stickyOffset
-    function layout(p) {
-      // translateY inicial = distancia acumulada; al avanzar, restar progreso (clamp a >=0)
-      for (let i = 0; i < items.length; i++) {
-        const startDown = dists[i];
-        const y = Math.max(0, startDown - p);
-        items[i].style.transform = `translateY(${y}px)`;
-      }
-      // Altura lógica del stage (para cubrir la "pista")
-      const maxH = Math.max(...itemHeights);
-      stage.style.height = (stickyOffset + maxH + Math.max(0, dists[dists.length - 1] - p)) + 'px';
-    }
-
-    applyAbsolutePositioning();
-    layout(0);
-
-    // Activar solo cuando la sección esté visible y mientras quede apilado por completar
-    const sectionObserver = new IntersectionObserver((entries) => {
-      const onScreen = entries.some(e => e.isIntersecting);
-      active = onScreen && progress < totalProgress() && progress >= 0;
-    }, { root: null, threshold: 0.05 });
-    sectionObserver.observe(viewport);
-
-    // Entrada de rueda/trackpad → avanzar "progress"
-    function onWheel(e) {
-      if (!active) return;
-      e.preventDefault();
-      const delta = Math.max(-80, Math.min(80, e.deltaY));
-      const t = totalProgress();
-      progress = Math.max(0, Math.min(t, progress + delta));
-      layout(progress);
-      if (progress >= t - 0.5) active = false; // liberar scroll global cuando termina
-    }
-
-    // Teclado
-    function onKey(e) {
-      if (!active) return;
-      const jump = 140;
-      if (['PageDown', 'ArrowDown', ' '].includes(e.key)) {
-        e.preventDefault();
-        const t = totalProgress();
-        progress = Math.min(t, progress + jump);
-        layout(progress);
-        if (progress >= t - 0.5) active = false;
-      } else if (['PageUp', 'ArrowUp'].includes(e.key)) {
-        e.preventDefault();
-        progress = Math.max(0, progress - jump);
-        layout(progress);
-      }
-    }
-
-    // Touch
-    let touchY = null;
-    function onTouchStart(e) { if (active) touchY = e.touches[0].clientY; }
-    function onTouchMove(e) {
-      if (!active || touchY == null) return;
-      e.preventDefault();
-      const y = e.touches[0].clientY;
-      const delta = touchY - y;
-      const t = totalProgress();
-      progress = Math.max(0, Math.min(t, progress + delta));
-      layout(progress);
-      touchY = y;
-      if (progress >= t - 0.5) active = false;
-    }
-    function onTouchEnd() { touchY = null; }
-
-    // Re-medición en resize (responsivo)
-    let resizeTimer;
-    function recompute() {
-      itemHeights = measureHeights();
-      dists = distancesDown();
-      const t = totalProgress();
-      progress = Math.max(0, Math.min(t, progress));
-      applyAbsolutePositioning();
-      layout(progress);
-    }
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(recompute, 150);
-    });
-
-    // Enlazar eventos al viewport de la sección
-    viewport.addEventListener('wheel', onWheel, { passive: false });
-    viewport.addEventListener('keydown', onKey, { passive: false });
-    viewport.addEventListener('touchstart', onTouchStart, { passive: false });
-    viewport.addEventListener('touchmove', onTouchMove, { passive: false });
-    viewport.addEventListener('touchend', onTouchEnd, { passive: true });
-    viewport.setAttribute('tabindex', '0'); // habilitar teclado
+  const boxOf = (item) => item.firstElementChild;
+  const gapPx = (() => {
+    const m = getComputedStyle(items[0]).marginTop;
+    const v = parseFloat(m || '0');
+    return Number.isFinite(v) ? v : 0;
   })();
+
+  function setCaptureMode(on) {
+    viewport.style.overscrollBehaviorY = on ? 'contain' : 'auto';
+    viewport.style.touchAction = on ? 'pan-y' : 'auto';
+  }
+  setCaptureMode(false);
+
+ 
+  function absolutize() {
+    stage.style.position = 'relative';
+    items.forEach((it, i) => {
+      it.style.position = 'absolute';
+      it.style.left = '0';
+      it.style.right = '0';
+      it.style.top = stickyOffset + 'px';
+      it.style.marginTop = '0px';
+      it.style.willChange = 'transform';
+      it.style.zIndex = String(100 + i);
+      it.style.pointerEvents = 'auto';
+      it.style.transition = 'transform 0.18s ease-out';
+    });
+  }
+
+  const measureHeights = () => items.map((it) => Math.ceil(boxOf(it).getBoundingClientRect().height));
+
+  let itemHeights = [];
+  let dists = [];
+  function computeDistances() {
+    itemHeights = measureHeights();
+    dists = [];
+    let acc = 0;
+    for (let i = 0; i < items.length; i++) {
+      dists.push(acc);
+      acc += itemHeights[i] + gapPx;
+    }
+  }
+
+ 
+  function setStageHeight(progressPx = 0) {
+    const maxItemH = Math.max(...itemHeights);
+    const tail = Math.max(0, dists[dists.length - 1] - progressPx);
+    const h = stickyOffset + maxItemH + tail + 1;
+    stage.style.minHeight = h + 'px';
+    stage.style.height = h + 'px';
+  }
+
+
+  function layout(progressPx) {
+    for (let i = 0; i < items.length; i++) {
+      const startDown = dists[i];
+      const y = Math.max(0, startDown - progressPx);
+      items[i].style.transform = `translateY(${y}px)`;
+    }
+    setStageHeight(progressPx);
+  }
+
+  absolutize();
+  computeDistances();
+
+  let progress = 0;
+  const totalProgressRaw = () => dists[dists.length - 1] + itemHeights[itemHeights.length - 1];
+  const maxProgress = () => Math.max(0, totalProgressRaw() - handoffPx);
+
+  let onScreen = true;
+  const io = new IntersectionObserver((entries) => {
+    onScreen = entries.some(e => e.isIntersecting);
+    if (!onScreen) setCaptureMode(false);
+  }, { root: null, threshold: 0.05 });
+  io.observe(viewport);
+
+  layout(progress);
+
+
+  function handleAdvance(delta) {
+    const tMax = maxProgress();
+    if (delta > 0) {
+      if (progress < tMax) {
+        setCaptureMode(true);
+        progress = Math.min(tMax, progress + delta);
+        layout(progress);
+        return true; 
+      }
+
+      setCaptureMode(false);
+      return false;
+    } else if (delta < 0) {
+      // subir
+      if (progress > 0) {
+        setCaptureMode(true);
+        progress = Math.max(0, progress + delta);
+        layout(progress);
+        return true;
+      }
+
+      setCaptureMode(false);
+      return false;
+    }
+    return false;
+  }
+
+  function onWheel(e) {
+    if (!onScreen) return;
+    const delta = Math.max(-wheelCap, Math.min(wheelCap, e.deltaY));
+    const captured = handleAdvance(delta);
+    if (captured) e.preventDefault();
+  }
+
+
+  function onKey(e) {
+    if (!onScreen) return;
+    if (['PageDown', 'ArrowDown', ' '].includes(e.key)) {
+      const captured = handleAdvance(+keyJump);
+      if (captured) e.preventDefault();
+    } else if (['PageUp', 'ArrowUp'].includes(e.key)) {
+      const captured = handleAdvance(-keyJump);
+      if (captured) e.preventDefault();
+    }
+  }
+
+  let tStartY = null, tStartX = null, lastY = null;
+  let lockedVertical = null;
+  let vel = 0;
+
+  function onTouchStart(e) {
+    if (!onScreen) return;
+    const t = e.touches[0];
+    tStartY = lastY = t.clientY;
+    tStartX = t.clientX;
+    lockedVertical = null;
+    vel = 0;
+
+    setCaptureMode(progress > 0 && progress < maxProgress());
+  }
+
+  function onTouchMove(e) {
+    if (!onScreen || tStartY == null) return;
+
+    const t = e.touches[0];
+    const dy = tStartY - t.clientY;
+    const dx = Math.abs(t.clientX - tStartX);
+    const ady = Math.abs(dy);
+
+    if (lockedVertical === null) {
+      if (ady > minVertLock) {
+        lockedVertical = ady > dx * vertLockRatio;
+      } else {
+        return;
+      }
+    }
+    if (!lockedVertical) return;
+
+    const delta = dy * touchDamp;
+    const captured = handleAdvance(delta);
+    if (captured) e.preventDefault();
+
+    vel = 0.6 * vel + 0.4 * (t.clientY - (lastY ?? t.clientY));
+    lastY = t.clientY;
+  }
+
+  function animateTo(target) {
+    const start = progress;
+    const dist = target - start;
+    const dur = Math.min(550, Math.max(220, Math.abs(dist) * (isMobile ? 0.6 : 0.35)));
+    const t0 = performance.now();
+    function step(t1) {
+      const t = (t1 - t0) / dur;
+      if (t >= 1) { progress = target; layout(progress); return; }
+      const e = 1 - Math.pow(1 - t, 3);
+      progress = start + dist * e;
+      layout(progress);
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function anchors() {
+    const last = dists[dists.length - 1] + itemHeights[itemHeights.length - 1];
+    const raw = [0, ...dists.map((d, i) => d + itemHeights[i])];
+    raw[raw.length - 1] = Math.max(0, last - handoffPx);
+    return [...new Set(raw)].sort((a, b) => a - b);
+  }
+
+  function onTouchEnd() {
+    const snapPoints = anchors();
+    const bias = (vel < 0 ? -1 : (vel > 0 ? +1 : 0));
+    let nearest = snapPoints.reduce((best, a) => {
+      const dCur = Math.abs(progress - a);
+      const dBest = Math.abs(progress - best);
+      const biasAdj = (a > progress ? +bias : (a < progress ? -bias : 0)) * 8;
+      return (dCur - biasAdj) < dBest ? a : best;
+    }, snapPoints[0]);
+    const minA = snapPoints[0], maxA = snapPoints[snapPoints.length - 1];
+    nearest = Math.max(minA, Math.min(maxA, nearest));
+    animateTo(nearest);
+
+    if (nearest <= minA + 0.5 || nearest >= maxA - 0.5) {
+      setCaptureMode(false);
+    }
+    tStartY = tStartX = lastY = null;
+    lockedVertical = null;
+    vel = 0;
+  }
+
+  let resizeTimer;
+  function recompute() {
+    computeDistances();
+    progress = Math.max(0, Math.min(maxProgress(), progress));
+    layout(progress);
+    setCaptureMode(progress > 0 && progress < maxProgress());
+  }
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(recompute, 150);
+  });
+
+  // Eventos
+  viewport.addEventListener('wheel', onWheel, { passive: false });
+  viewport.addEventListener('keydown', onKey, { passive: false });
+  viewport.addEventListener('touchstart', onTouchStart, { passive: false });
+  viewport.addEventListener('touchmove', onTouchMove, { passive: false });
+  viewport.addEventListener('touchend', onTouchEnd, { passive: true });
+  viewport.setAttribute('tabindex', '0');
+})();
 </script>
+
+
 

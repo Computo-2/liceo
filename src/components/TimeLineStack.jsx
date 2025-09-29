@@ -30,8 +30,8 @@ export default function TimelineStack({
   return (
     <div className="relative" style={{ paddingBottom: padBottom }}>
       {items.map((it, i) => {
-        const z = items.length - i;      // la de abajo (más nueva) sobre la de arriba
-        const compact = i !== active;    // solo la activa muestra imagen/descr.
+        const z = items.length - i;
+        const compact = i !== active;
         return (
           <div
             key={i}
