@@ -2,42 +2,41 @@ export default function TimelineCard({ src, alt, anio, children }) {
   return (
     <article
       className="
-        rounded-3xl border border-gray-200 bg-white shadow-lg
-        p-2 md:p-7 transition hover:shadow-xl -m-2 md:m-0
+        group rounded-[24px] border border-gray-200/70 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.06)]
+        p-5 sm:p-6 transition-all duration-200 hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)]
       "
     >
-      <div className="mx-auto w-full max-w-[320px]">
-        <div className="rounded-2xl overflow-hidden border border-gray-200">
-          <img
-            src={src}
-            alt={alt ?? ""}
-            className="h-[100px] md:h-[130px] lg:h-[190px] w-full object-cover"
-            loading="lazy"
-            draggable={false}
-          />
-        </div>
+      {/* Media */}
+      <div className="rounded-[18px] overflow-hidden border border-gray-200/70">
+        <img
+          src={src}
+          alt={alt ?? ""}
+          className="w-full aspect-[16/9] object-cover"
+          loading="lazy"
+          draggable={false}
+        />
       </div>
 
-      <div className="mt-6 flex items-center gap-3">
+      {/* Línea + punto */}
+      <div className="mt-5 flex items-center gap-3 opacity-90">
         <div className="h-px flex-1 border-t border-dotted border-gray-300" />
         <div className="grid place-items-center">
-          <div className="h-5 lg:h-8 w-5 lg:w-8 rounded-full bg-white border-2 border-blue-600 grid place-items-center">
+          <div className="h-8 w-8 rounded-full bg-white border-2 border-blue-600 grid place-items-center">
             <div className="h-2 w-2 rounded-full bg-blue-600" />
           </div>
         </div>
         <div className="h-px flex-1 border-t border-dotted border-gray-300" />
       </div>
 
-
-      <p className="mt-4 text-base md:text-xl lg:text-3xl font-semibold tracking-tight text-gray-900 text-center">
+      {/* Año */}
+      <p className="mt-4 text-center text-2xl font-semibold tracking-tight text-gray-900">
         {anio}
       </p>
 
-    
-      <div className="mt-2 text-center text-gray-700 text-[10px] md:text-[20px] lg:text-[30px] leading-relaxed">
+      {/* Descripción */}
+      <div className="mt-2 text-center text-gray-700 text-[15px] leading-relaxed">
         {children}
       </div>
     </article>
   );
 }
-
