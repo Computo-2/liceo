@@ -1,0 +1,209 @@
+---
+// src/components/ContactoForm.astro
+// Componente Astro independiente: estilos minimalistas (sin “lift”),
+// select con flechita sincronizada al abrir/cerrar.
+---
+
+<main class="bg-[#ffffff] font-sans antialiased py-2 md:py-4">
+  <div class="mx-auto flex max-w-lg flex-col items-center px-4">
+    <h1
+      class="mt-0 mb-3 text-center px-0.5 font-medium text-black leading-tight text-4xl sm:text-5xl"
+      style="font-family: FuturaPT, Arial, sans-serif; min-height: 3.5rem;"
+    >
+      Recibe más Información
+    </h1>
+
+    <section class="relative w-full">
+      <!-- Blue box -->
+      <div class="relative overflow-visible rounded-2xl bg-gradient-to-br from-[#3965b8] to-[#2c5aa0] p-6 shadow-2xl md:p-8">
+        <!-- Deco: square gray -->
+        <div class="square-gray absolute left-1/2 top-[-24px] h-[48px] w-[48px] -translate-x-1/2 rotate-45 bg-[#d0d0d0] shadow-lg"></div>
+        <!-- Deco: square black -->
+        <div class="square-black absolute left-[-32px] top-[40px] h-[64px] w-[64px] rotate-[20deg] bg-[#2c2c2c] shadow-2xl md:left-[-32px]"></div>
+
+        <!-- Card/Form compacto -->
+        <div class="group relative -rotate-2 transform rounded-2xl bg-white p-4 shadow-xl transition-transform duration-300 hover:rotate-0 md:p-6">
+          <div class="form-content rotate-2 transform transition-transform duration-300 group-hover:rotate-0">
+            <form id="contactForm" class="space-y-5" novalidate>
+              <!-- Nombre -->
+              <div class="group/form relative">
+                <label for="nombre" class="mb-1.5 block text-sm font-semibold text-neutral-800">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  required
+                  autocomplete="name"
+                  class="w-full border-0 border-b-2 border-neutral-200 bg-transparent px-0 py-2.5 text-sm outline-none transition-colors focus:border-[#3965b8]"
+                />
+              </div>
+
+              <!-- Email -->
+              <div class="group/form relative">
+                <label for="email" class="mb-1.5 block text-sm font-semibold text-neutral-800">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  class="w-full border-0 border-b-2 border-neutral-200 bg-transparent px-0 py-2.5 text-sm outline-none transition-colors focus:border-[#3965b8]"
+                />
+              </div>
+
+              <!-- Select -->
+              <div class="select-group group/form relative">
+                <label for="tema" class="mb-2 inline-block text-sm font-semibold text-neutral-800">
+                  Elige tu tema :
+                </label>
+
+                <!-- Usamos data-open para sincronizar la flecha -->
+                <div class="select-wrapper relative overflow-hidden rounded-xl" data-open="false">
+                  <select
+                    id="tema"
+                    name="tema"
+                    required
+                    class="peer w-full appearance-none rounded-xl border-2 border-neutral-200 px-3 py-3 pr-10 text-sm font-medium text-neutral-800 outline-none transition-colors hover:border-[#3965b8] focus:border-[#3965b8]"
+                  >
+                    <option value="" disabled selected>¿Qué tema te interesa?</option>
+                    <option value="precios">Precios</option>
+                    <option value="plan-estudios">Plan de estudios</option>
+                    <option value="becas">Becas</option>
+                    <option value="talleres">Talleres</option>
+                    <option value="viajes">Viajes</option>
+                    <option value="vinculacion">Vinculación Universitaria</option>
+                    <option value="orientacion">Orientación vocacional</option>
+                  </select>
+
+                  <!-- Flechita del dropdown -->
+                  <svg class="select-arrow pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-transform duration-200 ease-out text-[#3965b8]"
+                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+
+                  <!-- barra gradiente al focus (opcional) -->
+                  <span
+                    class="select-highlight pointer-events-none absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-[#3965b8] to-[#2c5aa0] transition-[width] duration-300 ease-out peer-focus:w-full"
+                    aria-hidden="true"></span>
+                </div>
+              </div>
+
+              <!-- Mensaje -->
+              <div class="group/form relative">
+                <label for="message" class="mb-1.5 block text-sm font-semibold text-neutral-800">
+                  Mensaje
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  class="min-h-[56px] w-full resize-y border-0 border-b-2 border-neutral-200 bg-transparent px-0 py-2.5 text-sm outline-none transition-colors focus:border-[#3965b8]"></textarea>
+              </div>
+
+              <!-- Submit -->
+              <div class="pt-1">
+                <button
+                  type="submit"
+                  class="mx-auto block rounded-full bg-[#2c2c2c] px-8 py-2.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-black"
+                >
+                  Enviar
+                </button>
+                <p id="formMsg" class="sr-only" aria-live="polite"></p>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Star deco -->
+        <div class="star absolute right-8 -bottom-6 h-16 w-16 bg-white shadow-xl"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<style is:global>
+  .star {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+
+  /* Inputs/textarea: sin “lift”, solo cambio de borde */
+  input, textarea {
+    transition: border-color 180ms ease;
+  }
+
+  /* Select: sin “brinquito” ni sombras; solo contorno cambia */
+  select {
+    transition: border-color 180ms ease;
+  }
+
+  /* Flecha del select: rota únicamente cuando data-open="true" */
+  .select-wrapper[data-open="true"] .select-arrow {
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  /* Opcional: hover sutil en opciones */
+  select option {
+    transition: background-color 150ms ease;
+  }
+  select option:hover {
+    background-color: rgba(57, 101, 184, 0.1);
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm');
+    const wrapper = document.querySelector('.select-wrapper');
+    const select  = document.getElementById('tema');
+
+    // Handler de envío (igual que antes)
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nombre  = document.getElementById('nombre')?.value?.trim() || '';
+        const email   = document.getElementById('email')?.value?.trim() || '';
+        const tema    = document.getElementById('tema')?.value || '';
+        const message = document.getElementById('message')?.value?.trim() || '';
+        const msgEl   = document.getElementById('formMsg');
+
+        if (nombre && email && tema && message) {
+          alert('¡Gracias por tu mensaje! Te contactaremos pronto.');
+          if (msgEl) { msgEl.classList.remove('sr-only'); msgEl.textContent = '¡Enviado correctamente!'; }
+          form.reset();
+        } else {
+          if (msgEl) { msgEl.classList.remove('sr-only'); msgEl.textContent = 'Por favor completa todos los campos.'; }
+        }
+      });
+    }
+
+    // Sincronización de flecha del select (abrir/cerrar)
+    if (wrapper && select) {
+      let openState = false;
+      const setOpen = (v) => {
+        openState = v;
+        wrapper.setAttribute('data-open', v ? 'true' : 'false');
+      };
+
+      // Foco: suele abrir (rotamos)
+      select.addEventListener('focus', () => setOpen(true));
+
+      // Click: si ya está abierto visualmente, alterna; si no, abre
+      select.addEventListener('click', () => setOpen(!openState));
+
+      // Cambio de valor cierra
+      select.addEventListener('change', () => setOpen(false));
+
+      // Blur cierra
+      select.addEventListener('blur', () => setOpen(false));
+
+      // Teclado (Esc/Enter/Tab) cierra
+      select.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' || e.key === 'Enter' || e.key === 'Tab') setOpen(false);
+      });
+    }
+  });
+</script>
