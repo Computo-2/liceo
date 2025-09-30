@@ -1,7 +1,9 @@
 ---
 // src/components/ContactoForm.astro
-// Componente Astro independiente: estilos minimalistas (sin “lift”),
-// select con flechita sincronizada al abrir/cerrar.
+// Select personalizado (headless) con animación ‘overkill’ usando Tailwind + Web Animations API.
+// - Botón accesible que abre un panel <ul role="listbox"> con opciones role="option">
+// - Sincroniza flecha/estado data-open, teclado (↑/↓/Enter/Esc/Tab), click fuera y envío del formulario.
+// - Mantiene un <select> real oculto para enviar el valor en el <form>.
 ---
 
 <main class="bg-[#ffffff] font-sans antialiased py-2 md:py-4">
@@ -55,21 +57,17 @@
                 />
               </div>
 
-              <!-- Select -->
+              <!-- Select personalizado -->
               <div class="select-group group/form relative">
-                <label for="tema" class="mb-2 inline-block text-sm font-semibold text-neutral-800">
+                <label class="mb-2 inline-block text-sm font-semibold text-neutral-800">
                   Elige tu tema :
                 </label>
 
-                <!-- Usamos data-open para sincronizar la flecha -->
-                <div class="select-wrapper relative overflow-hidden rounded-xl" data-open="false">
-                  <select
-                    id="tema"
-                    name="tema"
-                    required
-                    class="peer w-full appearance-none rounded-xl border-2 border-neutral-200 px-3 py-3 pr-10 text-sm font-medium text-neutral-800 outline-none transition-colors hover:border-[#3965b8] focus:border-[#3965b8]"
-                  >
-                    <option value="" disabled selected>¿Qué tema te interesa?</option>
+                <!-- Wrapper visual con estado -->
+                <div class="relative" data-open="false" id="tema-wrapper">
+                  <!-- Select real oculto para el form -->
+                  <select id="tema" name="tema" class="sr-only" aria-hidden="true" tabindex="-1">
+                    <option value="" selected>¿Qué tema te interesa?</option>
                     <option value="precios">Precios</option>
                     <option value="plan-estudios">Plan de estudios</option>
                     <option value="becas">Becas</option>
@@ -79,16 +77,38 @@
                     <option value="orientacion">Orientación vocacional</option>
                   </select>
 
-                  <!-- Flechita del dropdown -->
-                  <svg class="select-arrow pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-transform duration-200 ease-out text-[#3965b8]"
-                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
+                  <!-- Botón de activación -->
+                  <button
+                    id="tema-trigger"
+                    type="button"
+                    class="peer w-full rounded-xl border-2 border-neutral-200 px-3 py-3 pr-10 text-left text-sm font-medium text-neutral-800 outline-none transition-colors hover:border-[#3965b8] focus:border-[#3965b8] focus:ring-2 focus:ring-[#3965b8]/30"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-controls="tema-listbox"
+                  >
+                    <span id="tema-label" class="inline-block align-middle">¿Qué tema te interesa?</span>
+                    <!-- Flecha -->
+                    <svg class="select-arrow pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-transform duration-300 ease-out text-[#3965b8]"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                    <!-- Highlight inferior -->
+                    <span class="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 w-0 bg-gradient-to-r from-[#3965b8] to-[#2c5aa0] transition-[width] duration-300 ease-out peer-focus:w-full"></span>
+                  </button>
 
-                  <!-- barra gradiente al focus (opcional) -->
-                  <span
-                    class="select-highlight pointer-events-none absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-[#3965b8] to-[#2c5aa0] transition-[width] duration-300 ease-out peer-focus:w-full"
-                    aria-hidden="true"></span>
+                  <!-- Panel/menú -->
+                  <ul
+                    id="tema-listbox"
+                    role="listbox"
+                    tabindex="-1"
+                    class="invisible absolute z-30 mt-2 w-full origin-top rounded-xl border border-neutral-200 bg-white shadow-[0_30px_60px_-15px_rgba(0,0,0,0.35)] opacity-0 outline-none ring-1 ring-transparent focus:ring-[#3965b8]/30"
+                    aria-activedescendant=""
+                  >
+                    <!-- Item plantilla (clonado por JS) -->
+                  </ul>
+
+                  <!-- Fondo borroso animado -->
+                  <div id="tema-backdrop" class="pointer-events-none absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-[#3965b8]/0 to-[#2c5aa0]/0 blur-0 transition-all"></div>
                 </div>
               </div>
 
@@ -126,47 +146,189 @@
 </main>
 
 <style is:global>
+  @reference "tailwindcss";
   .star {
     clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
   }
 
-  /* Inputs/textarea: sin “lift”, solo cambio de borde */
-  input, textarea {
-    transition: border-color 180ms ease;
+  /* Animación del panel: usamos WAAPI en JS; aquí solo estados */
+  [data-open="true"] #tema-listbox { visibility: visible; opacity: 1; }
+  [data-open="true"] .select-arrow { transform: translateY(-50%) rotate(180deg); }
+
+  /* Focus outlines más nítidos en teclas */
+  @media (prefers-reduced-motion: no-preference) {
+    #tema-listbox li[role="option"] { will-change: transform, opacity, filter; }
   }
 
-  /* Select: sin “brinquito” ni sombras; solo contorno cambia */
-  select {
-    transition: border-color 180ms ease;
+  /* Item base */
+  .super-option {
+    @apply cursor-pointer select-none px-3 py-2 text-sm text-neutral-800 outline-none transition-colors;
   }
-
-  /* Flecha del select: rota únicamente cuando data-open="true" */
-  .select-wrapper[data-open="true"] .select-arrow {
-    transform: translateY(-50%) rotate(180deg);
-  }
-
-  /* Opcional: hover sutil en opciones */
-  select option {
-    transition: background-color 150ms ease;
-  }
-  select option:hover {
-    background-color: rgba(57, 101, 184, 0.1);
+  .super-option[aria-selected="true"], .super-option:hover {
+    @apply bg-[#3965b8]/10 text-neutral-900;
   }
 </style>
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contactForm');
-    const wrapper = document.querySelector('.select-wrapper');
-    const select  = document.getElementById('tema');
 
-    // Handler de envío (igual que antes)
+    // ====== SELECT SUPER-ANIMADO ======
+    const wrapper = document.getElementById('tema-wrapper');
+    const trigger = document.getElementById('tema-trigger');
+    const labelEl = document.getElementById('tema-label');
+    const listbox = document.getElementById('tema-listbox');
+    const nativeSelect = document.getElementById('tema');
+    const backdrop = document.getElementById('tema-backdrop');
+
+    const OPTIONS = Array.from(nativeSelect.options)
+      .map(o => ({ value: o.value, label: o.textContent, disabled: o.disabled }))
+      .filter(o => o.value !== '');
+
+    let open = false;
+    let activeIndex = -1; // para hover/teclado
+
+    // Construir items
+    const buildList = () => {
+      listbox.innerHTML = '';
+      OPTIONS.forEach((opt, i) => {
+        const li = document.createElement('li');
+        li.id = `tema-opt-${i}`;
+        li.setAttribute('role', 'option');
+        li.setAttribute('tabindex', '-1');
+        li.className = 'super-option';
+        li.textContent = opt.label;
+        li.dataset.value = opt.value;
+        if (opt.disabled) li.setAttribute('aria-disabled', 'true');
+        li.addEventListener('click', () => commitOption(i));
+        li.addEventListener('mousemove', () => setActive(i, false));
+        listbox.appendChild(li);
+      });
+    };
+
+    const setOpen = (v) => {
+      open = v;
+      wrapper.setAttribute('data-open', v ? 'true' : 'false');
+      trigger.setAttribute('aria-expanded', v ? 'true' : 'false');
+      if (v) {
+        playOpen();
+        document.addEventListener('click', onDocClick);
+      } else {
+        playClose();
+        document.removeEventListener('click', onDocClick);
+      }
+    };
+
+    const onDocClick = (e) => {
+      if (!wrapper.contains(e.target)) setOpen(false);
+    };
+
+    const focusTrigger = () => trigger.focus({ preventScroll: true });
+
+    const setActive = (index, scrollIntoView = true) => {
+      const prev = listbox.querySelector('[aria-current="true"]');
+      if (prev) prev.removeAttribute('aria-current');
+      activeIndex = Math.max(0, Math.min(index, OPTIONS.length - 1));
+      const cur = listbox.children[activeIndex];
+      if (cur) {
+        cur.setAttribute('aria-current', 'true');
+        listbox.setAttribute('aria-activedescendant', cur.id);
+        if (scrollIntoView) cur.scrollIntoView({ block: 'nearest' });
+      }
+    };
+
+    const commitOption = (index) => {
+      const opt = OPTIONS[index];
+      if (!opt) return;
+      // Actualiza UI
+      labelEl.textContent = opt.label;
+      // Actualiza select real
+      nativeSelect.value = opt.value;
+      // Marca seleccionada
+      listbox.querySelectorAll('[role="option"]').forEach((li, i) => {
+        li.setAttribute('aria-selected', i === index ? 'true' : 'false');
+      });
+      // micro efecto al seleccionar
+      trigger.animate([
+        { transform: 'translateY(0) scale(1)', boxShadow: '0 0 0 rgba(0,0,0,0)' },
+        { transform: 'translateY(-1px) scale(1.02)', boxShadow: '0 6px 16px rgba(0,0,0,0.15)' },
+        { transform: 'translateY(0) scale(1)', boxShadow: '0 0 0 rgba(0,0,0,0)' },
+      ], { duration: 220, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      setOpen(false);
+      focusTrigger();
+    };
+
+    // Animaciones OVERKILL
+    const playOpen = () => {
+      // Panel aparece con perspectiva + fade
+      const keyframes = [
+        { opacity: 0, transform: 'perspective(1000px) rotateX(-12deg) scaleY(0.9)', filter: 'blur(6px)' },
+        { opacity: 1, transform: 'perspective(1000px) rotateX(0deg) scaleY(1)', filter: 'blur(0)' }
+      ];
+      listbox.animate(keyframes, { duration: 260, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'forwards' });
+
+      // Stagger en items
+      [...listbox.children].forEach((el, i) => {
+        el.animate([
+          { opacity: 0, transform: 'translateY(-6px) scale(.98)' },
+          { opacity: 1, transform: 'translateY(0) scale(1)' }
+        ], { duration: 240, delay: 40 * i + 50, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' });
+      });
+
+      // Backdrop glow
+      backdrop.animate([
+        { background: 'linear-gradient(135deg, rgba(57,101,184,0.0), rgba(44,90,160,0.0))', filter: 'blur(0px)' },
+        { background: 'linear-gradient(135deg, rgba(57,101,184,0.15), rgba(44,90,160,0.18))', filter: 'blur(8px)' }
+      ], { duration: 280, easing: 'ease-out', fill: 'forwards' });
+    };
+
+    const playClose = () => {
+      listbox.animate([
+        { opacity: 1, transform: 'perspective(1000px) rotateX(0deg) scaleY(1)', filter: 'blur(0px)' },
+        { opacity: 0, transform: 'perspective(1000px) rotateX(-8deg) scaleY(.98)', filter: 'blur(4px)' }
+      ], { duration: 180, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+
+      backdrop.animate([
+        { background: 'linear-gradient(135deg, rgba(57,101,184,0.15), rgba(44,90,160,0.18))', filter: 'blur(8px)' },
+        { background: 'linear-gradient(135deg, rgba(57,101,184,0.0), rgba(44,90,160,0.0))', filter: 'blur(0px)' }
+      ], { duration: 220, easing: 'ease-in', fill: 'forwards' });
+    };
+
+    const toggle = () => setOpen(!open);
+
+    // Eventos botón
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!open) {
+        setOpen(true);
+        // Si no hay activa, activa la primera seleccionada o 0
+        const selectedIndex = OPTIONS.findIndex(o => o.value === nativeSelect.value);
+        setActive(selectedIndex >= 0 ? selectedIndex : 0);
+      } else {
+        setOpen(false);
+      }
+    });
+
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); if (!open) setOpen(true); setActive((activeIndex < 0 ? 0 : activeIndex) + 1); }
+      if (e.key === 'ArrowUp')   { e.preventDefault(); if (!open) setOpen(true); setActive((activeIndex < 0 ? 0 : activeIndex) - 1); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!open) { setOpen(true); setActive(activeIndex < 0 ? 0 : activeIndex); } else { commitOption(activeIndex < 0 ? 0 : activeIndex); } }
+      if (e.key === 'Escape') { e.preventDefault(); setOpen(false); }
+    });
+
+    // Construcción inicial del menú y sincronización con select nativo
+    buildList();
+    // Marca visual inicial
+    const initialIndex = OPTIONS.findIndex(o => o.value === nativeSelect.value);
+    if (initialIndex >= 0) commitOption(initialIndex);
+
+    // ====== ENVÍO DEL FORM ======
     if (form) {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         const nombre  = document.getElementById('nombre')?.value?.trim() || '';
         const email   = document.getElementById('email')?.value?.trim() || '';
-        const tema    = document.getElementById('tema')?.value || '';
+        const tema    = nativeSelect.value || '';
         const message = document.getElementById('message')?.value?.trim() || '';
         const msgEl   = document.getElementById('formMsg');
 
@@ -174,35 +336,13 @@
           alert('¡Gracias por tu mensaje! Te contactaremos pronto.');
           if (msgEl) { msgEl.classList.remove('sr-only'); msgEl.textContent = '¡Enviado correctamente!'; }
           form.reset();
+          // Reset label
+          labelEl.textContent = '¿Qué tema te interesa?';
+          nativeSelect.value = '';
+          listbox.querySelectorAll('[role="option"]').forEach(li => li.setAttribute('aria-selected','false'));
         } else {
           if (msgEl) { msgEl.classList.remove('sr-only'); msgEl.textContent = 'Por favor completa todos los campos.'; }
         }
-      });
-    }
-
-    // Sincronización de flecha del select (abrir/cerrar)
-    if (wrapper && select) {
-      let openState = false;
-      const setOpen = (v) => {
-        openState = v;
-        wrapper.setAttribute('data-open', v ? 'true' : 'false');
-      };
-
-      // Foco: suele abrir (rotamos)
-      select.addEventListener('focus', () => setOpen(true));
-
-      // Click: si ya está abierto visualmente, alterna; si no, abre
-      select.addEventListener('click', () => setOpen(!openState));
-
-      // Cambio de valor cierra
-      select.addEventListener('change', () => setOpen(false));
-
-      // Blur cierra
-      select.addEventListener('blur', () => setOpen(false));
-
-      // Teclado (Esc/Enter/Tab) cierra
-      select.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' || e.key === 'Enter' || e.key === 'Tab') setOpen(false);
       });
     }
   });
