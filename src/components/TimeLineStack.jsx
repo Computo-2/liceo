@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import TimelineCard from "../components/LineTimeCard.jsx";
 
-/** items: [{ anio, src, alt, html?: string, desc?: ReactNode }] */
 export default function TimelineStack({
   items = [],
-  top = 96,        // altura donde “pega” cada tarjeta (ajusta si tienes navbar fija)
-  gap = 36,        // separación inicial entre tarjetas
-  padBottom = 1000, // espacio al final para soltar el stack y seguir la página
+  top = 96,
+  gap = 36,
+  padBottom = 1000, 
 }) {
   const [active, setActive] = useState(0);
   const refs = useRef([]);

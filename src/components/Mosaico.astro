@@ -1,0 +1,78 @@
+---
+interface Card {
+  eyebrow?: string;
+  title: string;
+  text: string;
+  ctaLabel: string;
+  ctaHref: string;
+  bgColor: string;
+}
+
+interface Props {
+  heading?: string;
+  description?: string;
+  items?: Card[];
+}
+
+const {
+  heading = "Educación para el presente y el futuro",
+  description = "Google siempre está probando, iterando y lanzando actualizaciones nuevas para mejorar nuestros productos y facilitar su uso.",
+  items = [
+    {
+      title: "Google Workspace for Education",
+      text: "Colabora en tiempo real, comparte archivos con facilidad y comunica a toda tu comunidad educativa.",
+      ctaLabel: "Explorar Google Workspace for Education",
+      ctaHref: "#workspace",
+      bgColor: "bg-red-100"
+    },
+    {
+      title: "Aprende estés donde estés con las Chromebooks",
+      text: "Dispositivos rápidos, seguros y fáciles de administrar con acceso a recursos educativos.",
+      ctaLabel: "Explorar Chromebooks",
+      ctaHref: "#chromebooks",
+      bgColor: "bg-yellow-100"
+    },
+    {
+      title: "Crea experiencias atractivas en Classroom",
+      text: "Optimiza tareas, fomenta la colaboración y dinamiza el aprendizaje con herramientas interactivas.",
+      ctaLabel: "Explorar Classroom",
+      ctaHref: "#classroom",
+      bgColor: "bg-green-100"
+    },
+    {
+      title: "Transforma la educación con Gemini",
+      text: "Personaliza el aprendizaje, automatiza tareas y mejora resultados con IA avanzada.",
+      ctaLabel: "Explorar Gemini",
+      ctaHref: "#gemini",
+      bgColor: "bg-blue-100"
+    }
+  ]
+} = Astro.props;
+---
+
+<section id="mosaico" class="bg-white py-20 sm:py-24">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">{heading}</h2>
+      <p class="mt-4 text-base sm:text-lg text-gray-600">{description}</p>
+    </div>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+      {items.map((card) => (
+        <article class={`${card.bgColor} relative flex min-h-[20rem] flex-col justify-between rounded-[28px] p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] ring-1 ring-black/5`}>
+
+          <div>
+            {card.eyebrow && <span class="text-sm font-medium text-gray-700">{card.eyebrow}</span>}
+            <h3 class="mt-2 text-2xl font-semibold tracking-tight">{card.title}</h3>
+            <p class="mt-3 text-[15px] text-gray-800">{card.text}</p>
+          </div>
+          <div class="mt-6">
+            <a href={card.ctaHref} class="inline-block text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800">
+              {card.ctaLabel}
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

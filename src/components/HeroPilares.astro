@@ -1,0 +1,284 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  ctaHref?: string;
+  ctaLabel?: string;
+  deviceImgSrc?: string;
+  deviceImgAlt?: string;
+  bgImgSrc?: string;
+}
+
+const {
+  title = "Un aprendizaje que ilumina el futuro",
+  subtitle = "Las herramientas de nuestra plataforma funcionan en conjunto para transformar la enseñanza y el aprendizaje de manera que todos los estudiantes y educadores puedan alcanzar su potencial.",
+  ctaHref = "#mosaico",
+  ctaLabel = "Más información",
+  // Screenshot del “dispositivo”
+  deviceImgSrc = "https://picsum.photos/id/1015/1200/800", // paisaje claro
+  deviceImgAlt = "Vista del producto en una laptop",
+  // Fondo tipo bosque
+  bgImgSrc = "https://picsum.photos/id/1056/1600/900" // bosque/árboles
+} = Astro.props;
+
+---
+
+<section class="bg-fade-target relative overflow-hidden">
+  <!-- Fondo -->
+  <div class="absolute inset-0 -z-10">
+    <img src={bgImgSrc} alt="" class="h-full w-full object-cover" loading="lazy" decoding="async" />
+    <div class="absolute inset-0 bg-gradient-to-t from-white via-white/90 to-white"></div>
+  </div>
+
+  <!-- Texto -->
+  <div class="mx-auto max-w-6xl px-6 pt-16 text-center sm:pt-20 md:pt-24">
+  <!-- Eyebrow / logo pequeño -->
+  <div class="mb-3 flex items-center justify-center gap-2 text-gray-700">
+    <!-- Si no tienes un logo, deja el span como eyebrow -->
+    <span class="text-sm font-medium">Google for Education</span>
+  </div>
+
+  <!-- H1 más compacto y grande -->
+  <h1 class="mx-auto max-w-5xl text-[clamp(2.75rem,6.2vw,4.75rem)] font-extrabold leading-[1.05] tracking-[-0.01em]">
+    {title}
+  </h1>
+
+  <!-- Subtítulo más angosto y claro -->
+  <p class="mx-auto mt-4 max-w-[42rem] text-[15px] text-gray-600">
+    {subtitle}
+  </p>
+
+  <div class="mt-6">
+    <a href={ctaHref} class="text-base font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800">
+      {ctaLabel}
+    </a>
+  </div>
+  <div class="mt-4 mb-4 flex justify-center">
+    <svg class="h-6 w-6 animate-bounce text-blue-700" fill="none" viewBox="0 0 24 24">
+      <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v14m0 0l-6-6m6 6l6-6"/>
+    </svg>
+  </div>
+</div>
+
+ 
+  <!-- acercamos el mockup al título y mejoramos el marco -->
+<div class="mt-20 mx-auto max-w-[80%] h-200 px-0 pb-14 ">
+    <!-- Pastillas verdes decorativas -->
+  <!-- izquierda -->
+<div aria-hidden="true" class="mt-100 pointer-events-none absolute left-40 top-[60%] hidden -translate-y-1/2 lg:block">
+  <div class="h-200 w-32 rounded-2xl bg-blue-600/90"></div>
+</div>
+<!-- derecha -->
+<div aria-hidden="true" class="mt-100 pointer-events-none absolute right-40 top-[60%] hidden -translate-y-1/2 lg:block">
+  <div class="h-200 w-32 rounded-2xl bg-blue-600/90"></div>
+</div>
+
+  <div class="relative mx-auto overflow-hidden rounded-[1.75rem] border border-gray-200 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+    <!-- bisel superior más alto -->
+    <div class="relative h-9 w-full bg-gray-900">
+      <!-- cámara centrada -->
+      <div class="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-700"></div>
+    </div>
+    <!-- Contenedor de la imagen (relative) -->
+<div class="relative inline-block w-full">
+  <img
+    src={deviceImgSrc}
+    alt={deviceImgAlt}
+    class="block w-full h-auto"
+    loading="eager"
+    decoding="async"
+  />
+
+  <!-- Barra izquierda pegada al borde -->
+  <div class="absolute inset-y-0 left-0 w-3 bg-gray-900"></div>
+
+  <!-- Barra derecha pegada al borde -->
+  <div class="absolute inset-y-0 right-0 w-3 bg-gray-900"></div>
+</div>
+
+  </div>
+</div>
+
+
+</section>
+
+<style is:inline>
+  /* opcional: hace el zoom más suave y habilita capas */
+  .pc-willchange { will-change: transform, opacity; transform-origin: center top; }
+</style>
+
+<script is:inline>
+(() => {
+  // 1) Frame (PC)
+  let frame = document.querySelector('div.rounded-\\[1\\.75rem\\].overflow-hidden.border.bg-white')
+    || document.querySelector('div[class*="rounded-\\[1\\.75rem\\]"][class*="overflow-hidden"][class*="border"][class*="bg-white"]');
+  if (!frame) return;
+
+  // 2) Contenedores
+  const stage   = frame.parentElement;
+  const section = frame.closest('section');
+  if (!stage || !section) return;
+
+  // 3) Fondos a apagar
+  let bgLayer = section.querySelector('div.absolute.inset-0.-z-10')
+    || section.querySelector('div[class*="absolute"][class*="inset-0"][class*="-z-10"]');
+  let gradientLayer = section.querySelector('div.bg-gradient-to-t')
+    || section.querySelector('div[class*="bg-gradient-to-"]');
+
+  // 4) Pastillas
+  const pills = stage.querySelectorAll('div[aria-hidden="true"].pointer-events-none');
+
+  // ---------- PERILLAS ----------
+  const minScale = 0.90;
+  const maxScale = 1.38;
+  const hideAtVh = 0.95;      // umbral para ocultar (bajando)
+  const collapseStart = 0.78; // cuándo empieza a colapsar altura
+  const extraLiftPx = 96;     // empuje adicional hacia arriba durante el colapso
+  const appearMargin = 0.10;  // al subir, reaparece cuando el top <= 10% del viewport
+
+  // Preparación
+  frame.style.willChange = 'transform';
+  frame.style.transformOrigin = 'center center';
+  stage.style.overflow = 'visible';
+  stage.style.willChange = (stage.style.willChange ? stage.style.willChange + ', ' : '') + 'height, transform';
+  if (bgLayer) bgLayer.style.willChange = 'opacity';
+  if (gradientLayer) gradientLayer.style.willChange = 'opacity';
+
+  const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
+
+  // 🧭 Dirección de scroll
+  let lastY = window.pageYOffset || document.documentElement.scrollTop || 0;
+  let dir   = 'down';
+
+  // 📐 Referencias CONSTANTES para el cálculo (no varían al colapsar)
+  const ref = { top: 0, height: 0 };
+  function measureRef() {
+    // medir altura natural sin transform/height forzados
+    const prevH = stage.style.height;
+    const prevT = stage.style.transform;
+    stage.style.height = '';
+    stage.style.transform = '';
+    ref.height = Math.max(stage.scrollHeight, stage.offsetHeight);
+    const rect = stage.getBoundingClientRect();
+    ref.top = rect.top + (window.scrollY || document.documentElement.scrollTop || 0);
+    // restaurar
+    stage.style.height = prevH;
+    stage.style.transform = prevT;
+    if (!ref.height) ref.height = frame.offsetHeight;
+  }
+  measureRef();
+
+  function apply() {
+    const vh = window.innerHeight;
+    const Y  = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+    // ✅ Progreso con referencias fijas
+    const t = clamp((vh + Y - ref.top) / (vh + ref.height), 0, 1);
+    const scale = minScale + (maxScale - minScale) * t;
+    frame.style.transform = `translateZ(0) scale(${scale})`;
+
+    // Geometría actual del stage (para saber si está intersectando)
+    const rect = stage.getBoundingClientRect();
+    const isIntersecting = rect.bottom > 0 && rect.top < vh;
+
+    // Regla base de ocultamiento (bajando): bottom cruza 72% del viewport o t≈1
+    const bottomFromViewport = (ref.top + ref.height) - Y; // en coords del doc
+    let shouldHide = t >= 0.999 || bottomFromViewport <= hideAtVh * vh;
+
+    // ⬆️ Reaparición temprana al subir: top vuelve a entrar por arriba (≤ margen)
+    let forceAppear = false;
+    if (dir === 'up' && isIntersecting) {
+      const topFromViewport = ref.top - Y; // distancia del top al viewport-top
+      if (topFromViewport <= appearMargin * vh) {
+        shouldHide = false;
+        forceAppear = true;
+      }
+    }
+
+    // Estado global para otros bloques
+    if (shouldHide) {
+      document.documentElement.setAttribute('data-hero-bg', 'off');
+    } else {
+      document.documentElement.removeAttribute('data-hero-bg');
+    }
+
+    // Mostrar/ocultar PC + pastillas
+    frame.style.visibility = shouldHide ? 'hidden' : 'visible';
+    frame.style.pointerEvents = shouldHide ? 'none' : 'auto';
+    pills.forEach(p => {
+      p.style.visibility = shouldHide ? 'hidden' : 'visible';
+      p.style.pointerEvents = shouldHide ? 'none' : 'auto';
+    });
+
+    // Fondo del hero → transparente si se oculta
+    if (bgLayer) bgLayer.style.opacity = shouldHide ? '0' : '1';
+    if (gradientLayer) gradientLayer.style.opacity = shouldHide ? '0' : '1';
+
+    // 🧩 Colapso de altura del STAGE (hacia arriba) con empuje
+    let c = clamp((t - collapseStart) / (1 - collapseStart), 0, 1);
+
+    // Si forzamos reaparición, cancelamos el colapso y restauramos
+    if (forceAppear) c = 0;
+
+    const lift = -(extraLiftPx * c);
+    stage.style.transform = c > 0 ? `translateY(${lift}px)` : '';
+
+    if ((c > 0 || (shouldHide && !forceAppear))) {
+      stage.style.overflow = 'hidden';
+      const targetH = Math.max(0, Math.round(ref.height * (1 - c)));
+      stage.style.height = targetH + 'px';
+      stage.style.transition = 'height .25s linear, transform .25s linear';
+    } else {
+      stage.style.transition = '';
+      stage.style.height = '';
+      stage.style.overflow = 'visible';
+    }
+
+    // Al ocultar por completo (y no forzar aparición), mantenemos un lift final
+    if (shouldHide && !forceAppear) {
+      stage.style.height = '0px';
+      stage.style.transform = `translateY(${-extraLiftPx}px)`;
+      stage.style.overflow = 'hidden';
+    }
+  }
+
+  let ticking = false;
+  const onScroll = () => {
+    const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    dir = (y < lastY) ? 'up' : 'down';
+    lastY = y;
+
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { apply(); ticking = false; });
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', () => { measureRef(); apply(); });
+
+  apply(); // primera pasada
+})();
+</script>
+
+
+
+
+<style>
+
+    /* Elementos marcados que deben apagarse cuando el hero oculta la PC */
+.bg-fade-target { opacity: 1; transition: opacity .45s ease; }
+
+:root[data-hero-bg="off"] .bg-fade-target {
+  opacity: 0;           /* Transparencia total */
+  pointer-events: none; /* Evitar interacción mientras está oculto */
+}
+
+/* Respeto a reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .bg-fade-target { transition: none !important; }
+}
+
+
+  </style>
+
+

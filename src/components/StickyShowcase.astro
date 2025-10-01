@@ -1,0 +1,101 @@
+---
+interface Step {
+  background: string;   // imagen de fondo por paso
+  screen?: string;      // screenshot opcional para este paso
+  alt?: string;         // alt del screenshot
+}
+
+interface Props {
+  steps: Step[];
+  initialScreen?: string;
+  deviceAlt?: string;
+  topOffsetClass?: string; // ej. "top-16"
+}
+
+const {
+  steps = [
+    {
+      // Bosque
+      background: "https://picsum.photos/id/1056/1920/1080",
+      screen:     "https://picsum.photos/id/1015/1200/800",
+      alt:        "Clase - Novedades"
+    },
+    {
+      // Patrón/colorido (sustituto del “plumas”)
+      background: "https://picsum.photos/id/1025/1920/1080",
+      screen:     "https://picsum.photos/id/1043/1200/800",
+      alt:        "Ficha - Biomas del mundo"
+    },
+    {
+      // Selva/montaña verde
+      background: "https://picsum.photos/id/1039/1920/1080",
+      screen:     "https://picsum.photos/id/1024/1200/800",
+      alt:        "Selvas tropicales"
+    }
+  ],
+  // Pantalla inicial (si no cambias por step)
+  initialScreen = "https://picsum.photos/id/1015/1200/800",
+  deviceAlt = "Vista del producto",
+  topOffsetClass = "top-16"
+} = Astro.props;
+
+---
+<section class="relative min-h-[110vh] sm:min-h-[120vh] data-step={i}">
+  <!-- Pila de secciones de fondo -->
+   <div class="pointer-events-none absolute inset-x-0 -top-10 h-16 bg-gradient-to-b from-white to-transparent z-20"></div>
+  <div class="relative">
+    {steps.map((s, i) => (
+      <section class="relative min-h-[110vh] sm:min-h-[120vh]" data-step={i}>
+        <div class="absolute inset-0 -z-20">
+  <!-- fondo como background con parallax -->
+   <div style={`background-image:url('${s.background}')`} class="h-full w-full bg-cover bg-center bg-fixed"></div>
+  <!-- degradado para fundirse hacia arriba -->
+  <div class="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent"></div>
+</div>
+        <!-- marcador de intersección -->
+         <div class="absolute top-[40vh]" data-step-marker={i}></div>
+      </section>
+    ))}
+  </div>
+</section>
+
+  <!-- datos en JSON seguros -->
+  <script type="application/json" id="steps-data">
+    {JSON.stringify(steps)}
+  </script>
+
+  <!-- Cambiar screenshot al entrar cada paso -->
+  
+  <script is:inline>
+  const dataTag = document.getElementById('steps-data');
+  let steps = [];
+  try { steps = JSON.parse(dataTag?.textContent || '[]'); } catch {}
+  const screen = document.getElementById('sticky-screen');
+
+  if (steps && steps.some(s => s.screen) && screen) {
+    const markers = Array.from(document.querySelectorAll('[data-step-marker]'));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const idx = Number(e.target.getAttribute('data-step-marker'));
+          const s = steps[idx];
+          if (s?.screen && screen.getAttribute('src') !== s.screen) {
+            screen.style.opacity = '0';
+            setTimeout(() => {
+              screen.setAttribute('src', s.screen);
+              if (s?.alt) screen.setAttribute('alt', s.alt);
+              // cuando cargue, volvemos a hacer visible
+              screen.onload = () => (screen.style.opacity = '1');
+            }, 120);
+          }
+        }
+      });
+    }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
+    markers.forEach(m => io.observe(m));
+  }
+</script>
+
+  <style is:global>
+  .fade-swap { transition: opacity .4s ease; }
+</style>
+
