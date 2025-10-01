@@ -23,7 +23,7 @@ const {
 
 ---
 
-<section class="relative overflow-hidden">
+<section class="bg-fade-target relative overflow-hidden">
   <!-- Fondo -->
   <div class="absolute inset-0 -z-10">
     <img src={bgImgSrc} alt="" class="h-full w-full object-cover" loading="lazy" decoding="async" />
@@ -60,11 +60,9 @@ const {
   </div>
 </div>
 
-
-
-  <!-- Mockup -->
+ 
   <!-- acercamos el mockup al título y mejoramos el marco -->
-<div class="mt-40 mx-auto max-w-[80%] h-200 px-0 pb-14 ">
+<div class="mt-20 mx-auto max-w-[80%] h-200 px-0 pb-14 ">
     <!-- Pastillas verdes decorativas -->
   <!-- izquierda -->
 <div aria-hidden="true" class="mt-100 pointer-events-none absolute left-40 top-[60%] hidden -translate-y-1/2 lg:block">
@@ -110,67 +108,177 @@ const {
 </style>
 
 <script is:inline>
-(function () {
-  // Marco de la “PC”: tu div con rounded-[1.75rem] + overflow-hidden
-  const frame = document.querySelector('div.rounded-\\[1\\.75rem\\].overflow-hidden');
+(() => {
+  // 1) Frame (PC)
+  let frame = document.querySelector('div.rounded-\\[1\\.75rem\\].overflow-hidden.border.bg-white')
+    || document.querySelector('div[class*="rounded-\\[1\\.75rem\\]"][class*="overflow-hidden"][class*="border"][class*="bg-white"]');
   if (!frame) return;
 
-  // El "stage" es su contenedor directo (tu <div class="mt-40 mx-auto max-w-[80%] ...">)
-  const stage = frame.parentElement;
+  // 2) Contenedores
+  const stage   = frame.parentElement;
+  const section = frame.closest('section');
+  if (!stage || !section) return;
 
-  // Pastillas (para ocultarlas al mismo tiempo que la PC)
+  // 3) Fondos a apagar
+  let bgLayer = section.querySelector('div.absolute.inset-0.-z-10')
+    || section.querySelector('div[class*="absolute"][class*="inset-0"][class*="-z-10"]');
+  let gradientLayer = section.querySelector('div.bg-gradient-to-t')
+    || section.querySelector('div[class*="bg-gradient-to-"]');
+
+  // 4) Pastillas
   const pills = stage.querySelectorAll('div[aria-hidden="true"].pointer-events-none');
 
-  // ===== perillas =====
-  const minScale = 0.95;   // tamaño al entrar (más pequeño = se nota más el zoom)
-  const maxScale = 1.35;   // tamaño al salir (a qué tamaño máximo llega)
-  const hideAtVh = 0.72;   // punto de corte: cuando el bottom del stage cruza 66% del viewport, se oculta sin fade
+  // ---------- PERILLAS ----------
+  const minScale = 0.90;
+  const maxScale = 1.38;
+  const hideAtVh = 0.95;      // umbral para ocultar (bajando)
+  const collapseStart = 0.78; // cuándo empieza a colapsar altura
+  const extraLiftPx = 96;     // empuje adicional hacia arriba durante el colapso
+  const appearMargin = 0.10;  // al subir, reaparece cuando el top <= 10% del viewport
 
-  // QoL/perf
-  frame.style.willChange = 'transform, opacity';
-  frame.style.transformOrigin = 'center top';
+  // Preparación
+  frame.style.willChange = 'transform';
+  frame.style.transformOrigin = 'center center';
+  stage.style.overflow = 'visible';
+  stage.style.willChange = (stage.style.willChange ? stage.style.willChange + ', ' : '') + 'height, transform';
+  if (bgLayer) bgLayer.style.willChange = 'opacity';
+  if (gradientLayer) gradientLayer.style.willChange = 'opacity';
 
   const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
 
-  function apply() {
-    const vh   = window.innerHeight;
+  // 🧭 Dirección de scroll
+  let lastY = window.pageYOffset || document.documentElement.scrollTop || 0;
+  let dir   = 'down';
+
+  // 📐 Referencias CONSTANTES para el cálculo (no varían al colapsar)
+  const ref = { top: 0, height: 0 };
+  function measureRef() {
+    // medir altura natural sin transform/height forzados
+    const prevH = stage.style.height;
+    const prevT = stage.style.transform;
+    stage.style.height = '';
+    stage.style.transform = '';
+    ref.height = Math.max(stage.scrollHeight, stage.offsetHeight);
     const rect = stage.getBoundingClientRect();
+    ref.top = rect.top + (window.scrollY || document.documentElement.scrollTop || 0);
+    // restaurar
+    stage.style.height = prevH;
+    stage.style.transform = prevT;
+    if (!ref.height) ref.height = frame.offsetHeight;
+  }
+  measureRef();
 
-    // Progreso de paso por el viewport (0→1). Sólo lo usamos para ESCALA.
-    const t = clamp((vh - rect.top) / (vh + rect.height), 0, 1);
+  function apply() {
+    const vh = window.innerHeight;
+    const Y  = window.pageYOffset || document.documentElement.scrollTop || 0;
 
-    // Zoom (sin transparencia progresiva)
+    // ✅ Progreso con referencias fijas
+    const t = clamp((vh + Y - ref.top) / (vh + ref.height), 0, 1);
     const scale = minScale + (maxScale - minScale) * t;
-    frame.style.transform = `translate3d(0,0,0) scale(${scale})`;
-    frame.style.opacity   = '1'; // siempre opaca mientras sea visible
+    frame.style.transform = `translateZ(0) scale(${scale})`;
 
-    // Punto de corte (oculta de golpe PC y pastillas)
-    const shouldHide = rect.bottom <= vh * hideAtVh;
-    const vis = shouldHide ? 'hidden' : 'visible';
+    // Geometría actual del stage (para saber si está intersectando)
+    const rect = stage.getBoundingClientRect();
+    const isIntersecting = rect.bottom > 0 && rect.top < vh;
 
-    frame.style.visibility = vis;
-    // Opcional: quita clicks cuando esté oculta (por si tuvieras elementos interactivos detrás)
+    // Regla base de ocultamiento (bajando): bottom cruza 72% del viewport o t≈1
+    const bottomFromViewport = (ref.top + ref.height) - Y; // en coords del doc
+    let shouldHide = t >= 0.999 || bottomFromViewport <= hideAtVh * vh;
+
+    // ⬆️ Reaparición temprana al subir: top vuelve a entrar por arriba (≤ margen)
+    let forceAppear = false;
+    if (dir === 'up' && isIntersecting) {
+      const topFromViewport = ref.top - Y; // distancia del top al viewport-top
+      if (topFromViewport <= appearMargin * vh) {
+        shouldHide = false;
+        forceAppear = true;
+      }
+    }
+
+    // Estado global para otros bloques
+    if (shouldHide) {
+      document.documentElement.setAttribute('data-hero-bg', 'off');
+    } else {
+      document.documentElement.removeAttribute('data-hero-bg');
+    }
+
+    // Mostrar/ocultar PC + pastillas
+    frame.style.visibility = shouldHide ? 'hidden' : 'visible';
     frame.style.pointerEvents = shouldHide ? 'none' : 'auto';
-
     pills.forEach(p => {
-      p.style.visibility = vis;
+      p.style.visibility = shouldHide ? 'hidden' : 'visible';
       p.style.pointerEvents = shouldHide ? 'none' : 'auto';
-      // Sin efectos progresivos:
-      p.style.opacity = '1';
-      p.style.transform = 'none';
     });
+
+    // Fondo del hero → transparente si se oculta
+    if (bgLayer) bgLayer.style.opacity = shouldHide ? '0' : '1';
+    if (gradientLayer) gradientLayer.style.opacity = shouldHide ? '0' : '1';
+
+    // 🧩 Colapso de altura del STAGE (hacia arriba) con empuje
+    let c = clamp((t - collapseStart) / (1 - collapseStart), 0, 1);
+
+    // Si forzamos reaparición, cancelamos el colapso y restauramos
+    if (forceAppear) c = 0;
+
+    const lift = -(extraLiftPx * c);
+    stage.style.transform = c > 0 ? `translateY(${lift}px)` : '';
+
+    if ((c > 0 || (shouldHide && !forceAppear))) {
+      stage.style.overflow = 'hidden';
+      const targetH = Math.max(0, Math.round(ref.height * (1 - c)));
+      stage.style.height = targetH + 'px';
+      stage.style.transition = 'height .25s linear, transform .25s linear';
+    } else {
+      stage.style.transition = '';
+      stage.style.height = '';
+      stage.style.overflow = 'visible';
+    }
+
+    // Al ocultar por completo (y no forzar aparición), mantenemos un lift final
+    if (shouldHide && !forceAppear) {
+      stage.style.height = '0px';
+      stage.style.transform = `translateY(${-extraLiftPx}px)`;
+      stage.style.overflow = 'hidden';
+    }
   }
 
   let ticking = false;
-  function onScroll() {
+  const onScroll = () => {
+    const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    dir = (y < lastY) ? 'up' : 'down';
+    lastY = y;
+
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => { apply(); ticking = false; });
-  }
+  };
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', apply);
-  apply(); // primer pintado
+  window.addEventListener('resize', () => { measureRef(); apply(); });
+
+  apply(); // primera pasada
 })();
 </script>
+
+
+
+
+<style>
+
+    /* Elementos marcados que deben apagarse cuando el hero oculta la PC */
+.bg-fade-target { opacity: 1; transition: opacity .45s ease; }
+
+:root[data-hero-bg="off"] .bg-fade-target {
+  opacity: 0;           /* Transparencia total */
+  pointer-events: none; /* Evitar interacción mientras está oculto */
+}
+
+/* Respeto a reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .bg-fade-target { transition: none !important; }
+}
+
+
+  </style>
+
 

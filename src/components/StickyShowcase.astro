@@ -40,7 +40,6 @@ const {
 } = Astro.props;
 
 ---
-
 <section class="relative min-h-[110vh] sm:min-h-[120vh] data-step={i}">
   <!-- Pila de secciones de fondo -->
    <div class="pointer-events-none absolute inset-x-0 -top-10 h-16 bg-gradient-to-b from-white to-transparent z-20"></div>
@@ -58,7 +57,7 @@ const {
       </section>
     ))}
   </div>
-  </div>
+</section>
 
   <!-- datos en JSON seguros -->
   <script type="application/json" id="steps-data">
@@ -99,4 +98,4 @@ const {
   <style is:global>
   .fade-swap { transition: opacity .4s ease; }
 </style>
-</section>
+
