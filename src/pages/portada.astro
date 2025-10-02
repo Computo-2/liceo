@@ -1,5 +1,5 @@
 <!-- Componente sin lógica -->
-<section class="relative flex items-center justify-center min-h-[35svh] md:min-h-[72svh] lg:min-h-[87vh] overflow-hidden font-sans text-2xl">
+<section class="relative flex items-center justify-center min-h-[35svh] md:min-h-[60svh] lg:min-h-[70svh] overflow-hidden font-sans text-2xl">
   <!-- Contenedor del video de fondo -->
   <div class="absolute inset-0 overflow-hidden -z-10 bg-black">
     <iframe
@@ -10,16 +10,16 @@
       title="Background video"
     ></iframe>
 
-    <!-- Degradado inferior -->
-    <div class="pointer-events-none absolute bottom-0 left-0 w-full h-[120px] md:h-[160px] lg:h-[200px] bg-gradient-to-t from-[rgba(192,190,190,0.8)] to-transparent z-10"></div>
+    <!-- Degradado inferior (un poco más corto) -->
+    <div class="pointer-events-none absolute bottom-0 left-0 w-full h-[90px] md:h-[120px] lg:h-[140px] bg-gradient-to-t from-[rgba(192,190,190,0.8)] to-transparent z-10"></div>
   </div>
 
   <!-- Imagen flotante -->
-  <div class="absolute bottom-[12px] right-[12px] z-10 md:bottom-[24px] md:right-[24px]">
+  <div class="absolute bottom-[12px] right-[12px] z-10 md:bottom-[20px] md:right-[20px]">
     <img
       src="/CONTACTANOS.svg"
       alt="Liceo Michoacano"
-      class="w-[130px] md:w-[260px] lg:w-[300px] max-w-full cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95"
+      class="w-[130px] md:w-[230px] lg:w-[260px] max-w-full cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95"
     />
   </div>
 </section>
@@ -28,49 +28,56 @@
   /* En <head>:
      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> */
 
-  .vf-iframe {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    border: 0;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    background: transparent;
+  .vf-iframe{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border:0;
+    pointer-events:none;
+    background:transparent;
+    transition:transform .3s ease;
   }
 
-  /* ===== Móvil: CONTAIN (video completo, aunque con franjas) ===== */
-  @media (max-width: 768px) and (min-aspect-ratio: 16/9) {
-    .vf-iframe {
-      width: calc(100dvh * 16 / 9);
-      height: 100dvh;
+  /* ===== MÓVIL: CONTAIN (video completo) ===== */
+  /* pantalla más ancha que 16:9 → dimensionar por alto */
+  @media (max-width:768px) and (min-aspect-ratio:16/9){
+    .vf-iframe{
+      width:calc(100dvh * 16 / 9);
+      height:100dvh;
     }
   }
-  @media (max-width: 768px) and (max-aspect-ratio: 16/9) {
-    .vf-iframe {
-      width: 100dvw;
-      height: calc(100dvw * 9 / 16);
+  /* pantalla más alta que 16:9 → dimensionar por ancho */
+  @media (max-width:768px) and (max-aspect-ratio:16/9){
+    .vf-iframe{
+      width:100dvw;
+      height:calc(100dvw * 9 / 16);
+    }
+  }
+  @media (max-width:768px){
+    .vf-iframe{ top:65%; } /* el encuadre que te gustó */
+  }
+
+  /* ===== iPad & DESKTOP: COVER con overscan (sin barras) ===== */
+  /* más ancha que 16:9 → dimensionamos por ancho */
+  @media (min-width:769px) and (min-aspect-ratio:16/9){
+    .vf-iframe{
+      width:108dvw;    /* overscan para matar bordes */
+      height:60.75dvw; /* 56.25% * 1.08 */
+      top:55%;         /* encuadre un pelín abajo */
+    }
+  }
+  /* más alta que 16:9 → dimensionamos por alto */
+  @media (min-width:769px) and (max-aspect-ratio:16/9){
+    .vf-iframe{
+      width:192dvh;    /* 177.78% * 1.08 */
+      height:108dvh;   /* overscan */
+      top:55%;
     }
   }
 
-  /* ===== iPad y Desktop: COVER (sin franjas, puede recortar) ===== */
-  @media (min-width: 769px) and (min-aspect-ratio: 16/9) {
-    .vf-iframe {
-      width: 110dvw;   /* overscan para matar bordes blancos */
-      height: 61.9dvw;
-    }
-  }
-  @media (min-width: 769px) and (max-aspect-ratio: 16/9) {
-    .vf-iframe {
-      width: 196dvh;
-      height: 110dvh;
-    }
-  }
-
-  /* Ajuste de encuadre */
-  @media (max-width: 768px) { .vf-iframe { top: 65%; } }
-  @media (min-width: 769px) { .vf-iframe { top: 50%; } }
-
-  @supports (-webkit-touch-callout: none) {
-    .vf-iframe { will-change: transform; }
+  /* iOS perf hint */
+  @supports (-webkit-touch-callout:none){
+    .vf-iframe{ will-change:transform; }
   }
 </style>
