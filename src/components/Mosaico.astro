@@ -6,6 +6,8 @@ interface Card {
   ctaLabel: string;
   ctaHref: string;
   bgColor: string;
+  images?: string[];
+  details?: string;
 }
 
 interface Props {
@@ -21,30 +23,54 @@ const {
     {
       title: "Google Workspace for Education",
       text: "Colabora en tiempo real, comparte archivos con facilidad y comunica a toda tu comunidad educativa.",
-      ctaLabel: "Explorar Google Workspace for Education",
+      ctaLabel: "Explorar Google Workspace",
       ctaHref: "#workspace",
-      bgColor: "bg-red-100"
+      bgColor: "bg-red-100",
+      images: [
+        "https://picsum.photos/id/1015/400/260",
+        "https://picsum.photos/id/1025/400/260",
+        "https://picsum.photos/id/1039/400/260"
+      ],
+      details: "Suite colaborativa para aulas y directivos: documentos, hojas de cálculo, presentaciones y comunicación en un mismo lugar."
     },
     {
-      title: "Aprende estés donde estés con las Chromebooks",
+      title: "Chromebooks para aprender en cualquier lugar",
       text: "Dispositivos rápidos, seguros y fáciles de administrar con acceso a recursos educativos.",
       ctaLabel: "Explorar Chromebooks",
       ctaHref: "#chromebooks",
-      bgColor: "bg-yellow-100"
+      bgColor: "bg-yellow-100",
+      images: [
+        "https://picsum.photos/id/1043/400/260",
+        "https://picsum.photos/id/1056/400/260",
+        "https://picsum.photos/id/1024/400/260"
+      ],
+      details: "Arranque veloz, batería de larga duración y administración simple para TI con actualizaciones automáticas."
     },
     {
-      title: "Crea experiencias atractivas en Classroom",
+      title: "Experiencias atractivas en Classroom",
       text: "Optimiza tareas, fomenta la colaboración y dinamiza el aprendizaje con herramientas interactivas.",
       ctaLabel: "Explorar Classroom",
       ctaHref: "#classroom",
-      bgColor: "bg-green-100"
+      bgColor: "bg-green-100",
+      images: [
+        "https://picsum.photos/id/1005/400/260",
+        "https://picsum.photos/id/1006/400/260",
+        "https://picsum.photos/id/1008/400/260"
+      ],
+      details: "Asignaciones, rúbricas, comentarios y calificaciones centralizados para docentes y estudiantes."
     },
     {
-      title: "Transforma la educación con Gemini",
+      title: "Transformación con Gemini",
       text: "Personaliza el aprendizaje, automatiza tareas y mejora resultados con IA avanzada.",
       ctaLabel: "Explorar Gemini",
       ctaHref: "#gemini",
-      bgColor: "bg-blue-100"
+      bgColor: "bg-blue-100",
+      images: [
+        "https://picsum.photos/id/1011/400/260",
+        "https://picsum.photos/id/1012/400/260",
+        "https://picsum.photos/id/1013/400/260"
+      ],
+      details: "Asistentes de IA para preparar clases, crear recursos y retroalimentar trabajos con seguridad institucional."
     }
   ]
 } = Astro.props;
@@ -57,22 +83,121 @@ const {
       <p class="mt-4 text-base sm:text-lg text-gray-600">{description}</p>
     </div>
 
-    <div class="mt-12 grid gap-6 sm:grid-cols-2">
-      {items.map((card) => (
-        <article class={`${card.bgColor} relative flex min-h-[20rem] flex-col justify-between rounded-[28px] p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] ring-1 ring-black/5`}>
+    <div class="mt-12 grid gap-6 lg:grid-cols-2 ">
+      {items.map((card, idx) => (
+        <article
+          class={`${card.bgColor} group relative isolate flex min-h-[25rem] flex-col rounded-[28px] p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] ring-1 ring-black/5`}
+          data-card
+          data-open="false"
+        >
+          {/* vista base*/}
+          <div data-primary class="grid content-between gap-6 transition duration-300">
+            <div>
+              {card.eyebrow && <span class="text-sm font-medium text-gray-700">{card.eyebrow}</span>}
+              <h3 class="mt-2 text-2xl font-semibold tracking-tight">{card.title}</h3>
+              <p class="mt-3 text-[15px] text-gray-800">{card.text}</p>
+            </div>
 
-          <div>
-            {card.eyebrow && <span class="text-sm font-medium text-gray-700">{card.eyebrow}</span>}
-            <h3 class="mt-2 text-2xl font-semibold tracking-tight">{card.title}</h3>
-            <p class="mt-3 text-[15px] text-gray-800">{card.text}</p>
+            <div class="flex items-center justify-between">
+              <a href={card.ctaHref} class="text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800">
+                {card.ctaLabel}
+              </a>
+
+              {/* Botón que sirve para cambiar el contenido */}
+              <button
+                type="button"
+                class="js-toggle inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-2 text-sm font-medium shadow ring-1 ring-black/10 backdrop-blur hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/60"
+                aria-expanded="false"
+                aria-controls={`reveal-${idx}`}
+              >
+                Ver más
+                <svg class="js-icon h-4 w-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
           </div>
-          <div class="mt-6">
-            <a href={card.ctaHref} class="inline-block text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800">
-              {card.ctaLabel}
-            </a>
+
+          {/* Capa emergente  */}
+          <div
+            id={`reveal-${idx}`}
+            data-secondary
+            class="pointer-events-none absolute inset-0 z-10 rounded-[28px] bg-white/95 p-10 opacity-0 shadow-lg ring-1 ring-black/5 transition duration-300 backdrop-blur translate-y-2"
+          >
+
+            {/* FOTOS */}
+            <div class="grid grid-cols-3 gap-3">
+              {(card.images ?? []).slice(0,3).map((src) => (
+                <img src={src} alt="" loading="lazy" decoding="async"
+                     class="h-28 w-full rounded-xl object-cover shadow-sm" />
+              ))}
+            </div>
+
+            {/* TEXTO */}
+            <div class="mt-5">
+              <h4 class="text-lg font-semibold">{card.title}</h4>
+              <p class="mt-2 text-[15px] text-gray-700">{card.details ?? "Contenido adicional de la tarjeta. Agregar descripción, beneficios o ejemplos de uso."}</p>
+              <div class="flex items-center justify-between">
+              <a href={card.ctaHref} class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800">
+                {card.ctaLabel}
+                <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true">
+                  <path d="M5 12h14M13 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+              <div class=" flex items-center justify-end">
+              <button
+                type="button"
+                class="js-toggle inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-sm font-medium shadow ring-1 ring-black/10 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/60"
+                aria-expanded="true"
+                aria-controls={`reveal-${idx}`}
+              >
+                Cerrar
+                <svg class="js-icon h-4 w-4 rotate-180 transition-transform duration-300" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            </div>
+            </div>
           </div>
         </article>
       ))}
     </div>
   </div>
+
+  <style is:global>
+    [data-card][data-open="true"] [data-primary] {
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+    }
+    [data-card][data-open="true"] [data-secondary] {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    [data-card][data-open="true"] .js-icon {
+      transform: rotate(180deg);
+    }
+  </style>
+
+  <script is:inline>
+
+    (() => {
+      const cards = Array.from(document.querySelectorAll('[data-card]'));
+      cards.forEach(card => {
+        const toggles = card.querySelectorAll('.js-toggle');
+        const btns = Array.from(toggles);
+        btns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const open = card.getAttribute('data-open') === 'true';
+            const next = !open;
+            card.setAttribute('data-open', String(next));
+            btns.forEach(b => b.setAttribute('aria-expanded', String(next)));
+          });
+        });
+      });
+    })();
+  </script>
 </section>
+
