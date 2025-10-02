@@ -1,134 +1,83 @@
-<style>
-  section {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 87vh;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    font-size: 2rem;
-  }
-
-  .video-fondo {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    z-index: -1;
-  }
-
-  .video-fondo iframe {
-    position: absolute;
-    top: 75%; /* por defecto en PC */
-    left: 50%;
-    border: 0;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    transition: all 0.4s ease-in-out;
-  }
-
-  /* Degradado en la parte inferior */
-  .video-fondo::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    background: linear-gradient(to top, rgba(192, 190, 190, 0.8), transparent);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  @media (min-aspect-ratio: 16/9) {
-    .video-fondo iframe {
-      width: 100vw;
-      height: 56.25vw;
-    }
-  }
-
-  @media (max-aspect-ratio: 16/9) {
-    .video-fondo iframe {
-      width: 177.78vh;
-      height: 100vh;
-    }
-  }
-
-  /* SOLO ajuste en móviles */
-  @media (max-width: 768px) {
-    .video-fondo iframe {
-      top: 69%;
-    }
-  }
-
-  /* Tablets (iPad, etc.) */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .video-fondo iframe {
-    top: 67%;
-  }
-}
-
-@media (min-width: 900px) and (max-width: 1400px) {
-  .video-fondo iframe {
-    width: 110vw;
-    height: 61vw;
-    top: 52%;
-  }
-}
-
-@media (min-width: 1921px) {
-  .video-fondo iframe {
-    width: 115vw;
-    height: 63vw;
-    top: 56%;
-  }
-}
-
-  .imagen-container {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    z-index: 10;
-  }
-
-  .imagen-container img {
-    width: 300px;
-    height: auto;
-    max-width: 100%;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .imagen-container img:hover {
-    transform: scale(1.05);
-  }
-
-  .imagen-container img:active {
-    transform: scale(0.95);
-  }
-
-  @media (max-width: 768px) {
-    .imagen-container {
-      bottom: 15px;
-      right: 15px;
-    }
-
-    .imagen-container img {
-      width: 150px;
-    }
-  }
-</style>
-
-<section class="relative min-h-[80vh] overflow-hidden pt-60">
-  <div class="video-fondo">
+<!-- Componente sin lógica -->
+<section class="relative flex items-center justify-center min-h-[35svh] md:min-h-[60svh] lg:min-h-[70svh] overflow-hidden font-sans text-2xl">
+  <!-- Contenedor del video de fondo -->
+  <div class="absolute inset-0 overflow-hidden -z-10 bg-black">
     <iframe
+      class="vf-iframe"
       src="https://player.vimeo.com/video/1116858454?background=1&autoplay=1&muted=1&loop=1&playsinline=1"
       allow="autoplay; fullscreen; picture-in-picture"
       allowfullscreen
+      title="Background video"
     ></iframe>
+
+    <!-- Degradado inferior (un poco más corto) -->
+    <div class="pointer-events-none absolute bottom-0 left-0 w-full h-[90px] md:h-[120px] lg:h-[140px] bg-gradient-to-t from-[rgba(192,190,190,0.8)] to-transparent z-10"></div>
   </div>
 
-  <div class="imagen-container">
-    <img src="/CONTACTANOS.svg" alt="Liceo Michoacano" />
+  <!-- Imagen flotante -->
+  <div class="absolute bottom-[12px] right-[12px] z-10 md:bottom-[20px] md:right-[20px]">
+    <img
+      src="/CONTACTANOS.svg"
+      alt="Liceo Michoacano"
+      class="w-[130px] md:w-[230px] lg:w-[260px] max-w-full cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95"
+    />
   </div>
 </section>
+
+<style is:global>
+  /* En <head>:
+     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> */
+
+  .vf-iframe{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    border:0;
+    pointer-events:none;
+    background:transparent;
+    transition:transform .3s ease;
+  }
+
+  /* ===== MÓVIL: CONTAIN (video completo) ===== */
+  /* pantalla más ancha que 16:9 → dimensionar por alto */
+  @media (max-width:768px) and (min-aspect-ratio:16/9){
+    .vf-iframe{
+      width:calc(100dvh * 16 / 9);
+      height:100dvh;
+    }
+  }
+  /* pantalla más alta que 16:9 → dimensionar por ancho */
+  @media (max-width:768px) and (max-aspect-ratio:16/9){
+    .vf-iframe{
+      width:100dvw;
+      height:calc(100dvw * 9 / 16);
+    }
+  }
+  @media (max-width:768px){
+    .vf-iframe{ top:65%; } /* el encuadre que te gustó */
+  }
+
+  /* ===== iPad & DESKTOP: COVER con overscan (sin barras) ===== */
+  /* más ancha que 16:9 → dimensionamos por ancho */
+  @media (min-width:769px) and (min-aspect-ratio:16/9){
+    .vf-iframe{
+      width:108dvw;    /* overscan para matar bordes */
+      height:60.75dvw; /* 56.25% * 1.08 */
+      top:55%;         /* encuadre un pelín abajo */
+    }
+  }
+  /* más alta que 16:9 → dimensionamos por alto */
+  @media (min-width:769px) and (max-aspect-ratio:16/9){
+    .vf-iframe{
+      width:192dvh;    /* 177.78% * 1.08 */
+      height:108dvh;   /* overscan */
+      top:55%;
+    }
+  }
+
+  /* iOS perf hint */
+  @supports (-webkit-touch-callout:none){
+    .vf-iframe{ will-change:transform; }
+  }
+</style>
