@@ -1,0 +1,97 @@
+---
+const fbPageUrl = "https://www.facebook.com/liceomichoacano";
+---
+
+<main class="mx-auto max-w-6xl px-4 py-10">
+  <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">
+    Síguenos en redes
+  </h1>
+
+  <!-- Contenedor en grid -->
+  <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <!-- Facebook -->
+    <div class="bg-white p-4 rounded-2xl border-2 border-gray-300 shadow-lg flex flex-col h-[500px]">
+      <h2 class="text-xl font-semibold mb-4 text-center text-blue-600">Facebook</h2>
+      <div class="flex-1 overflow-hidden w-full">
+        <div
+          class="fb-page rounded-lg w-full"
+          data-href={fbPageUrl}
+          data-tabs="timeline"
+          data-width="500"
+          data-height="380"
+          data-adapt-container-width="true"
+          data-hide-cover="false"
+          data-show-facepile="false"
+        >
+          <blockquote cite={fbPageUrl} class="fb-xfbml-parse-ignore">
+            <a href={fbPageUrl}>Liceo Michoacano</a>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+
+    <!-- TikTok -->
+    <div class="bg-white p-4 rounded-2xl border-2 border-gray-300 shadow-lg flex flex-col h-[500px]">
+      <h2 class="text-xl font-semibold mb-4 text-center text-pink-600">TikTok</h2>
+      <div class="flex-1 overflow-hidden">
+        <blockquote
+          class="tiktok-embed h-full"
+          cite="https://www.tiktok.com/@liceomich"
+          data-unique-id="liceomich"
+          data-embed-type="creator"
+          style="max-width: 100%; height: 100%; margin: 0 auto;"
+        >
+          <section>
+            <a target="_blank" href="https://www.tiktok.com/@liceomich"
+              >@liceomich</a
+            >
+          </section>
+        </blockquote>
+      </div>
+    </div>
+
+    <!-- Instagram -->
+    <div class="bg-white p-4 rounded-2xl border-2 border-gray-300 shadow-lg flex flex-col h-[500px]">
+      <h2 class="text-xl font-semibold mb-4 text-center text-purple-600">Instagram</h2>
+      <div class="w-full aspect-[4/5] overflow-hidden rounded-md">
+        <iframe
+          src="https://www.instagram.com/liceomich/embed"
+          class="w-full h-full rounded-lg"
+          frameborder="0"
+          allowtransparency="true"
+          allow="encrypted-media"
+          scrolling="no"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- SDK de Facebook -->
+<div id="fb-root"></div>
+<script is:inline>
+  (function (d, s, id) {
+    if (d.getElementById(id)) return;
+    var js = d.createElement(s);
+    js.id = id;
+    js.src =
+      "https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v19.0";
+    var fjs = d.getElementsByTagName(s)[0];
+    fjs.parentNode.insertBefore(js, fjs);
+  })(document, "script", "facebook-jssdk");
+</script>
+
+<!-- Script TikTok -->
+<script is:inline>
+  (function (d, s, id) {
+    if (d.getElementById(id)) return;
+    var js = d.createElement(s);
+    js.id = id;
+    js.async = true;
+    js.src = "https://www.tiktok.com/embed.js";
+    var fjs = d.getElementsByTagName(s)[0];
+    fjs.parentNode.insertBefore(js, fjs);
+  })(document, "script", "tiktok-embed-js");
+</script>
