@@ -106,15 +106,22 @@ const {
     || section.querySelector('div[class*="absolute"][class*="inset-0"][class*="-z-10"]');
   let gradientLayer = section.querySelector('div.bg-gradient-to-t')
     || section.querySelector('div[class*="bg-gradient-to-"]');
-
   const pills = stage.querySelectorAll('div[aria-hidden="true"].pointer-events-none');
 
+  // ------- PERILLAS -------
   const minScale = 0.90;
   const maxScale = 1.38;
-  const hideAtVh = 0.95;
+
+  // Umbral para ocultar (bajando). Súbelo para ocultar antes.
+  const hideAtVh = 0.86;      // antes 0.95
+  const hideLeadPx = 48;      // adelanta ocultación en px
+
+  // Umbral para mostrar (subiendo). Más grande = aparece antes.
+  const appearMargin = 0.12;  // 12% del viewport
+  const showLeadPx   = 16;    // colchón extra
+
   const collapseStart = 0.78;
-  const extraLiftPx = 96;
-  const appearMargin = 0.10;
+  const extraLiftPx   = 96;
 
   frame.style.willChange = 'transform';
   frame.style.transformOrigin = 'center center';
@@ -125,9 +132,11 @@ const {
 
   const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
 
+  // Dirección de scroll
   let lastY = window.pageYOffset || document.documentElement.scrollTop || 0;
   let dir   = 'down';
 
+  // Referencias fijas (no varían al colapsar)
   const ref = { top: 0, height: 0 };
   function measureRef() {
     const prevH = stage.style.height;
@@ -143,35 +152,40 @@ const {
   }
   measureRef();
 
+  // Estado e inercia para evitar “baile”
+  let lockedHidden = false;       // bloquea el estado oculto hasta que se cruce el umbral de mostrar
+  let currentH = NaN;             // cache altura aplicada para rate-limit
+
   function apply() {
     const vh = window.innerHeight;
     const Y  = window.pageYOffset || document.documentElement.scrollTop || 0;
 
+    // Progreso con referencias fijas
     const t = clamp((vh + Y - ref.top) / (vh + ref.height), 0, 1);
     const scale = minScale + (maxScale - minScale) * t;
     frame.style.transform = `translateZ(0) scale(${scale})`;
 
+    // Geometría actual (solo para intersección)
     const rect = stage.getBoundingClientRect();
     const isIntersecting = rect.bottom > 0 && rect.top < vh;
 
+    // Umbrales con histéresis (Schmitt)
     const bottomFromViewport = (ref.top + ref.height) - Y;
-    let shouldHide = t >= 0.999 || bottomFromViewport <= hideAtVh * vh;
+    const hideTrigger = (bottomFromViewport <= hideAtVh * vh + hideLeadPx) || (t >= 0.995);
+    const topFromViewport = ref.top - Y;
+    const showTrigger = (topFromViewport <= appearMargin * vh + showLeadPx) && isIntersecting;
 
-    let forceAppear = false;
-    if (dir === 'up' && isIntersecting) {
-      const topFromViewport = ref.top - Y;
-      if (topFromViewport <= appearMargin * vh) {
-        shouldHide = false;
-        forceAppear = true;
-      }
-    }
+    // Decidir estado
+    if (dir === 'down' && hideTrigger) lockedHidden = true;
+    if (dir === 'up'   && showTrigger) lockedHidden = false;
 
-    if (shouldHide) {
-      document.documentElement.setAttribute('data-hero-bg', 'off');
-    } else {
-      document.documentElement.removeAttribute('data-hero-bg');
-    }
+    const shouldHide = lockedHidden;
 
+    // Estado global para otras capas
+    if (shouldHide) document.documentElement.setAttribute('data-hero-bg', 'off');
+    else            document.documentElement.removeAttribute('data-hero-bg');
+
+    // Mostrar/ocultar PC y pastillas
     frame.style.visibility = shouldHide ? 'hidden' : 'visible';
     frame.style.pointerEvents = shouldHide ? 'none' : 'auto';
     pills.forEach(p => {
@@ -179,31 +193,44 @@ const {
       p.style.pointerEvents = shouldHide ? 'none' : 'auto';
     });
 
-    if (bgLayer) bgLayer.style.opacity = shouldHide ? '0' : '1';
+    // Fondo del hero
+    if (bgLayer)       bgLayer.style.opacity = shouldHide ? '0' : '1';
     if (gradientLayer) gradientLayer.style.opacity = shouldHide ? '0' : '1';
 
+    // Colapso visual (con rate-limit y sin alternar transition cada frame)
     let c = clamp((t - collapseStart) / (1 - collapseStart), 0, 1);
-
-    if (forceAppear) c = 0;
+    if (!lockedHidden && dir === 'up') c = 0; // al subir, descolapsar suave
 
     const lift = -(extraLiftPx * c);
     stage.style.transform = c > 0 ? `translateY(${lift}px)` : '';
 
-    if ((c > 0 || (shouldHide && !forceAppear))) {
+    if (c > 0 || lockedHidden) {
       stage.style.overflow = 'hidden';
       const targetH = Math.max(0, Math.round(ref.height * (1 - c)));
-      stage.style.height = targetH + 'px';
+
+      // RATE-LIMIT: solo escribe si cambia > 1px
+      if (Number.isNaN(currentH) || Math.abs(targetH - currentH) > 1) {
+        stage.style.height = targetH + 'px';
+        currentH = targetH;
+      }
+      // transición estable (no alternarla en cada frame)
       stage.style.transition = 'height .25s linear, transform .25s linear';
     } else {
-      stage.style.transition = '';
-      stage.style.height = '';
+      // Restaurar
+      if (stage.style.height) {
+        stage.style.height = '';
+        currentH = NaN;
+      }
       stage.style.overflow = 'visible';
+      stage.style.transition = ''; // estable
     }
 
-    if (shouldHide && !forceAppear) {
+    // Al quedar realmente oculto, fijar altura 0 y lift final — una sola vez
+    if (lockedHidden && currentH !== 0) {
       stage.style.height = '0px';
       stage.style.transform = `translateY(${-extraLiftPx}px)`;
       stage.style.overflow = 'hidden';
+      currentH = 0;
     }
   }
 
@@ -224,6 +251,7 @@ const {
   apply();
 })();
 </script>
+
 
 
 <style>
