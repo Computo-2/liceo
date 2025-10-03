@@ -1,0 +1,182 @@
+---
+
+---
+
+<div class="fixed right-4 bottom-4 z-20">
+  <!-- Ventana del chat -->
+  <section
+    id="chatWindow"
+    class="pointer-events-none opacity-0 translate-y-5 scale-95 transition
+           duration-200 ease-out
+           fixed right-4 bottom-[88px] z-25 p-0 pb-2
+           w-[450px] max-w-[calc(100vw-32px)] max-h-[50vh] h-[400px]
+           bg-white text-slate-900 rounded-2xl shadow-xl overflow-hidden
+           data-[open=true]:pointer-events-auto data-[open=true]:opacity-100 data-[open=true]:translate-y-0 data-[open=true]:scale-100"
+    role="dialog"
+    aria-labelledby="chatTitle"
+    aria-modal="false"
+    data-open="false"
+  >
+    <!-- Header -->
+    <header class="flex items-center gap-3 px-4 py-3 bg-blue-200 border-b border-blue-100">
+      <div aria-hidden="true" class="w-10 h-10 rounded-full bg-[#32509c] text-white grid place-items-center font-bold">
+        LM
+      </div>
+      <div class="min-w-0">
+        <h2 id="chatTitle" class="text-sm font-semibold truncate">Liceo Michoacano</h2>
+        <p class="text-xs text-slate-500"><span class="text-green-500">En línea •</span> Chatbot de asistencia</p>
+      </div>
+      <button
+        id="chatClose"
+        type="button"
+        class="ml-auto w-8 h-8 rounded-lg hover:bg-black/5 grid place-items-center"
+        aria-label="Cerrar chat"
+        title="Cerrar"
+      >
+        ✕
+      </button>
+    </header>
+
+   <!-- Body (último hijo dentro de la ventana) -->
+<div id="chatBody" class="bg-slate-50 h-[calc(100%-52px)] overflow-y-auto p-3 space-y-2">
+  <!-- Mensaje inicial -->
+  <div class="max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug">
+    ¡Hola! ¿Cómo puedo ayudarte hoy?
+  </div>
+
+  <!-- Opciones rápidas -->
+  <div class="flex flex-col gap-2 mt-3">
+    <button
+      class="w-fit self-start bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-sm px-3 py-2 rounded-xl transition"
+      data-option="📄 Informes de pago"
+    >
+      📄 Informes de pago
+    </button>
+
+    <button
+      class="w-fit self-start bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-sm px-3 py-2 rounded-xl transition"
+      data-option="⏰ Horarios de clases"
+    >
+      ⏰ Horarios de clases
+    </button>
+
+    <button
+      class="w-fit self-start bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-sm px-3 py-2 rounded-xl transition"
+      data-option="💬 Contactar soporte"
+    >
+      💬 Contactar soporte
+    </button>
+  </div>
+</div>
+
+
+  </section>
+
+  <!-- Botón flotante -->
+  <button
+    id="chatToggle"
+    type="button"
+    class="grid place-items-center w-14 h-14 rounded-full bg-[#32509c] text-white shadow-xl
+           hover:scale-105 active:scale-95 transition"
+    aria-controls="chatWindow"
+    aria-expanded="false"
+    title="Abrir chat"
+  >
+    <!-- Ícono burbuja -->
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M20 12.5c0 3.59-3.58 6.5-8 6.5-.9 0-1.76-.12-2.56-.35L4 20l1.45-3.62C4.54 15.18 4 13.9 4 12.5 4 8.91 7.58 6 12 6s8 2.91 8 6.5Z"
+            stroke="currentColor" stroke-width="1.6" fill="currentColor"/>
+    </svg>
+  </button>
+</div>
+
+<!-- Lógica -->
+<script is:inline>
+  const $ = (sel) => document.querySelector(sel);
+  const win = $("#chatWindow");
+  const toggleBtn = $("#chatToggle");
+  const closeBtn = $("#chatClose");
+  const form = $("#chatForm");
+  const input = $("#chatText");
+  const sendBtn = $("#chatSend");
+  const body = $("#chatBody");
+
+  const isOpen = () => win?.getAttribute("data-open") === "true";
+  const openChat = () => {
+    win?.setAttribute("data-open", "true");
+    toggleBtn?.setAttribute("aria-expanded", "true");
+    toggleBtn?.setAttribute("title", "Cerrar chat");
+    setTimeout(() => input?.focus(), 120);
+  };
+  const closeChat = () => {
+    win?.setAttribute("data-open", "false");
+    toggleBtn?.setAttribute("aria-expanded", "false");
+    toggleBtn?.setAttribute("title", "Abrir chat");
+    toggleBtn?.focus();
+  };
+  const toggleChat = () => (isOpen() ? closeChat() : openChat());
+
+  toggleBtn?.addEventListener("click", toggleChat);
+  closeBtn?.addEventListener("click", closeChat);
+
+  input?.addEventListener("input", () => {
+    sendBtn.disabled = !input.value.trim();
+  });
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    appendMsg(text, "user");
+    input.value = "";
+    sendBtn.disabled = true;
+    setTimeout(() => {
+      appendMsg("Gracias, hemos recibido tu mensaje.", "bot");
+      scrollToBottom();
+    }, 500);
+
+    scrollToBottom();
+  });
+
+  function appendMsg(text, type) {
+    const el = document.createElement("div");
+    el.className =
+      type === "user"
+        ? "max-w-[78%] ml-auto rounded-xl rounded-br-sm bg-emerald-100 px-3 py-2 text-[13px] leading-snug"
+        : "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
+    el.textContent = text;
+    body?.appendChild(el);
+  }
+
+  function scrollToBottom() {
+    body.scrollTop = body.scrollHeight;
+  }
+
+  win?.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeChat();
+  });
+
+  // Atajo: Ctrl+/ para abrir/cerrar
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "/" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      toggleChat();
+    }
+  });
+
+  document.querySelectorAll("#chatBody [data-option]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const text = btn.getAttribute("data-option");
+
+    // Mostrar el mensaje del usuario
+    appendMsg(text, "user");
+
+    // Simular respuesta automática (aquí lo reemplazas con tu lógica o API)
+    setTimeout(() => {
+      appendMsg(`Seleccionaste: ${text}. Te comparto más información...`, "bot");
+      scrollToBottom();
+    }, 500);
+  });
+});
+
+</script>

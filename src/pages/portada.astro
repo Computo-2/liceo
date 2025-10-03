@@ -1,4 +1,7 @@
-<!-- Sin imports; puro markup + css + un script pequeño -->
+---
+import Chat from '../components/chat.astro';  
+---
+
 <section
   id="hero-video"
   class="relative flex items-center justify-center overflow-hidden font-sans text-2xl
@@ -26,7 +29,7 @@
   ></div>
 
   <!-- Botón/imagen flotante -->
-  <div class="absolute right-[12px] z-10 md:right-[20px] bottom-[34px] md:bottom-[44px] lg:bottom-[52px]">
+  <div class="absolute right-[12px] z-5 md:right-[20px] bottom-[34px] md:bottom-[44px] lg:bottom-[52px]">
   <a href="#" target="_blank" rel="noopener noreferrer">
     <img
       src="/CONTACTANOS.svg"
@@ -35,6 +38,9 @@
     />
   </a>
 </div>
+
+  <!-- Chatbot -->
+  <Chat />
 
 </section>
 
