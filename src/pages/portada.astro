@@ -1,21 +1,32 @@
-<!-- Componente sin lógica -->
-<section class="relative flex items-center justify-center min-h-[35svh] md:min-h-[60svh] lg:min-h-[70svh] overflow-hidden font-sans text-2xl">
-  <!-- Contenedor del video de fondo -->
-  <div class="absolute inset-0 overflow-hidden -z-10 bg-black">
+<!-- Sin imports; puro markup + css + un script pequeño -->
+<section
+  id="hero-video"
+  class="relative flex items-center justify-center overflow-hidden font-sans text-2xl
+         min-h-[35svh] md:min-h-[60svh] lg:min-h-[70svh]
+         pt-[var(--header-h,72px)]"
+  style="--header-h:72px" 
+>
+  <!-- Video de fondo -->
+  <div class="absolute inset-0 overflow-hidden">
     <iframe
       class="vf-iframe"
       src="https://player.vimeo.com/video/1116858454?background=1&autoplay=1&muted=1&loop=1&playsinline=1"
       allow="autoplay; fullscreen; picture-in-picture"
-      allowfullscreen
       title="Background video"
+      aria-hidden="true"
+      tabindex="-1"
     ></iframe>
-
-    <!-- Degradado inferior (un poco más corto) -->
-    <div class="pointer-events-none absolute bottom-0 left-0 w-full h-[90px] md:h-[120px] lg:h-[140px] bg-gradient-to-t from-[rgba(192,190,190,0.8)] to-transparent z-10"></div>
   </div>
 
-  <!-- Imagen flotante -->
-  <div class="absolute bottom-[12px] right-[12px] z-10 md:bottom-[20px] md:right-[20px]">
+  <!-- Suavizado (degradado transparente->blanco) pegado al borde inferior -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 bottom-0 h-20 md:h-28 lg:h-32"
+    style="background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #ffffff 100%);"
+  ></div>
+
+  <!-- Botón/imagen flotante -->
+  <div class="absolute right-[12px] z-10 md:right-[20px] bottom-[34px] md:bottom-[44px] lg:bottom-[52px]">
   <a href="#" target="_blank" rel="noopener noreferrer">
     <img
       src="/CONTACTANOS.svg"
@@ -28,8 +39,9 @@
 </section>
 
 <style is:global>
-  /* En <head>:
-     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> */
+  /* Fallback si el header no expone altura */
+
+
 
   .vf-iframe{
     position:absolute;
@@ -37,50 +49,54 @@
     top:50%;
     transform:translate(-50%,-50%);
     border:0;
-    pointer-events:none;
+    pointer-events:none; /* quita si quieres controles */
     background:transparent;
     transition:transform .3s ease;
   }
 
-  /* ===== MÓVIL: CONTAIN (video completo) ===== */
-  /* pantalla más ancha que 16:9 → dimensionar por alto */
-  @media (max-width:768px) and (min-aspect-ratio:16/9){
-    .vf-iframe{
-      width:calc(100dvh * 16 / 9);
-      height:100dvh;
-    }
-  }
-  /* pantalla más alta que 16:9 → dimensionar por ancho */
-  @media (max-width:768px) and (max-aspect-ratio:16/9){
-    .vf-iframe{
-      width:100dvw;
-      height:calc(100dvw * 9 / 16);
-    }
-  }
+  /* ===== MÓVIL ===== */
   @media (max-width:768px){
-    .vf-iframe{ top:65%; } /* el encuadre que te gustó */
+    .vf-iframe{ width:100dvw; height:100dvh; object-fit:cover; }
+    @media (max-aspect-ratio:16/9){
+      .vf-iframe{ width:100dvw; height:calc(100dvw * 9 / 16); }
+    }
+    .vf-iframe{ top:55%; }
   }
 
-  /* ===== iPad & DESKTOP: COVER con overscan (sin barras) ===== */
-  /* más ancha que 16:9 → dimensionamos por ancho */
+  /* ===== iPad & DESKTOP ===== */
   @media (min-width:769px) and (min-aspect-ratio:16/9){
-    .vf-iframe{
-      width:108dvw;    /* overscan para matar bordes */
-      height:60.75dvw; /* 56.25% * 1.08 */
-      top:55%;         /* encuadre un pelín abajo */
-    }
+    .vf-iframe{ width:108dvw; height:60.75dvw; top:55%; }
   }
-  /* más alta que 16:9 → dimensionamos por alto */
   @media (min-width:769px) and (max-aspect-ratio:16/9){
-    .vf-iframe{
-      width:192dvh;    /* 177.78% * 1.08 */
-      height:108dvh;   /* overscan */
-      top:55%;
-    }
+    .vf-iframe{ width:192dvh; height:108dvh; top:55%; }
   }
 
-  /* iOS perf hint */
   @supports (-webkit-touch-callout:none){
     .vf-iframe{ will-change:transform; }
   }
+  
 </style>
+
+<!-- Script local (NO toca el header): calcula altura real del header y la aplica SOLO a esta portada -->
+<script>
+  (function(){
+    const hero = document.getElementById('hero-video');
+    if (!hero) return;
+
+    const applyHeaderHeight = () => {
+      const header = document.querySelector('header');
+      const h = header ? Math.ceil(header.getBoundingClientRect().height) : 72;
+      hero.style.setProperty('--header-h', h + 'px');
+    };
+
+    // aplicar en carga y on resize (con rAF para evitar jank)
+    const onResize = () => requestAnimationFrame(applyHeaderHeight);
+    applyHeaderHeight();
+    window.addEventListener('load', applyHeaderHeight, { once: true });
+    window.addEventListener('resize', onResize);
+    // Si tu header cambia al abrir menú móvil, vuelve a medir tras un pequeño delay:
+    document.addEventListener('click', (e) => {
+      setTimeout(applyHeaderHeight, 250);
+    });
+  })();
+</script>
