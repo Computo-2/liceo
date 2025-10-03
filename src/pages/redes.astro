@@ -1,10 +1,10 @@
----
-const fbPageUrl = "https://www.facebook.com/liceomichoacano";
----
+<script>
+  const fbPageUrl = "https://www.facebook.com/liceomichoacano";
+</script>
 
 <main class="mx-auto max-w-6xl px-4 py-10">
   <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">
-    Síguenos en redes
+    Síguenos en nuestras redes
   </h1>
 
   <!-- Contenedor en grid -->
@@ -16,7 +16,7 @@ const fbPageUrl = "https://www.facebook.com/liceomichoacano";
       <div class="flex-1 overflow-hidden w-full">
         <div
           class="fb-page rounded-lg w-full"
-          data-href={fbPageUrl}
+          data-href="https://www.facebook.com/liceomichoacano"
           data-tabs="timeline"
           data-width="500"
           data-height="380"
@@ -24,8 +24,8 @@ const fbPageUrl = "https://www.facebook.com/liceomichoacano";
           data-hide-cover="false"
           data-show-facepile="false"
         >
-          <blockquote cite={fbPageUrl} class="fb-xfbml-parse-ignore">
-            <a href={fbPageUrl}>Liceo Michoacano</a>
+          <blockquote cite="https://www.facebook.com/liceomichoacano" class="fb-xfbml-parse-ignore">
+            <a href="https://www.facebook.com/liceomichoacano">Liceo Michoacano</a>
           </blockquote>
         </div>
       </div>
@@ -43,9 +43,7 @@ const fbPageUrl = "https://www.facebook.com/liceomichoacano";
           style="max-width: 100%; height: 100%; margin: 0 auto;"
         >
           <section>
-            <a target="_blank" href="https://www.tiktok.com/@liceomich"
-              >@liceomich</a
-            >
+            <a target="_blank" href="https://www.tiktok.com/@liceomich">@liceomich</a>
           </section>
         </blockquote>
       </div>
@@ -59,8 +57,8 @@ const fbPageUrl = "https://www.facebook.com/liceomichoacano";
           src="https://www.instagram.com/liceomich/embed"
           class="w-full h-full rounded-lg"
           frameborder="0"
-          allowtransparency="true"
-          allow="encrypted-media"
+          allow="clipboard-write; encrypted-media; picture-in-picture"
+          sandbox="allow-scripts allow-same-origin allow-popups"
           scrolling="no"
           loading="lazy"
         ></iframe>
