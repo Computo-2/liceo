@@ -43,30 +43,14 @@
   <div class="max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug">
     ¡Hola! ¿Cómo puedo ayudarte hoy?
   </div>
+  
+</div>
 
-  <!-- Opciones rápidas -->
-  <div class="flex flex-col gap-2 mt-3">
-    <button
-      class="w-fit self-start bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-sm px-3 py-2 rounded-xl transition"
-      data-option="📄 Informes de pago"
-    >
-      📄 Informes de pago
-    </button>
-
-    <button
-      class="w-fit self-start bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-sm px-3 py-2 rounded-xl transition"
-      data-option="⏰ Horarios de clases"
-    >
-      ⏰ Horarios de clases
-    </button>
-
-    <button
-      class="w-fit self-start bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-sm px-3 py-2 rounded-xl transition"
-      data-option="💬 Contactar soporte"
-    >
-      💬 Contactar soporte
-    </button>
-  </div>
+<div
+  id="chatBackdrop"
+  role="presentation"
+  class="fixed inset-0 z-[9997] bg-black/40 opacity-0 pointer-events-none transition-opacity duration-200
+         data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto">
 </div>
 
 
@@ -90,35 +74,217 @@
   </button>
 </div>
 
-<!-- Lógica -->
+
+
 <script is:inline>
+  // ====== Referencias base ======
+  const chatBody = document.getElementById("chatBody");
   const $ = (sel) => document.querySelector(sel);
   const win = $("#chatWindow");
   const toggleBtn = $("#chatToggle");
   const closeBtn = $("#chatClose");
+
+  // (Opcional) Si mantienes input/form para texto libre:
   const form = $("#chatForm");
   const input = $("#chatText");
   const sendBtn = $("#chatSend");
-  const body = $("#chatBody");
 
+  // ====== Menú jerárquico (puedes editar textos a tu gusto) ======
+  const MENU = {
+    root: [
+      { id: "pagos",    label: "📄 Informes de pago", submenu: "pagos" },
+      { id: "horarios", label: "⏰ Horarios de clases", submenu: "horarios" },
+      { id: "soporte",  label: "💬 Contactar soporte", submenu: "soporte" },
+    ],
+    pagos: [
+      { id: "calendario_pagos", label: "Calendario de pagos", action: { type: "message", text: "Calendario de pagos: consulta tu portal o administración." } },
+      { id: "comprobante",      label: "Obtener comprobante", action: { type: "message", text: "Para comprobante: comparte tu folio y fecha de pago." } },
+      { id: "formas_pago",      label: "Formas de pago",      action: { type: "message", text: "Aceptamos transferencia, depósito y pago en caja." } },
+    ],
+    horarios: [
+      // Nota: antes abrían PDFs; ahora solo enviamos texto descriptivo (sin links).
+      { id: "primaria_pdf",   label: "Primaria (PDF)",       action: { type: "link", url: "/docs/horarios-primaria.pdf" } },
+      { id: "secundaria_pdf", label: "Secundaria (PDF)",     action: { type: "link", url: "/docs/horarios-secundaria.pdf" } },
+      { id: "prepa_pdf",      label: "Preparatoria (PDF)",   action: { type: "link", url: "/docs/horarios-prepa.pdf" } },
+    ],
+    soporte: [
+      // Nota: antes abrían WhatsApp/correo; ahora solo texto con indicaciones.
+      { id: "whatsapp", label: "Abrir WhatsApp", action: { type: "whatsapp", phone: "52XXXXXXXXXX", text: "Hola, necesito ayuda." } },
+      { id: "correo",   label: "Enviar correo",  action: { type: "mailto", to: "soporte@liceomichoacano.edu.mx", subject: "Soporte", body: "Necesito ayuda con..." } },
+      { id: "tel",      label: "Llamar",         action: { type: "link", url: "tel:+52XXXXXXXXXX" } },
+    ],
+  };
+
+  // ====== Estado / navegación ======
+  let menuStack = ["root"];
+  const QR_SELECTOR = '[data-qr="true"]';
+
+  // ====== Utilidades de mensajes ======
+  function appendMsg(text, type) {
+    const el = document.createElement("div");
+    el.className =
+      type === "user"
+        ? "max-w-[78%] ml-auto rounded-xl rounded-br-sm bg-blue-100 px-3 py-2 text-[13px] leading-snug"
+        : "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
+    el.textContent = text;
+    chatBody?.appendChild(el);
+  }
+
+  function scrollToBottom() {
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function removeQuickReplies() {
+    chatBody?.querySelectorAll(QR_SELECTOR).forEach((n) => n.remove());
+  }
+
+  function renderMenu(menuId) {
+    if (!chatBody) return;
+    removeQuickReplies();
+
+    const opts = MENU[menuId] || [];
+    const showBack = menuId !== "root";
+
+    const wrap = document.createElement("div");
+    wrap.setAttribute("data-qr", "true");
+    wrap.className = "sticky bottom-0 bg-slate-50/90 backdrop-blur p-2 -mx-3 pt-3";
+
+    const inner = document.createElement("div");
+    inner.className = "flex flex-wrap gap-2";
+
+    opts.forEach((item) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "px-3 py-2 text-sm rounded-xl bg-blue-100 hover:bg-blue-200 text-emerald-900 transition";
+      btn.dataset.id = item.id;
+      btn.textContent = item.label;
+      inner.appendChild(btn);
+    });
+
+    if (showBack) {
+      const backBtn = document.createElement("button");
+      backBtn.type = "button";
+      backBtn.className = "px-3 py-2 text-sm rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 transition";
+      backBtn.dataset.id = "__back";
+      backBtn.textContent = "◀️ Volver";
+      inner.appendChild(backBtn);
+    }
+
+    wrap.appendChild(inner);
+    chatBody.appendChild(wrap);
+    scrollToBottom();
+  }
+
+  function currentMenu() {
+    return menuStack[menuStack.length - 1];
+  }
+
+  function goTo(menuId) {
+    menuStack.push(menuId);
+    renderMenu(menuId);
+  }
+
+  function goBack() {
+    if (menuStack.length > 1) menuStack.pop();
+    renderMenu(currentMenu());
+  }
+
+  // ====== Acciones SOLO TEXTO (sin abrir nada) ======
+  function performAction(item) {
+    const action = item.action;
+    if (!action) return;
+
+    let text;
+
+    switch (action.type) {
+      case "message":
+        text = action.text || "Información enviada.";
+        break;
+
+      case "link":
+        // Antes abría un PDF o tel:. Ahora solo texto (sin URL).
+        // Puedes personalizar el mensaje por cada item.label si quieres.
+        text = `Documento "${item.label}" disponible. Si necesitas que te lo enviemos, indícalo aquí.`;
+        break;
+
+      case "whatsapp":
+        // Solo texto informativo, sin abrir WhatsApp.
+        text = `WhatsApp de soporte: +${action.phone}. Mensaje sugerido: "${action.text || "Hola, necesito ayuda."}"`;
+        break;
+
+      case "mailto":
+        // Solo texto informativo, sin abrir el cliente de correo.
+        text = `Correo de soporte: ${action.to}. Asunto sugerido: "${action.subject || "Soporte"}".`;
+        break;
+
+      default:
+        text = "Acción no implementada.";
+    }
+
+    appendMsg(text, "bot");
+  }
+
+  // ====== Interacción de opciones ======
+  chatBody?.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-id]");
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+    if (id === "__back") {
+      appendMsg("◀️ Volver", "user");
+      removeQuickReplies();
+      goBack();
+      return;
+    }
+
+    const menuId = currentMenu();
+    const item = (MENU[menuId] || []).find((i) => i.id === id);
+    if (!item) return;
+
+    appendMsg(item.label, "user");
+    removeQuickReplies();
+    scrollToBottom();
+
+    if (item.submenu && MENU[item.submenu]) {
+      setTimeout(() => {
+        appendMsg("Elige una opción:", "bot");
+        goTo(item.submenu);
+      }, 200);
+    } else if (item.action) {
+      setTimeout(() => {
+        performAction(item);       // ← solo texto
+        renderMenu(menuId);        // reimprimir el menú actual
+      }, 250);
+    } else {
+      renderMenu(menuId);
+    }
+  });
+
+  // ====== Abrir / cerrar chat ======
   const isOpen = () => win?.getAttribute("data-open") === "true";
+
   const openChat = () => {
     win?.setAttribute("data-open", "true");
     toggleBtn?.setAttribute("aria-expanded", "true");
     toggleBtn?.setAttribute("title", "Cerrar chat");
-    setTimeout(() => input?.focus(), 120);
+    menuStack = ["root"];
+    renderMenu("root");
+    if (input) setTimeout(() => input.focus(), 120);
   };
+
   const closeChat = () => {
     win?.setAttribute("data-open", "false");
     toggleBtn?.setAttribute("aria-expanded", "false");
     toggleBtn?.setAttribute("title", "Abrir chat");
     toggleBtn?.focus();
   };
+
   const toggleChat = () => (isOpen() ? closeChat() : openChat());
 
   toggleBtn?.addEventListener("click", toggleChat);
   closeBtn?.addEventListener("click", closeChat);
 
+  // ====== Envío de texto libre (opcional) ======
   input?.addEventListener("input", () => {
     sendBtn.disabled = !input.value.trim();
   });
@@ -127,56 +293,25 @@
     e.preventDefault();
     const text = input.value.trim();
     if (!text) return;
+
+    removeQuickReplies();
     appendMsg(text, "user");
     input.value = "";
     sendBtn.disabled = true;
+    scrollToBottom();
+
     setTimeout(() => {
       appendMsg("Gracias, hemos recibido tu mensaje.", "bot");
-      scrollToBottom();
-    }, 500);
-
-    scrollToBottom();
+      renderMenu(currentMenu());
+    }, 400);
   });
 
-  function appendMsg(text, type) {
-    const el = document.createElement("div");
-    el.className =
-      type === "user"
-        ? "max-w-[78%] ml-auto rounded-xl rounded-br-sm bg-emerald-100 px-3 py-2 text-[13px] leading-snug"
-        : "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
-    el.textContent = text;
-    body?.appendChild(el);
+  // ====== Si el chat inicia abierto ======
+  if (isOpen()) {
+    menuStack = ["root"];
+    renderMenu("root");
   }
-
-  function scrollToBottom() {
-    body.scrollTop = body.scrollHeight;
-  }
-
-  win?.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeChat();
-  });
-
-  // Atajo: Ctrl+/ para abrir/cerrar
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "/" && (e.ctrlKey || e.metaKey)) {
-      e.preventDefault();
-      toggleChat();
-    }
-  });
-
-  document.querySelectorAll("#chatBody [data-option]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const text = btn.getAttribute("data-option");
-
-    // Mostrar el mensaje del usuario
-    appendMsg(text, "user");
-
-    // Simular respuesta automática (aquí lo reemplazas con tu lógica o API)
-    setTimeout(() => {
-      appendMsg(`Seleccionaste: ${text}. Te comparto más información...`, "bot");
-      scrollToBottom();
-    }, 500);
-  });
-});
-
 </script>
+
+
+
