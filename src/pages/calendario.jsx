@@ -448,7 +448,7 @@ const sendToSheets = async (payload) => {
     <div
       className="min-h-screen p-4 md:p-8 relative overflow-hidden"
       style={{
-        backgroundImage: "url(/bg_calendar.svg)",
+        backgroundImage: "url(/bg_calendar.webp)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundColor: "#2563eb",
