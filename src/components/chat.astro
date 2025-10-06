@@ -2,13 +2,13 @@
 
 ---
 
-<div class="fixed right-4 bottom-4 z-20">
+<div class="fixed right-4 bottom-4 z-40">
   <!-- Ventana del chat -->
   <section
     id="chatWindow"
     class="pointer-events-none opacity-0 translate-y-5 scale-95 transition
            duration-200 ease-out
-           fixed right-4 bottom-[88px] z-25 p-0 pb-2
+           fixed right-4 bottom-[88px] z-40 p-0 pb-2
            w-[450px] max-w-[calc(100vw-32px)] max-h-[50vh] h-[400px]
            bg-white text-slate-900 rounded-2xl shadow-xl overflow-hidden
            data-[open=true]:pointer-events-auto data-[open=true]:opacity-100 data-[open=true]:translate-y-0 data-[open=true]:scale-100"
@@ -46,21 +46,19 @@
   
 </div>
 
-<div
-  id="chatBackdrop"
-  role="presentation"
-  class="fixed inset-0 z-[9997] bg-black/40 opacity-0 pointer-events-none transition-opacity duration-200
-         data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto">
-</div>
-
-
   </section>
+
+<div id="chatTail" aria-hidden="true"
+     class="absolute right-[15px] bottom-[64px] w-4 h-4 rotate-45
+            bg-white border border-slate-200 shadow-xl
+            opacity-0 pointer-events-none"></div>
+
 
   <!-- Botón flotante -->
   <button
     id="chatToggle"
     type="button"
-    class="grid place-items-center w-14 h-14 rounded-full bg-[#32509c] text-white shadow-xl
+    class="grid place-items-center w-14 h-14 rounded-full bg-[#32509c] text-white shadow-2xl
            hover:scale-105 active:scale-95 transition"
     aria-controls="chatWindow"
     aria-expanded="false"
@@ -73,7 +71,6 @@
     </svg>
   </button>
 </div>
-
 
 
 <script is:inline>
@@ -120,15 +117,31 @@
   const QR_SELECTOR = '[data-qr="true"]';
 
   // ====== Utilidades de mensajes ======
-  function appendMsg(text, type) {
-    const el = document.createElement("div");
-    el.className =
-      type === "user"
-        ? "max-w-[78%] ml-auto rounded-xl rounded-br-sm bg-blue-100 px-3 py-2 text-[13px] leading-snug"
-        : "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
-    el.textContent = text;
-    chatBody?.appendChild(el);
-  }
+ function appendMsg(text, type) {
+  const el = document.createElement("div");
+  el.className =
+    type === "user"
+      ? "max-w-[78%] ml-auto rounded-xl rounded-br-sm bg-blue-100 px-3 py-2 text-[13px] leading-snug"
+      : "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
+
+  // Estado inicial (entra desde abajo; user entra un pelín a la derecha, bot a la izquierda)
+  el.classList.add(
+    "opacity-0", "translate-y-2", "scale-[.98]",
+    type === "user" ? "translate-x-2" : "-translate-x-2",
+    "transition", "duration-200", "ease-out"
+  );
+
+  el.textContent = text;
+  chatBody?.appendChild(el);
+  scrollToBottom();
+
+  // Dispara la transición a estado final
+  requestAnimationFrame(() => {
+    el.classList.remove("opacity-0", "translate-y-2", "scale-[.98]", "translate-x-2", "-translate-x-2");
+    // (opcional) el navegador animará a opacity 1 / translate 0 / scale 1
+  });
+}
+
 
   function scrollToBottom() {
     chatBody.scrollTop = chatBody.scrollHeight;
@@ -225,40 +238,47 @@
   }
 
   // ====== Interacción de opciones ======
-  chatBody?.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-id]");
-    if (!btn) return;
+chatBody?.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-id]");
+  if (!btn) return;
 
-    const id = btn.dataset.id;
-    if (id === "__back") {
-      appendMsg("◀️ Volver", "user");
-      removeQuickReplies();
-      goBack();
-      return;
-    }
-
-    const menuId = currentMenu();
-    const item = (MENU[menuId] || []).find((i) => i.id === id);
-    if (!item) return;
-
-    appendMsg(item.label, "user");
+  const id = btn.dataset.id;
+  if (id === "__back") {
+    appendMsg("◀️ Volver", "user");
     removeQuickReplies();
-    scrollToBottom();
+    goBack();
+    return;
+  }
 
-    if (item.submenu && MENU[item.submenu]) {
-      setTimeout(() => {
-        appendMsg("Elige una opción:", "bot");
-        goTo(item.submenu);
-      }, 200);
-    } else if (item.action) {
-      setTimeout(() => {
-        performAction(item);       // ← solo texto
-        renderMenu(menuId);        // reimprimir el menú actual
-      }, 250);
-    } else {
-      renderMenu(menuId);
-    }
-  });
+  const menuId = currentMenu();
+  const item = (MENU[menuId] || []).find((i) => i.id === id);
+  if (!item) return;
+
+  appendMsg(item.label, "user");
+  removeQuickReplies();
+  scrollToBottom();
+
+  showTyping();
+
+  if (item.submenu && MENU[item.submenu]) {
+    setTimeout(() => {
+      hideTyping();                               
+      appendMsg("Elige una opción:", "bot");      
+      goTo(item.submenu);                         
+      scrollToBottom();
+    }, 400);
+  } else if (item.action) {
+    setTimeout(() => {
+      hideTyping();                     
+      performAction(item);                    
+      renderMenu(menuId);                 
+      scrollToBottom();
+    }, 450);
+  } else {
+    hideTyping();               
+    renderMenu(menuId);
+  }
+});
 
   // ====== Abrir / cerrar chat ======
   const isOpen = () => win?.getAttribute("data-open") === "true";
@@ -267,8 +287,9 @@
     win?.setAttribute("data-open", "true");
     toggleBtn?.setAttribute("aria-expanded", "true");
     toggleBtn?.setAttribute("title", "Cerrar chat");
-    menuStack = ["root"];
-    renderMenu("root");
+  
+    resetChat();
+  
     if (input) setTimeout(() => input.focus(), 120);
   };
 
@@ -311,6 +332,161 @@
     menuStack = ["root"];
     renderMenu("root");
   }
+
+
+(() => {
+  const chatWindow = document.getElementById('chatWindow');
+  if (!chatWindow) return;
+  
+  let overlay = document.getElementById('__chat_overlay__');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = '__chat_overlay__';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: '0',
+      background: 'rgba(0,0,0,0.80)',
+      opacity: '0',
+      pointerEvents: 'none',
+      transition: 'opacity 200ms ease',
+      zIndex: '30'
+    });
+    document.body.appendChild(overlay);
+  }
+
+  const widgetRoot = chatWindow.parentElement;
+  const inerted = new Set();
+  const html = document.documentElement;
+  const body = document.body;
+
+  function prevent(e){ e.preventDefault(); }
+  function enableBlockers() {
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+    window.addEventListener('wheel', prevent, { passive: false });
+    window.addEventListener('touchmove', prevent, { passive: false });
+  }
+
+  function disableBlockers() {
+    html.style.overflow = '';
+    body.style.overflow = '';
+    window.removeEventListener('wheel', prevent);
+    window.removeEventListener('touchmove', prevent);
+    inerted.forEach(el => el.removeAttribute('inert'));
+    inerted.clear();
+  }
+
+  function showOverlay() {
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'auto';
+
+     chatWindow.style.pointerEvents = 'auto';
+
+    overlay.onclick = () => {
+      try {
+        typeof closeChat === 'function'
+          ? closeChat()
+          : chatWindow.setAttribute('data-open', 'false');
+      } catch {
+        chatWindow.setAttribute('data-open', 'false');
+      }
+    };
+  }
+
+  function hideOverlay() {
+    overlay.style.opacity = '0';
+    overlay.style.pointerEvents = 'none';
+    overlay.onclick = null;
+    chatWindow.style.pointerEvents = '';
+  }
+
+  const obs = new MutationObserver(muts => {
+    for (const m of muts) {
+      if (m.attributeName !== 'data-open') continue;
+      const open = chatWindow.getAttribute('data-open') === 'true';
+      if (open) { showOverlay(); enableBlockers(); }
+      else { hideOverlay(); disableBlockers(); }
+    }
+  });
+  obs.observe(chatWindow, { attributes: true });
+
+  if (chatWindow.getAttribute('data-open') === 'true') {
+    showOverlay(); enableBlockers();
+  }
+})();
+
+function resetChat() {
+  if (!chatBody) return;
+
+  chatBody.innerHTML = "";
+
+  const welcome = document.createElement("div");
+  welcome.className = "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
+  welcome.textContent = "¡Hola! ¿Cómo puedo ayudarte hoy?";
+  chatBody.appendChild(welcome);
+
+  menuStack = ["root"];
+  renderMenu("root");
+
+  scrollToBottom();
+}
+
+(() => {
+  const win  = document.getElementById('chatWindow');
+  const tail = document.getElementById('chatTail');
+  if (!win || !tail) return;
+
+  const sync = () => {
+    const open = win.getAttribute('data-open') === 'true';
+    tail.classList.toggle('opacity-100', open);
+    tail.classList.toggle('opacity-0',  !open);
+  };
+
+  new MutationObserver(sync).observe(win, { attributes: true, attributeFilter: ['data-open'] });
+  sync();
+})();
+
+let typingEl = null;
+
+function showTyping() {
+  if (!chatBody || typingEl) return;
+
+  const wrap = document.createElement("div");
+  wrap.className = "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
+
+  const inner = document.createElement("div");
+  inner.className = "flex items-center gap-1";
+  inner.innerHTML = `
+    <span class="w-2 h-2 rounded-full bg-slate-500 animate-bounce"></span>
+    <span class="w-2 h-2 rounded-full bg-slate-500 animate-bounce"></span>
+    <span class="w-2 h-2 rounded-full bg-slate-500 animate-bounce"></span>
+  `;
+
+  wrap.appendChild(inner);
+
+  // Animación de entrada del “typing”
+  wrap.classList.add("opacity-0","translate-y-2","transition","duration-150","ease-out");
+  typingEl = wrap;
+  chatBody.appendChild(typingEl);
+  scrollToBottom();
+  requestAnimationFrame(() => {
+    wrap.classList.remove("opacity-0","translate-y-2");
+  });
+}
+
+function hideTyping() {
+  if (!typingEl) return;
+  // Animación de salida rápida
+  typingEl.classList.add("opacity-0","translate-y-1","transition","duration-100","ease-in");
+  setTimeout(() => {
+    typingEl?.remove();
+    typingEl = null;
+  }, 110);
+}
+
+
+
+
 </script>
 
 
