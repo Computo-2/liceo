@@ -37,7 +37,6 @@
       </button>
     </header>
 
-   <!-- Body (último hijo dentro de la ventana) -->
 <div id="chatBody" class="bg-slate-50 h-[calc(100%-52px)] overflow-y-auto p-3 space-y-2">
   <!-- Mensaje inicial -->
   <div class="max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug">
@@ -84,31 +83,29 @@
   // (Opcional) Si mantienes input/form para texto libre:
   const form = $("#chatForm");
   const input = $("#chatText");
-  const sendBtn = $("#chatSend");
 
   // ====== Menú jerárquico (puedes editar textos a tu gusto) ======
   const MENU = {
     root: [
-      { id: "pagos",    label: "📄 Informes de pago", submenu: "pagos" },
-      { id: "horarios", label: "⏰ Horarios de clases", submenu: "horarios" },
-      { id: "soporte",  label: "💬 Contactar soporte", submenu: "soporte" },
+      { id: "Nuevo ingreso",    label: "📄 Informes para nuevo ingreso", submenu: "NuevoIngreso" },
+      { id: "Cursos", label: "⏰ Cursos", submenu: "Cursos" },
+      { id: "Revalidacion",  label: "💬 Revalidacion", submenu: "Revalidacion" },
     ],
-    pagos: [
-      { id: "calendario_pagos", label: "Calendario de pagos", action: { type: "message", text: "Calendario de pagos: consulta tu portal o administración." } },
-      { id: "comprobante",      label: "Obtener comprobante", action: { type: "message", text: "Para comprobante: comparte tu folio y fecha de pago." } },
-      { id: "formas_pago",      label: "Formas de pago",      action: { type: "message", text: "Aceptamos transferencia, depósito y pago en caja." } },
+    NuevoIngreso: [
+      { label: "Consulta entre todo esto y mas que tenemos disponible" },
+      { id: "Idiomas", label: "Idiomas", action: { type: "message", text: "Descriptor idiomas" } },
+      { id: "Viajes",      label: "Viajes", action: { type: "message", text: "Descriptor viajes" } },
+      { id: "Bachillerato",      label: "Bachillerato",      action: { type: "message", text: "Descriptor bachillerato" } },
+      { id: "Talleres",      label: "Talleres",      action: { type: "message", text: "Descriptor talleres" } },
+      { id: "Optativas",      label: "Optativas",      action: { type: "message", text: "Descriptor optativas" } },
     ],
-    horarios: [
-      // Nota: antes abrían PDFs; ahora solo enviamos texto descriptivo (sin links).
-      { id: "primaria_pdf",   label: "Primaria (PDF)",       action: { type: "link", url: "/docs/horarios-primaria.pdf" } },
-      { id: "secundaria_pdf", label: "Secundaria (PDF)",     action: { type: "link", url: "/docs/horarios-secundaria.pdf" } },
-      { id: "prepa_pdf",      label: "Preparatoria (PDF)",   action: { type: "link", url: "/docs/horarios-prepa.pdf" } },
+    Cursos: [
+      { label: "Cursos de todo tipo para aumentar tus habilidades" },
+      { id: "SobreCursos",   label: "Conoce mas sobre nuestros cursos", action: { type: "link", url: "/docs/horarios-primaria.pdf" } },
     ],
-    soporte: [
-      // Nota: antes abrían WhatsApp/correo; ahora solo texto con indicaciones.
-      { id: "whatsapp", label: "Abrir WhatsApp", action: { type: "whatsapp", phone: "52XXXXXXXXXX", text: "Hola, necesito ayuda." } },
-      { id: "correo",   label: "Enviar correo",  action: { type: "mailto", to: "soporte@liceomichoacano.edu.mx", subject: "Soporte", body: "Necesito ayuda con..." } },
-      { id: "tel",      label: "Llamar",         action: { type: "link", url: "tel:+52XXXXXXXXXX" } },
+    Revalidacion: [
+      { label: "Si tienes materias cursadas anteriormente y se pueden hacer validas da click en revalidacion de materias" },
+      { id: "Revalidacion", label: "Revalidacion de materias", action: { type: "whatsapp", phone: "52XXXXXXXXXX", text: "Hola, necesito ayuda." } },
     ],
   };
 
@@ -123,8 +120,7 @@
     type === "user"
       ? "max-w-[78%] ml-auto rounded-xl rounded-br-sm bg-blue-100 px-3 py-2 text-[13px] leading-snug"
       : "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
-
-  // Estado inicial (entra desde abajo; user entra un pelín a la derecha, bot a la izquierda)
+      
   el.classList.add(
     "opacity-0", "translate-y-2", "scale-[.98]",
     type === "user" ? "translate-x-2" : "-translate-x-2",
@@ -138,10 +134,8 @@
   // Dispara la transición a estado final
   requestAnimationFrame(() => {
     el.classList.remove("opacity-0", "translate-y-2", "scale-[.98]", "translate-x-2", "-translate-x-2");
-    // (opcional) el navegador animará a opacity 1 / translate 0 / scale 1
   });
 }
-
 
   function scrollToBottom() {
     chatBody.scrollTop = chatBody.scrollHeight;
@@ -168,8 +162,13 @@
     opts.forEach((item) => {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "px-3 py-2 text-sm rounded-xl bg-blue-100 hover:bg-blue-200 text-emerald-900 transition";
       btn.dataset.id = item.id;
+      if (!item.id) {
+        btn.disabled = true;
+        btn.className = "px-3 py-2 text-sm rounded-xl bg-blue-100 hover:bg-blue-200 text-emerald-900 transition";
+      } else {
+        btn.className = "px-3 py-2 text-sm rounded-xl bg-white border border-blue-300 hover:bg-blue-200 text-slate-800 transition";
+      }
       btn.textContent = item.label;
       inner.appendChild(btn);
     });
@@ -177,7 +176,7 @@
     if (showBack) {
       const backBtn = document.createElement("button");
       backBtn.type = "button";
-      backBtn.className = "px-3 py-2 text-sm rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 transition";
+      backBtn.className = "px-3 py-2 text-sm rounded-xl bg-white border border-slate-300 hover:bg-blue-200 text-slate-800 transition";
       backBtn.dataset.id = "__back";
       backBtn.textContent = "◀️ Volver";
       inner.appendChild(backBtn);
@@ -305,34 +304,11 @@ chatBody?.addEventListener("click", (e) => {
   toggleBtn?.addEventListener("click", toggleChat);
   closeBtn?.addEventListener("click", closeChat);
 
-  // ====== Envío de texto libre (opcional) ======
-  input?.addEventListener("input", () => {
-    sendBtn.disabled = !input.value.trim();
-  });
-
-  form?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
-
-    removeQuickReplies();
-    appendMsg(text, "user");
-    input.value = "";
-    sendBtn.disabled = true;
-    scrollToBottom();
-
-    setTimeout(() => {
-      appendMsg("Gracias, hemos recibido tu mensaje.", "bot");
-      renderMenu(currentMenu());
-    }, 400);
-  });
-
   // ====== Si el chat inicia abierto ======
   if (isOpen()) {
     menuStack = ["root"];
     renderMenu("root");
   }
-
 
 (() => {
   const chatWindow = document.getElementById('chatWindow');
@@ -354,7 +330,6 @@ chatBody?.addEventListener("click", (e) => {
     document.body.appendChild(overlay);
   }
 
-  const widgetRoot = chatWindow.parentElement;
   const inerted = new Set();
   const html = document.documentElement;
   const body = document.body;
@@ -431,21 +406,6 @@ function resetChat() {
   scrollToBottom();
 }
 
-(() => {
-  const win  = document.getElementById('chatWindow');
-  const tail = document.getElementById('chatTail');
-  if (!win || !tail) return;
-
-  const sync = () => {
-    const open = win.getAttribute('data-open') === 'true';
-    tail.classList.toggle('opacity-100', open);
-    tail.classList.toggle('opacity-0',  !open);
-  };
-
-  new MutationObserver(sync).observe(win, { attributes: true, attributeFilter: ['data-open'] });
-  sync();
-})();
-
 let typingEl = null;
 
 function showTyping() {
@@ -476,7 +436,6 @@ function showTyping() {
 
 function hideTyping() {
   if (!typingEl) return;
-  // Animación de salida rápida
   typingEl.classList.add("opacity-0","translate-y-1","transition","duration-100","ease-in");
   setTimeout(() => {
     typingEl?.remove();
@@ -484,10 +443,4 @@ function hideTyping() {
   }, 110);
 }
 
-
-
-
 </script>
-
-
-
