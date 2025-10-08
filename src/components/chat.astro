@@ -195,15 +195,16 @@
     Revalidacion: [
       {
         label:
-          "Si tienes materias cursadas anteriormente y se pueden hacer validas da click en revalidacion de materias",
+          "Si tienes materias cursadas anteriormente y se pueden hacer válidas, da click en revalidación de materias.",
       },
       {
         id: "Revalidacion",
-        label: "Revalidacion de materias",
+        label: "Revalidación de materias",
         action: {
-          type: "whatsapp",
-          phone: "52XXXXXXXXXX",
-          text: "Hola, necesito ayuda.",
+          type: "correo",
+          email: "computo4@liceomichoacano.edu.mx",
+          text: "Hola, necesito información sobre la revalidación de materias.",
+          subject: "Solicitud de revalidación de materias",
         },
       },
     ],
@@ -346,22 +347,44 @@
         }
         break;
 
-      case "whatsapp":
-        // Solo texto informativo, sin abrir WhatsApp.
-        text = `WhatsApp de soporte: +${action.phone}. Mensaje sugerido: "${action.text || "Hola, necesito ayuda."}"`;
-        break;
+      case "correo":
+        if (action.email) {
+          const subject = encodeURIComponent(action.subject || "Consulta");
+          const body = encodeURIComponent(action.text || "");
+          const mailto = `mailto:${action.email}?subject=${subject}&body=${body}`;
 
-      case "mailto":
-        // Solo texto informativo, sin abrir el cliente de correo.
-        text = `Correo de soporte: ${action.to}. Asunto sugerido: "${action.subject || "Soporte"}".`;
+          window.location.href = mailto;
+
+          text = `Abriendo correo a ${action.email}...`;
+        } else {
+          text = "No se encontró una dirección de correo válida.";
+        }
         break;
 
       case "scroll":
         const el = document.querySelector(action.target);
         if (el) {
-          const y = el.getBoundingClientRect().top + window.pageYOffset-50;
+          const currentY = window.scrollY || window.pageYOffset;
+          const elementY = el.getBoundingClientRect().top + currentY;
+
+          
+          const goingDown = elementY > currentY;
+
+          let offset;
+          if (window.innerWidth <= 640)
+            offset = goingDown ? -800 : -45; // móvil
+          else if (window.innerWidth <= 1024)
+            offset = goingDown ? -800 : -40; // tablet
+          else offset = goingDown ? -800 : -120; // escritorio
+
+          const y = elementY + offset;
+
+
           window.scrollTo({ top: y, behavior: "smooth" });
+
           text = "Abriendo el calendario para agendar tu cita...";
+
+
           setTimeout(() => {
             if (typeof closeChat === "function") closeChat();
           }, 1700);
