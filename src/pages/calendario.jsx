@@ -180,7 +180,7 @@ export default function CalendarioCitas() {
   const validateForm = () => {
     const errors = {};
 
-    if (!formData.nombre.trim()) errors.nombre = "El nombre es requerido";
+    if (!formData.nombre.trim()) errors.nombre = "El nombre es un campo requerido";
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.correo.trim()) errors.correo = "El correo es requerido";
@@ -263,8 +263,6 @@ export default function CalendarioCitas() {
       created_at_local,
       timezone: tz,
       origen: "web",
-      user_agent:
-        typeof navigator !== "undefined" ? navigator.userAgent : "",
     };
   };
 
