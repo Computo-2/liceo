@@ -331,6 +331,64 @@
 
     let text;
 
+    // ===== Helpers de scroll con offset dinámico =====
+    const HEADER_SELECTORS = [
+      "#siteHeader",
+      ".site-header",
+      ".navbar",
+      "header.sticky",
+      "header.fixed",
+      "header.navbar",
+      "#appBar",
+    ];
+
+    function getTopFixedHeight() {
+      let h = 0;
+      for (const sel of HEADER_SELECTORS) {
+        const n = document.querySelector(sel);
+        if (!n) continue;
+        const cs = getComputedStyle(n);
+        if (cs.position === "fixed" || cs.position === "sticky") {
+          h += n.getBoundingClientRect().height;
+        }
+      }
+      return h; // suma alturas de elementos superiores fijos/pegajosos
+    }
+
+    function getViewportExtraGap(goingDown) {
+      // Extra “aire” visual según breakpoints y dirección
+      const w = window.innerWidth;
+      if (w <= 640) return goingDown ? 32 : 12; // móvil
+      if (w <= 1024) return goingDown ? 48 : 24; // tablet
+      return goingDown ? 56 : 36; // desktop
+    }
+
+    function scrollToElementWithOffset(el) {
+      const currentY = window.scrollY || window.pageYOffset;
+      const elementY = el.getBoundingClientRect().top + currentY;
+      const goingDown = elementY > currentY;
+
+      const headerH = getTopFixedHeight();
+      const extra = getViewportExtraGap(goingDown);
+
+      // Offset negativo: queremos que el elemento quede visible debajo del header + aire extra
+      const offset = -(headerH + extra);
+
+      const targetY = elementY + offset;
+      window.scrollTo({ top: targetY, behavior: "smooth" });
+
+      // Ajuste fino tras el scroll (por si cambió el layout o hay fuentes/iframes que reflowean)
+      setTimeout(() => {
+        const headerNow = getTopFixedHeight();
+        const desiredTop = headerNow + 8; // 8px de respiro
+        const rect = el.getBoundingClientRect();
+        const delta = rect.top - desiredTop;
+        if (Math.abs(delta) > 2) {
+          window.scrollBy({ top: delta, behavior: "auto" });
+        }
+      }, 450);
+    }
+
     switch (action.type) {
       case "message":
         text = action.text || "Información enviada.";
@@ -364,30 +422,11 @@
       case "scroll":
         const el = document.querySelector(action.target);
         if (el) {
-          const currentY = window.scrollY || window.pageYOffset;
-          const elementY = el.getBoundingClientRect().top + currentY;
-
-          
-          const goingDown = elementY > currentY;
-
-          let offset;
-          if (window.innerWidth <= 640)
-            offset = goingDown ? -800 : -45; // móvil
-          else if (window.innerWidth <= 1024)
-            offset = goingDown ? -800 : -40; // tablet
-          else offset = goingDown ? -800 : -120; // escritorio
-
-          const y = elementY + offset;
-
-
-          window.scrollTo({ top: y, behavior: "smooth" });
-
+          scrollToElementWithOffset(el);
           text = "Abriendo el calendario para agendar tu cita...";
-
-
           setTimeout(() => {
             if (typeof closeChat === "function") closeChat();
-          }, 1700);
+          }, 1700); 
         } else {
           text = "No se encontró el calendario en esta página.";
         }
