@@ -18,13 +18,22 @@
     data-open="false"
   >
     <!-- Header -->
-    <header class="flex items-center gap-3 px-4 py-3 bg-blue-200 border-b border-blue-100">
-      <div aria-hidden="true" class="w-10 h-10 rounded-full bg-[#32509c] text-white grid place-items-center font-bold">
+    <header
+      class="flex items-center gap-3 px-4 py-3 bg-blue-200 border-b border-blue-100"
+    >
+      <div
+        aria-hidden="true"
+        class="w-10 h-10 rounded-full bg-[#32509c] text-white grid place-items-center font-bold"
+      >
         LM
       </div>
       <div class="min-w-0">
-        <h2 id="chatTitle" class="text-sm font-semibold truncate">Liceo Michoacano</h2>
-        <p class="text-xs text-slate-500"><span class="text-green-500">En línea •</span> Chatbot de asistencia</p>
+        <h2 id="chatTitle" class="text-sm font-semibold truncate">
+          Liceo Michoacano
+        </h2>
+        <p class="text-xs text-slate-500">
+          <span class="text-green-500">En línea •</span> Chatbot de asistencia
+        </p>
       </div>
       <button
         id="chatClose"
@@ -37,21 +46,21 @@
       </button>
     </header>
 
-<div id="chatBody" class="bg-slate-50 h-[calc(100%-52px)] overflow-y-auto p-3 space-y-2">
-  <!-- Mensaje inicial -->
-  <div class="max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug">
-    ¡Hola! ¿Cómo puedo ayudarte hoy?
-  </div>
-  
-</div>
-
+    <div
+      id="chatBody"
+      class="bg-slate-50 h-[calc(100%-52px)] overflow-y-auto p-3 space-y-2"
+    >
+      <!-- Contenido del chatbot -->
+    </div>
   </section>
-
-<div id="chatTail" aria-hidden="true"
-     class="absolute right-[15px] bottom-[64px] w-4 h-4 rotate-45
+  <div
+    id="chatTail"
+    aria-hidden="true"
+    class="absolute right-[15px] bottom-[60px] w-8 h-8 rotate-45
             bg-white border border-slate-200 shadow-xl
-            opacity-0 pointer-events-none"></div>
-
+            opacity-0 pointer-events-none"
+  >
+  </div>
 
   <!-- Botón flotante -->
   <button
@@ -64,13 +73,21 @@
     title="Abrir chat"
   >
     <!-- Ícono burbuja -->
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M20 12.5c0 3.59-3.58 6.5-8 6.5-.9 0-1.76-.12-2.56-.35L4 20l1.45-3.62C4.54 15.18 4 13.9 4 12.5 4 8.91 7.58 6 12 6s8 2.91 8 6.5Z"
-            stroke="currentColor" stroke-width="1.6" fill="currentColor"/>
+    <svg
+      width="26"
+      height="26"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M20 12.5c0 3.59-3.58 6.5-8 6.5-.9 0-1.76-.12-2.56-.35L4 20l1.45-3.62C4.54 15.18 4 13.9 4 12.5 4 8.91 7.58 6 12 6s8 2.91 8 6.5Z"
+        stroke="currentColor"
+        stroke-width="1.6"
+        fill="currentColor"></path>
     </svg>
   </button>
 </div>
-
 
 <script is:inline>
   // ====== Referencias base ======
@@ -80,32 +97,123 @@
   const toggleBtn = $("#chatToggle");
   const closeBtn = $("#chatClose");
 
-  // (Opcional) Si mantienes input/form para texto libre:
-  const form = $("#chatForm");
   const input = $("#chatText");
 
-  // ====== Menú jerárquico (puedes editar textos a tu gusto) ======
+  // ====== Opcion con enlace al calendario ======
+  const CITA_AGENDAR_OPTION = {
+    id: "AgendarCita",
+    label: "📅 Agendar visita para conocer Liceo",
+    action: { type: "scroll", target: "#calendario" },
+    // WhatsApp:
+    // action: { type: "whatsapp", phone: "52XXXXXXXXXX", text: "Quiero agendar experiencia liceo" }
+    // texto:
+    // action: { type: "message", text: "Agendaremos tu cita para la experiencia liceo." }
+  };
+
+  // ====== Menú ======
   const MENU = {
     root: [
-      { id: "Nuevo ingreso",    label: "📄 Informes para nuevo ingreso", submenu: "NuevoIngreso" },
+      {
+        id: "Nuevo ingreso",
+        label: "📄 Informes para nuevo ingreso",
+        submenu: "NuevoIngreso",
+      },
       { id: "Cursos", label: "⏰ Cursos", submenu: "Cursos" },
-      { id: "Revalidacion",  label: "💬 Revalidacion", submenu: "Revalidacion" },
+      { id: "Revalidacion", label: "💬 Revalidacion", submenu: "Revalidacion" },
     ],
     NuevoIngreso: [
       { label: "Consulta entre todo esto y mas que tenemos disponible" },
-      { id: "Idiomas", label: "Idiomas", action: { type: "message", text: "Descriptor idiomas" } },
-      { id: "Viajes",      label: "Viajes", action: { type: "message", text: "Descriptor viajes" } },
-      { id: "Bachillerato",      label: "Bachillerato",      action: { type: "message", text: "Descriptor bachillerato" } },
-      { id: "Talleres",      label: "Talleres",      action: { type: "message", text: "Descriptor talleres" } },
-      { id: "Optativas",      label: "Optativas",      action: { type: "message", text: "Descriptor optativas" } },
+
+      {
+        id: "Idiomas",
+        label: "Idiomas",
+        submenu: "IdiomasSub",
+      },
+      {
+        id: "Viajes",
+        label: "Viajes",
+        submenu: "ViajesSub",
+      },
+      {
+        id: "Bachillerato",
+        label: "Bachillerato",
+        submenu: "BachilleratoSub",
+      },
+      {
+        id: "Talleres",
+        label: "Talleres",
+        submenu: "TalleresSub",
+      },
+      {
+        id: "Optativas",
+        label: "Optativas",
+        submenu: "OptativasSub",
+      },
+    ],
+
+    // ===== Submenús individuales con “Agendar cita experiencia liceo” =====
+    IdiomasSub: [
+      {
+        label: "Descriptor",
+        action: { type: "message", text: "Descriptor idiomas" },
+      },
+      CITA_AGENDAR_OPTION,
+    ],
+
+    ViajesSub: [
+      {
+        label: "Descriptor viajes",
+        action: { type: "message", text: "Descriptor viajes" },
+      },
+      CITA_AGENDAR_OPTION,
+    ],
+
+    BachilleratoSub: [
+      {
+        label: "Descriptor bachillerato",
+        action: { type: "message", text: "Descriptor bachillerato" },
+      },
+      CITA_AGENDAR_OPTION,
+    ],
+
+    TalleresSub: [
+      {
+        label: "Descriptor talleres",
+        action: { type: "message", text: "Descriptor talleres" },
+      },
+      CITA_AGENDAR_OPTION,
+    ],
+
+    OptativasSub: [
+      {
+        label: "Descriptor optativas",
+        action: { type: "message", text: "Descriptor optativas" },
+      },
+      CITA_AGENDAR_OPTION,
+    ],
+
+    Revalidacion: [
+      {
+        label:
+          "Si tienes materias cursadas anteriormente y se pueden hacer validas da click en revalidacion de materias",
+      },
+      {
+        id: "Revalidacion",
+        label: "Revalidacion de materias",
+        action: {
+          type: "whatsapp",
+          phone: "52XXXXXXXXXX",
+          text: "Hola, necesito ayuda.",
+        },
+      },
     ],
     Cursos: [
       { label: "Cursos de todo tipo para aumentar tus habilidades" },
-      { id: "SobreCursos",   label: "Conoce mas sobre nuestros cursos", action: { type: "link", url: "/docs/horarios-primaria.pdf" } },
-    ],
-    Revalidacion: [
-      { label: "Si tienes materias cursadas anteriormente y se pueden hacer validas da click en revalidacion de materias" },
-      { id: "Revalidacion", label: "Revalidacion de materias", action: { type: "whatsapp", phone: "52XXXXXXXXXX", text: "Hola, necesito ayuda." } },
+      {
+        id: "SobreCursos",
+        label: "Conoce mas sobre nuestros cursos",
+        action: { type: "link", url: "https://liq.com.mx/university-2/" },
+      },
     ],
   };
 
@@ -114,28 +222,38 @@
   const QR_SELECTOR = '[data-qr="true"]';
 
   // ====== Utilidades de mensajes ======
- function appendMsg(text, type) {
-  const el = document.createElement("div");
-  el.className =
-    type === "user"
-      ? "max-w-[78%] ml-auto rounded-xl rounded-br-sm bg-blue-100 px-3 py-2 text-[13px] leading-snug"
-      : "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
-      
-  el.classList.add(
-    "opacity-0", "translate-y-2", "scale-[.98]",
-    type === "user" ? "translate-x-2" : "-translate-x-2",
-    "transition", "duration-200", "ease-out"
-  );
+  function appendMsg(text, type) {
+    const el = document.createElement("div");
+    el.className =
+      type === "user"
+        ? "max-w-[78%] ml-auto rounded-xl rounded-br-sm bg-blue-100 px-3 py-2 text-[13px] leading-snug"
+        : "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
 
-  el.textContent = text;
-  chatBody?.appendChild(el);
-  scrollToBottom();
+    el.classList.add(
+      "opacity-0",
+      "translate-y-2",
+      "scale-[.98]",
+      type === "user" ? "translate-x-2" : "-translate-x-2",
+      "transition",
+      "duration-200",
+      "ease-out"
+    );
 
-  // Dispara la transición a estado final
-  requestAnimationFrame(() => {
-    el.classList.remove("opacity-0", "translate-y-2", "scale-[.98]", "translate-x-2", "-translate-x-2");
-  });
-}
+    el.textContent = text;
+    chatBody?.appendChild(el);
+    scrollToBottom();
+
+    // Dispara la transición a estado final
+    requestAnimationFrame(() => {
+      el.classList.remove(
+        "opacity-0",
+        "translate-y-2",
+        "scale-[.98]",
+        "translate-x-2",
+        "-translate-x-2"
+      );
+    });
+  }
 
   function scrollToBottom() {
     chatBody.scrollTop = chatBody.scrollHeight;
@@ -154,7 +272,8 @@
 
     const wrap = document.createElement("div");
     wrap.setAttribute("data-qr", "true");
-    wrap.className = "sticky bottom-0 bg-slate-50/90 backdrop-blur p-2 -mx-3 pt-3";
+    wrap.className =
+      "sticky bottom-0 bg-slate-50/90 backdrop-blur p-2 -mx-3 pt-3";
 
     const inner = document.createElement("div");
     inner.className = "flex flex-wrap gap-2";
@@ -165,9 +284,11 @@
       btn.dataset.id = item.id;
       if (!item.id) {
         btn.disabled = true;
-        btn.className = "px-3 py-2 text-sm rounded-xl bg-blue-100 hover:bg-blue-200 text-emerald-900 transition";
+        btn.className =
+          "px-3 py-2 text-sm rounded-xl bg-blue-100 hover:bg-blue-200 text-emerald-900 transition";
       } else {
-        btn.className = "px-3 py-2 text-sm rounded-xl bg-white border border-blue-300 hover:bg-blue-200 text-slate-800 transition";
+        btn.className =
+          "px-3 py-2 text-sm rounded-xl bg-white border border-blue-300 hover:bg-blue-200 text-slate-800 transition";
       }
       btn.textContent = item.label;
       inner.appendChild(btn);
@@ -176,7 +297,8 @@
     if (showBack) {
       const backBtn = document.createElement("button");
       backBtn.type = "button";
-      backBtn.className = "px-3 py-2 text-sm rounded-xl bg-white border border-slate-300 hover:bg-blue-200 text-slate-800 transition";
+      backBtn.className =
+        "px-3 py-2 text-sm rounded-xl bg-white border border-slate-300 hover:bg-blue-200 text-slate-800 transition";
       backBtn.dataset.id = "__back";
       backBtn.textContent = "◀️ Volver";
       inner.appendChild(backBtn);
@@ -201,7 +323,7 @@
     renderMenu(currentMenu());
   }
 
-  // ====== Acciones SOLO TEXTO (sin abrir nada) ======
+  // ====== Acciones SOLO TEXTO ======
   function performAction(item) {
     const action = item.action;
     if (!action) return;
@@ -214,9 +336,14 @@
         break;
 
       case "link":
-        // Antes abría un PDF o tel:. Ahora solo texto (sin URL).
-        // Puedes personalizar el mensaje por cada item.label si quieres.
-        text = `Documento "${item.label}" disponible. Si necesitas que te lo enviemos, indícalo aquí.`;
+        if (action.url) {
+          text = `Estamos redirigiendote a la pagina nuestra pagina de cursos...`;
+          setTimeout(() => {
+            window.open(action.url, "_blank");
+          }, 2200);
+        } else {
+          text = "El documento no tiene un enlace válido.";
+        }
         break;
 
       case "whatsapp":
@@ -229,6 +356,20 @@
         text = `Correo de soporte: ${action.to}. Asunto sugerido: "${action.subject || "Soporte"}".`;
         break;
 
+      case "scroll":
+        const el = document.querySelector(action.target);
+        if (el) {
+          const y = el.getBoundingClientRect().top + window.pageYOffset-50;
+          window.scrollTo({ top: y, behavior: "smooth" });
+          text = "Abriendo el calendario para agendar tu cita...";
+          setTimeout(() => {
+            if (typeof closeChat === "function") closeChat();
+          }, 1700);
+        } else {
+          text = "No se encontró el calendario en esta página.";
+        }
+        break;
+
       default:
         text = "Acción no implementada.";
     }
@@ -237,58 +378,62 @@
   }
 
   // ====== Interacción de opciones ======
-chatBody?.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-id]");
-  if (!btn) return;
+  chatBody?.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-id]");
+    if (!btn) return;
 
-  const id = btn.dataset.id;
-  if (id === "__back") {
-    appendMsg("◀️ Volver", "user");
+    const id = btn.dataset.id;
+    if (id === "__back") {
+      appendMsg("◀️ Volver", "user");
+      removeQuickReplies();
+      goBack();
+      return;
+    }
+
+    const menuId = currentMenu();
+    const item = (MENU[menuId] || []).find((i) => i.id === id);
+    if (!item) return;
+
+    appendMsg(item.label, "user");
     removeQuickReplies();
-    goBack();
-    return;
-  }
+    scrollToBottom();
 
-  const menuId = currentMenu();
-  const item = (MENU[menuId] || []).find((i) => i.id === id);
-  if (!item) return;
+    showTyping();
 
-  appendMsg(item.label, "user");
-  removeQuickReplies();
-  scrollToBottom();
-
-  showTyping();
-
-  if (item.submenu && MENU[item.submenu]) {
-    setTimeout(() => {
-      hideTyping();                               
-      appendMsg("Elige una opción:", "bot");      
-      goTo(item.submenu);                         
-      scrollToBottom();
-    }, 400);
-  } else if (item.action) {
-    setTimeout(() => {
-      hideTyping();                     
-      performAction(item);                    
-      renderMenu(menuId);                 
-      scrollToBottom();
-    }, 450);
-  } else {
-    hideTyping();               
-    renderMenu(menuId);
-  }
-});
+    if (item.submenu && MENU[item.submenu]) {
+      setTimeout(() => {
+        hideTyping();
+        appendMsg("Elige una opción:", "bot");
+        goTo(item.submenu);
+        scrollToBottom();
+      }, 400);
+    } else if (item.action) {
+      setTimeout(() => {
+        hideTyping();
+        performAction(item);
+        renderMenu(menuId);
+        scrollToBottom();
+      }, 450);
+    } else {
+      hideTyping();
+      renderMenu(menuId);
+    }
+  });
 
   // ====== Abrir / cerrar chat ======
+  const chatTail = document.getElementById("chatTail");
   const isOpen = () => win?.getAttribute("data-open") === "true";
 
   const openChat = () => {
     win?.setAttribute("data-open", "true");
     toggleBtn?.setAttribute("aria-expanded", "true");
     toggleBtn?.setAttribute("title", "Cerrar chat");
-  
+
+    if (chatTail) {
+      chatTail.classList.remove("opacity-0", "pointer-events-none");
+    }
     resetChat();
-  
+
     if (input) setTimeout(() => input.focus(), 120);
   };
 
@@ -297,6 +442,10 @@ chatBody?.addEventListener("click", (e) => {
     toggleBtn?.setAttribute("aria-expanded", "false");
     toggleBtn?.setAttribute("title", "Abrir chat");
     toggleBtn?.focus();
+
+    if (chatTail) {
+      chatTail.classList.add("opacity-0", "pointer-events-none");
+    }
   };
 
   const toggleChat = () => (isOpen() ? closeChat() : openChat());
@@ -310,137 +459,185 @@ chatBody?.addEventListener("click", (e) => {
     renderMenu("root");
   }
 
-(() => {
-  const chatWindow = document.getElementById('chatWindow');
-  if (!chatWindow) return;
-  
-  let overlay = document.getElementById('__chat_overlay__');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = '__chat_overlay__';
-    Object.assign(overlay.style, {
-      position: 'fixed',
-      inset: '0',
-      background: 'rgba(0,0,0,0.80)',
-      opacity: '0',
-      pointerEvents: 'none',
-      transition: 'opacity 200ms ease',
-      zIndex: '30'
-    });
-    document.body.appendChild(overlay);
-  }
+  (() => {
+    const chatWindow = document.getElementById("chatWindow");
+    if (!chatWindow) return;
 
-  const inerted = new Set();
-  const html = document.documentElement;
-  const body = document.body;
-
-  function prevent(e){ e.preventDefault(); }
-  function enableBlockers() {
-    html.style.overflow = 'hidden';
-    body.style.overflow = 'hidden';
-    window.addEventListener('wheel', prevent, { passive: false });
-    window.addEventListener('touchmove', prevent, { passive: false });
-  }
-
-  function disableBlockers() {
-    html.style.overflow = '';
-    body.style.overflow = '';
-    window.removeEventListener('wheel', prevent);
-    window.removeEventListener('touchmove', prevent);
-    inerted.forEach(el => el.removeAttribute('inert'));
-    inerted.clear();
-  }
-
-  function showOverlay() {
-    overlay.style.opacity = '1';
-    overlay.style.pointerEvents = 'auto';
-
-     chatWindow.style.pointerEvents = 'auto';
-
-    overlay.onclick = () => {
-      try {
-        typeof closeChat === 'function'
-          ? closeChat()
-          : chatWindow.setAttribute('data-open', 'false');
-      } catch {
-        chatWindow.setAttribute('data-open', 'false');
-      }
-    };
-  }
-
-  function hideOverlay() {
-    overlay.style.opacity = '0';
-    overlay.style.pointerEvents = 'none';
-    overlay.onclick = null;
-    chatWindow.style.pointerEvents = '';
-  }
-
-  const obs = new MutationObserver(muts => {
-    for (const m of muts) {
-      if (m.attributeName !== 'data-open') continue;
-      const open = chatWindow.getAttribute('data-open') === 'true';
-      if (open) { showOverlay(); enableBlockers(); }
-      else { hideOverlay(); disableBlockers(); }
+    let overlay = document.getElementById("__chat_overlay__");
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "__chat_overlay__";
+      Object.assign(overlay.style, {
+        position: "fixed",
+        inset: "0",
+        background: "rgba(0,0,0,0.80)",
+        opacity: "0",
+        pointerEvents: "none",
+        transition: "opacity 200ms ease",
+        zIndex: "30",
+      });
+      document.body.appendChild(overlay);
     }
-  });
-  obs.observe(chatWindow, { attributes: true });
 
-  if (chatWindow.getAttribute('data-open') === 'true') {
-    showOverlay(); enableBlockers();
+    const inerted = new Set();
+    const html = document.documentElement;
+    const body = document.body;
+
+    // Bloquear scroll del FONDO, permitir dentro del chat
+    function shouldBlock(e) {
+      // Si el evento viene desde dentro del chat, no bloquear
+      return !e.target.closest("#chatWindow");
+    }
+
+    function onWheel(e) {
+      if (shouldBlock(e)) e.preventDefault();
+    }
+
+    function onTouchMove(e) {
+      if (shouldBlock(e)) e.preventDefault();
+    }
+
+    function enableBlockers() {
+      // Bloquea el scroll del documento
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+
+      // Pero permite scroll si el gesto nace dentro del chat
+      window.addEventListener("wheel", onWheel, { passive: false });
+      window.addEventListener("touchmove", onTouchMove, { passive: false });
+    }
+
+    function disableBlockers() {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchmove", onTouchMove);
+      inerted.forEach((el) => el.removeAttribute("inert"));
+      inerted.clear();
+    }
+
+    function showOverlay() {
+      overlay.style.opacity = "1";
+      overlay.style.pointerEvents = "auto";
+
+      chatWindow.style.pointerEvents = "auto";
+
+      overlay.onclick = () => {
+        try {
+          typeof closeChat === "function"
+            ? closeChat()
+            : chatWindow.setAttribute("data-open", "false");
+        } catch {
+          chatWindow.setAttribute("data-open", "false");
+        }
+      };
+    }
+
+    function hideOverlay() {
+      overlay.style.opacity = "0";
+      overlay.style.pointerEvents = "none";
+      overlay.onclick = null;
+      chatWindow.style.pointerEvents = "";
+    }
+
+    const obs = new MutationObserver((muts) => {
+      for (const m of muts) {
+        if (m.attributeName !== "data-open") continue;
+        const open = chatWindow.getAttribute("data-open") === "true";
+        if (open) {
+          showOverlay();
+          enableBlockers();
+        } else {
+          hideOverlay();
+          disableBlockers();
+        }
+      }
+    });
+    obs.observe(chatWindow, { attributes: true });
+
+    if (chatWindow.getAttribute("data-open") === "true") {
+      showOverlay();
+      enableBlockers();
+    }
+  })();
+
+  let hasWelcomed = false;
+
+  function resetChat() {
+    if (!chatBody) return;
+
+    if (!hasWelcomed) {
+      const welcome = document.createElement("div");
+      welcome.className =
+        "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
+      welcome.textContent = "¡Hola! ¿Cómo puedo ayudarte hoy?";
+      chatBody.appendChild(welcome);
+      hasWelcomed = true;
+    }
+
+    menuStack = ["root"];
+    renderMenu("root");
+
+    scrollToBottom();
   }
-})();
 
-function resetChat() {
-  if (!chatBody) return;
+  let typingEl = null;
 
-  chatBody.innerHTML = "";
+  function showTyping() {
+    if (!chatBody || typingEl) return;
 
-  const welcome = document.createElement("div");
-  welcome.className = "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
-  welcome.textContent = "¡Hola! ¿Cómo puedo ayudarte hoy?";
-  chatBody.appendChild(welcome);
+    const wrap = document.createElement("div");
+    wrap.className =
+      "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
 
-  menuStack = ["root"];
-  renderMenu("root");
-
-  scrollToBottom();
-}
-
-let typingEl = null;
-
-function showTyping() {
-  if (!chatBody || typingEl) return;
-
-  const wrap = document.createElement("div");
-  wrap.className = "max-w-[78%] rounded-xl rounded-bl-sm border border-slate-200 bg-white px-3 py-2 text-[13px] leading-snug";
-
-  const inner = document.createElement("div");
-  inner.className = "flex items-center gap-1";
-  inner.innerHTML = `
+    const inner = document.createElement("div");
+    inner.className = "flex items-center gap-1";
+    inner.innerHTML = `
     <span class="w-2 h-2 rounded-full bg-slate-500 animate-bounce"></span>
     <span class="w-2 h-2 rounded-full bg-slate-500 animate-bounce"></span>
     <span class="w-2 h-2 rounded-full bg-slate-500 animate-bounce"></span>
   `;
 
-  wrap.appendChild(inner);
+    wrap.appendChild(inner);
 
-  // Animación de entrada del “typing”
-  wrap.classList.add("opacity-0","translate-y-2","transition","duration-150","ease-out");
-  typingEl = wrap;
-  chatBody.appendChild(typingEl);
-  scrollToBottom();
-  requestAnimationFrame(() => {
-    wrap.classList.remove("opacity-0","translate-y-2");
-  });
-}
+    // Animación de entrada del “typing”
+    wrap.classList.add(
+      "opacity-0",
+      "translate-y-2",
+      "transition",
+      "duration-150",
+      "ease-out"
+    );
+    typingEl = wrap;
+    chatBody.appendChild(typingEl);
+    scrollToBottom();
+    requestAnimationFrame(() => {
+      wrap.classList.remove("opacity-0", "translate-y-2");
+    });
+  }
 
-function hideTyping() {
-  if (!typingEl) return;
-  typingEl.classList.add("opacity-0","translate-y-1","transition","duration-100","ease-in");
-  setTimeout(() => {
-    typingEl?.remove();
-    typingEl = null;
-  }, 110);
-}
-
+  function hideTyping() {
+    if (!typingEl) return;
+    typingEl.classList.add(
+      "opacity-0",
+      "translate-y-1",
+      "transition",
+      "duration-100",
+      "ease-in"
+    );
+    setTimeout(() => {
+      typingEl?.remove();
+      typingEl = null;
+    }, 110);
+  }
 </script>
+
+<style>
+  #chatBody {
+    overflow-y: auto;
+    max-height: 70vh;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+</style>

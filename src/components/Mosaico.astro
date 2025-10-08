@@ -17,13 +17,13 @@ interface Props {
 }
 
 const {
-  heading = "Educación para el presente y el futuro",
-  description = "Google siempre está probando, iterando y lanzando actualizaciones nuevas para mejorar nuestros productos y facilitar su uso.",
+  heading = "Titulo del mosaico",
+  description = "Subtítulo del mosaico",
   items = [
     {
-      title: "Google Workspace for Education",
-      text: "Colabora en tiempo real, comparte archivos con facilidad y comunica a toda tu comunidad educativa.",
-      ctaLabel: "Explorar Google Workspace",
+      title: "Titulo",
+      text: "Subtítulo o descripción.",
+      ctaLabel: "Explorar",
       ctaHref: "#workspace",
       bgColor: "bg-red-100",
       images: [
@@ -31,12 +31,12 @@ const {
         "https://picsum.photos/id/1025/400/260",
         "https://picsum.photos/id/1039/400/260"
       ],
-      details: "Suite colaborativa para aulas y directivos: documentos, hojas de cálculo, presentaciones y comunicación en un mismo lugar."
+      details: "Detalles"
     },
     {
-      title: "Chromebooks para aprender en cualquier lugar",
-      text: "Dispositivos rápidos, seguros y fáciles de administrar con acceso a recursos educativos.",
-      ctaLabel: "Explorar Chromebooks",
+      title: "Titulo",
+      text: "Subtitulo o descripción.",
+      ctaLabel: "Explorar",
       ctaHref: "#chromebooks",
       bgColor: "bg-yellow-100",
       images: [
@@ -44,33 +44,33 @@ const {
         "https://picsum.photos/id/1056/400/260",
         "https://picsum.photos/id/1024/400/260"
       ],
-      details: "Arranque veloz, batería de larga duración y administración simple para TI con actualizaciones automáticas."
+      details: "Detalles"
     },
     {
-      title: "Experiencias atractivas en Classroom",
-      text: "Optimiza tareas, fomenta la colaboración y dinamiza el aprendizaje con herramientas interactivas.",
-      ctaLabel: "Explorar Classroom",
-      ctaHref: "#classroom",
+      title: "Titulo",
+      text: "Subtitulo o descripción.",
+      ctaLabel: "Explorar",
+      ctaHref: "Explorar",
       bgColor: "bg-green-100",
       images: [
         "https://picsum.photos/id/1005/400/260",
         "https://picsum.photos/id/1006/400/260",
         "https://picsum.photos/id/1008/400/260"
       ],
-      details: "Asignaciones, rúbricas, comentarios y calificaciones centralizados para docentes y estudiantes."
+      details: "Detalles"
     },
     {
-      title: "Transformación con Gemini",
-      text: "Personaliza el aprendizaje, automatiza tareas y mejora resultados con IA avanzada.",
-      ctaLabel: "Explorar Gemini",
-      ctaHref: "#gemini",
+      title: "Titulo",
+      text: "Subtítulo o descripción.",
+      ctaLabel: "Explorar",
+      ctaHref: "Explorar",
       bgColor: "bg-blue-100",
       images: [
         "https://picsum.photos/id/1011/400/260",
         "https://picsum.photos/id/1012/400/260",
         "https://picsum.photos/id/1013/400/260"
       ],
-      details: "Asistentes de IA para preparar clases, crear recursos y retroalimentar trabajos con seguridad institucional."
+      details: "Detalles"
     }
   ]
 } = Astro.props;
@@ -165,7 +165,9 @@ const {
     </div>
   </div>
 
-  <style is:global>
+</section>
+
+<style is:global>
     [data-card][data-open="true"] [data-primary] {
       opacity: 0;
       transform: translateY(-4px);
@@ -199,5 +201,4 @@ const {
       });
     })();
   </script>
-</section>
 
