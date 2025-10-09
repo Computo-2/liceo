@@ -268,23 +268,28 @@ export default function CalendarioCitas() {
 
   
  // SIN headers para evitar preflight CORS
-const sendToSheets = async (payload) => {
-  if (!SHEETS_ENDPOINT) throw new Error("Falta PUBLIC_SHEETS_ENDPOINT");
+async function sendToSheets(payload) {
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbw4IeHwt5o6Dqv-3yLhQOFJb1lJE8fwiPwJK_ELyKm8Gj2uYrRQ_cr-38STiBAeKUdx/exec';
 
-  const fd = new FormData();
-  fd.append("payload", JSON.stringify(payload)); // 👈 nombre del campo
-
-  const res = await fetch(`${SHEETS_ENDPOINT}?t=${Date.now()}`, {
-    method: "POST",
-    body: fd,
+  const res = await fetch(`${GAS_URL}?t=${Date.now()}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain; charset=UTF-8' }, // 👈 simple request => NO preflight
+    body: JSON.stringify(payload), // GAS lo lee con e.postData.contents
   });
 
-  let data = null;
-  try { data = await res.json(); } catch (_) {}
-  if (!res.ok || (data && data.ok === false)) {
-    throw new Error((data && data.message) || `HTTP ${res.status}`);
+  if (!res.ok) {
+    const txt = await res.text().catch(() => '');
+    throw new Error(`GAS error ${res.status}: ${txt || 'Failed'}`);
   }
-};
+
+  const txt = await res.text();
+  try { 
+    return JSON.parse(txt); 
+  } catch {
+    return { ok: true, raw: txt };
+  }
+}
+
 
 
   const handleSubmit = async () => {
