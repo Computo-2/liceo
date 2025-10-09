@@ -21,8 +21,8 @@ const {
   description = "Subtítulo del mosaico",
   items = [
     {
-      title: "Titulo",
-      text: "Subtítulo o descripción.",
+      title: "Orientación Profesional",
+      text: "Proyecta Tu Vida",
       ctaLabel: "Explorar",
       ctaHref: "#workspace",
       bgColor: "bg-red-100",
@@ -31,11 +31,11 @@ const {
         "https://picsum.photos/id/1025/400/260",
         "https://picsum.photos/id/1039/400/260"
       ],
-      details: "Detalles"
+      details: "Nos centramos en el desarrollo de tus habilidades. Brindamos orientación ética para definir metas claras y desarrollar un plan de acción para llegar ahí. Nos especializamos en la preparación universitaria. Te damos herramientas para crecer, y te guíamos a reconciliar quien eres, lo que deseas y lo que puedes llegar a ser.En el Liceo enfocamos tus capacidades para que destaques en tu carrera profesional."
     },
     {
-      title: "Titulo",
-      text: "Subtitulo o descripción.",
+      title: "Agentes de Cambio ",
+      text: "Transformando Realidades.",
       ctaLabel: "Explorar",
       ctaHref: "#chromebooks",
       bgColor: "bg-yellow-100",
@@ -44,11 +44,11 @@ const {
         "https://picsum.photos/id/1056/400/260",
         "https://picsum.photos/id/1024/400/260"
       ],
-      details: "Detalles"
+      details: "Desafiamos el Status Quo. Fomentamos el liderazgo Liceísta para generar cambios positivos en la comunidad que te desarrolles. Somos defensores del medio ambiente. Fomentamos la participación y construimos compromiso social, Crecemos con responsabilidad para participar en la justicia social y generar un impacto real."
     },
     {
-      title: "Titulo",
-      text: "Subtitulo o descripción.",
+      title: "Comunidad de Aprendizajes",
+      text: "Regula, conecta, decide.",
       ctaLabel: "Explorar",
       ctaHref: "Explorar",
       bgColor: "bg-green-100",
@@ -57,11 +57,11 @@ const {
         "https://picsum.photos/id/1006/400/260",
         "https://picsum.photos/id/1008/400/260"
       ],
-      details: "Detalles"
+      details: "A través de un proceso educativo constante, donde el el conocimiento va más allá de las aulas. Aprehendes a decidir y actúas en coherencia con tu bienestar. Aquí guiamos personas que buscan contener, comunicar límites vivir en equilibrio. Formación socioemocional para cuidar el bienestar propio y el trabajo con los demás."
     },
     {
-      title: "Titulo",
-      text: "Subtítulo o descripción.",
+      title: "Emprendiendo Haces Más",
+      text: "Liceistas que Florecen",
       ctaLabel: "Explorar",
       ctaHref: "Explorar",
       bgColor: "bg-blue-100",
@@ -70,7 +70,7 @@ const {
         "https://picsum.photos/id/1012/400/260",
         "https://picsum.photos/id/1013/400/260"
       ],
-      details: "Detalles"
+      details: "Libera tu potencial con el aprendizaje autogestionado y convierte tus proyectos en oportunidades laborales. La educación no es un uniforme; es un proceso dinámico que impulsa el desarrollo a través de investigación y aprendizaje autogestionado."
     }
   ]
 } = Astro.props;
@@ -91,14 +91,15 @@ const {
           data-open="false"
         >
           {/* vista base*/}
-          <div data-primary class="grid content-between gap-6 transition duration-300">
+          <div data-primary class="grid content-between gap-6 transition duration-100">
             <div>
               {card.eyebrow && <span class="text-sm font-medium text-gray-700">{card.eyebrow}</span>}
               <h3 class="mt-2 text-2xl font-semibold tracking-tight">{card.title}</h3>
               <p class="mt-3 text-[15px] text-gray-800">{card.text}</p>
+              <p class="mt-2 text-[15px] text-gray-700">{card.details ?? "Contenido adicional de la tarjeta. Agregar descripción, beneficios o ejemplos de uso."}</p>
             </div>
 
-            <div class="flex items-center justify-between">
+            <div class="absolute bottom-1 md:bottom-3 lg:bottom-5 gap-10 md:gap-120 lg:gap-60 flex items-center justify-between">
               <a href={card.ctaHref} class="text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800">
                 {card.ctaLabel}
               </a>
@@ -129,14 +130,13 @@ const {
             <div class="grid grid-cols-3 gap-3">
               {(card.images ?? []).slice(0,3).map((src) => (
                 <img src={src} alt="" loading="lazy" decoding="async"
-                     class="h-28 w-full rounded-xl object-cover shadow-sm" />
+                     class="h-60 w-full rounded-xl object-cover shadow-sm" />
               ))}
             </div>
 
             {/* TEXTO */}
             <div class="mt-5">
               <h4 class="text-lg font-semibold">{card.title}</h4>
-              <p class="mt-2 text-[15px] text-gray-700">{card.details ?? "Contenido adicional de la tarjeta. Agregar descripción, beneficios o ejemplos de uso."}</p>
               <div class="flex items-center justify-between">
               <a href={card.ctaHref} class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800">
                 {card.ctaLabel}
