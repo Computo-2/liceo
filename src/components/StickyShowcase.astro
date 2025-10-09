@@ -1,5 +1,8 @@
 ---
 interface Step {
+  title: string;
+  subtitle: string;
+  body: string;
   background: string;
   screen?: string;
   alt?: string;
@@ -15,16 +18,25 @@ interface Props {
 const {
   steps = [
     {
+      title: "Encabezado 1",
+      subtitle: "Subtítulo 1",
+      body: "Cuerpo del texto 1.",
       background: "https://picsum.photos/id/1056/1920/1080",
       screen:     "https://picsum.photos/id/1015/1200/800",
       alt:        "Clase - Novedades"
     },
     {
+      title: "Encabezado 2",
+      subtitle: "Subtítulo 2",
+      body: "Cuerpo del texto 2.",
       background: "https://picsum.photos/id/1025/1920/1080",
       screen:     "https://picsum.photos/id/1043/1200/800",
       alt:        "Ficha - Biomas del mundo"
     },
     {
+      title: "Encabezado 3",
+      subtitle: "Subtítulo 3",
+      body: "Cuerpo del texto 3.",
       background: "https://picsum.photos/id/1039/1920/1080",
       screen:     "https://picsum.photos/id/1024/1200/800",
       alt:        "Selvas tropicales"
@@ -36,23 +48,34 @@ const {
 } = Astro.props;
 
 ---
-<section class="relative min-h-[110vh] sm:min-h-[120vh] data-step={i}">
-   <div class="pointer-events-none absolute inset-x-0 -top-10 h-16 bg-gradient-to-b from-white to-transparent z-20"></div>
+<section class="relative min-h-[110vh] sm:min-h-[120vh]">
+  <div class="pointer-events-none absolute inset-x-0 -top-10 h-16 bg-gradient-to-b from-white to-transparent z-20"></div>
   <div class="relative">
     {steps.map((s, i) => (
       <section class="relative min-h-[110vh] sm:min-h-[120vh]" data-step={i}>
         <div class="absolute inset-0 -z-20">
-  <!-- fondo como background con parallax -->
-   <div style={`background-image:url('${s.background}')`} class="h-full w-full bg-cover bg-center bg-fixed"></div>
-  <!-- degradado para fundirse hacia arriba -->
-  <div class="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent"></div>
-</div>
-        <!-- marcador de intersección -->
-         <div class="absolute top-[40vh]" data-step-marker={i}></div>
+          <div style={`background-image:url('${s.background}')`} class="h-full w-full bg-cover bg-center bg-fixed"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent"></div>
+        </div>
+
+        <div class="mt-12 relative z-21 mx-auto max-w-3xl px-6 pt-[40vh] pb-24">
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">
+            {s.title ?? 'Encabezado'}
+          </h2>
+          <p class="mt-2 text-lg text-gray-700">
+            {s.subtitle ?? 'Subtítulo'}
+          </p>
+          <p class="mt-4 text-base leading-relaxed text-gray-800">
+            {s.body ?? 'Cuerpo del texto.'}
+          </p>
+        </div>
+
+        <div class="absolute top-[40vh]" data-step-marker={i}></div>
       </section>
     ))}
   </div>
 </section>
+
 
   <script type="application/json" id="steps-data">
     {JSON.stringify(steps)}

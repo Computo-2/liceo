@@ -29,9 +29,10 @@ const {
       images: [
         "https://picsum.photos/id/1015/400/260",
         "https://picsum.photos/id/1025/400/260",
-        "https://picsum.photos/id/1039/400/260"
+        "https://picsum.photos/id/1039/400/260",
       ],
-      details: "Nos centramos en el desarrollo de tus habilidades. Brindamos orientación ética para definir metas claras y desarrollar un plan de acción para llegar ahí. Nos especializamos en la preparación universitaria. Te damos herramientas para crecer, y te guíamos a reconciliar quien eres, lo que deseas y lo que puedes llegar a ser.En el Liceo enfocamos tus capacidades para que destaques en tu carrera profesional."
+      details:
+        "Nos centramos en el desarrollo de tus habilidades. Brindamos orientación ética para definir metas claras y desarrollar un plan de acción para llegar ahí. Nos especializamos en la preparación universitaria. Te damos herramientas para crecer, y te guíamos a reconciliar quien eres, lo que deseas y lo que puedes llegar a ser.En el Liceo enfocamos tus capacidades para que destaques en tu carrera profesional.",
     },
     {
       title: "Agentes de Cambio ",
@@ -42,9 +43,10 @@ const {
       images: [
         "https://picsum.photos/id/1043/400/260",
         "https://picsum.photos/id/1056/400/260",
-        "https://picsum.photos/id/1024/400/260"
+        "https://picsum.photos/id/1024/400/260",
       ],
-      details: "Desafiamos el Status Quo. Fomentamos el liderazgo Liceísta para generar cambios positivos en la comunidad que te desarrolles. Somos defensores del medio ambiente. Fomentamos la participación y construimos compromiso social, Crecemos con responsabilidad para participar en la justicia social y generar un impacto real."
+      details:
+        "Desafiamos el Status Quo. Fomentamos el liderazgo Liceísta para generar cambios positivos en la comunidad que te desarrolles. Somos defensores del medio ambiente. Fomentamos la participación y construimos compromiso social, Crecemos con responsabilidad para participar en la justicia social y generar un impacto real.",
     },
     {
       title: "Comunidad de Aprendizajes",
@@ -55,9 +57,10 @@ const {
       images: [
         "https://picsum.photos/id/1005/400/260",
         "https://picsum.photos/id/1006/400/260",
-        "https://picsum.photos/id/1008/400/260"
+        "https://picsum.photos/id/1008/400/260",
       ],
-      details: "A través de un proceso educativo constante, donde el el conocimiento va más allá de las aulas. Aprehendes a decidir y actúas en coherencia con tu bienestar. Aquí guiamos personas que buscan contener, comunicar límites vivir en equilibrio. Formación socioemocional para cuidar el bienestar propio y el trabajo con los demás."
+      details:
+        "A través de un proceso educativo constante, donde el el conocimiento va más allá de las aulas. Aprehendes a decidir y actúas en coherencia con tu bienestar. Aquí guiamos personas que buscan contener, comunicar límites vivir en equilibrio. Formación socioemocional para cuidar el bienestar propio y el trabajo con los demás.",
     },
     {
       title: "Emprendiendo Haces Más",
@@ -68,137 +71,334 @@ const {
       images: [
         "https://picsum.photos/id/1011/400/260",
         "https://picsum.photos/id/1012/400/260",
-        "https://picsum.photos/id/1013/400/260"
+        "https://picsum.photos/id/1013/400/260",
       ],
-      details: "Libera tu potencial con el aprendizaje autogestionado y convierte tus proyectos en oportunidades laborales. La educación no es un uniforme; es un proceso dinámico que impulsa el desarrollo a través de investigación y aprendizaje autogestionado."
-    }
-  ]
+      details:
+        "Libera tu potencial con el aprendizaje autogestionado y convierte tus proyectos en oportunidades laborales. La educación no es un uniforme; es un proceso dinámico que impulsa el desarrollo a través de investigación y aprendizaje autogestionado.",
+    },
+  ],
 } = Astro.props;
 ---
 
 <section id="mosaico" class="bg-white py-20 sm:py-24">
   <div class="mx-auto max-w-6xl px-6">
     <div class="mx-auto max-w-3xl text-center">
-      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">{heading}</h2>
+      <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        {heading}
+      </h2>
       <p class="mt-4 text-base sm:text-lg text-gray-600">{description}</p>
     </div>
 
-    <div class="mt-12 grid gap-6 lg:grid-cols-2 ">
-      {items.map((card, idx) => (
-        <article
-          class={`${card.bgColor} group relative isolate flex min-h-[25rem] flex-col rounded-[28px] p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] ring-1 ring-black/5`}
-          data-card
-          data-open="false"
-        >
-          {/* vista base*/}
-          <div data-primary class="grid content-between gap-6 transition duration-100">
-            <div>
-              {card.eyebrow && <span class="text-sm font-medium text-gray-700">{card.eyebrow}</span>}
-              <h3 class="mt-2 text-2xl font-semibold tracking-tight">{card.title}</h3>
-              <p class="mt-3 text-[15px] text-gray-800">{card.text}</p>
-              <p class="mt-2 text-[15px] text-gray-700">{card.details ?? "Contenido adicional de la tarjeta. Agregar descripción, beneficios o ejemplos de uso."}</p>
-            </div>
-
-            <div class="absolute bottom-1 md:bottom-3 lg:bottom-5 gap-10 md:gap-120 lg:gap-60 flex items-center justify-between">
-              <a href={card.ctaHref} class="text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800">
-                {card.ctaLabel}
-              </a>
-
-              {/* Botón que sirve para cambiar el contenido */}
-              <button
-                type="button"
-                class="js-toggle inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-2 text-sm font-medium shadow ring-1 ring-black/10 backdrop-blur hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/60"
-                aria-expanded="false"
-                aria-controls={`reveal-${idx}`}
-              >
-                Ver más
-                <svg class="js-icon h-4 w-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Capa emergente  */}
-          <div
-            id={`reveal-${idx}`}
-            data-secondary
-            class="pointer-events-none absolute inset-0 z-10 rounded-[28px] bg-white/95 p-10 opacity-0 shadow-lg ring-1 ring-black/5 transition duration-300 backdrop-blur translate-y-2"
+    <div class="mt-12 grid gap-6 lg:grid-cols-2">
+      {
+        items.map((card, idx) => (
+          <article
+            class={`${card.bgColor} group relative isolate flex min-h-[25rem] flex-col rounded-[28px] p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] ring-1 ring-black/5`}
+            data-card
+            data-open="false"
           >
+            {/* vista base*/}
+            <div
+              data-primary
+              class="grid content-between gap-6 transition duration-100"
+            >
+              <div>
+                {card.eyebrow && (
+                  <span class="text-sm font-medium text-gray-700">
+                    {card.eyebrow}
+                  </span>
+                )}
+                <h3 class="mt-2 text-2xl font-semibold tracking-tight">
+                  {card.title}
+                </h3>
+                <h4 class="mt-3 text-[17px] text-gray-800 font-bold">{card.text}</h4>
+                <p class="mt-2 text-[15px] text-gray-700">
+                  {card.details ??
+                    "Contenido adicional de la tarjeta."}
+                </p>
+              </div>
 
-            {/* FOTOS */}
-            <div class="grid grid-cols-3 gap-3">
-              {(card.images ?? []).slice(0,3).map((src) => (
-                <img src={src} alt="" loading="lazy" decoding="async"
-                     class="h-60 w-full rounded-xl object-cover shadow-sm" />
-              ))}
+              <div class="absolute bottom-1 md:bottom-3 lg:bottom-5 gap-10 md:gap-120 lg:gap-60 flex items-center justify-between">
+                <a
+                  href={card.ctaHref}
+                  class="flex text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800"
+                >
+                  {card.ctaLabel}
+                  <svg
+                    viewBox="0 0 24 24"
+                    class="mt-1 h-4 w-4"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M5 12h14M13 5l7 7-7 7"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </a>
+
+                {/* Botón que sirve para cambiar el contenido */}
+                <button
+                  type="button"
+                  class="js-toggle inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-2 text-sm font-medium shadow ring-1 ring-black/10 backdrop-blur hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/60"
+                  aria-expanded="false"
+                  aria-controls={`reveal-${idx}`}
+                >
+                  Ver más
+                  <svg
+                    class="js-icon h-4 w-4 transition-transform duration-300"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M6 9l6 6 6-6"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
 
-            {/* TEXTO */}
-            <div class="mt-5">
-              <h4 class="text-lg font-semibold">{card.title}</h4>
-              <div class="flex items-center justify-between">
-              <a href={card.ctaHref} class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800">
-                {card.ctaLabel}
-                <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true">
-                  <path d="M5 12h14M13 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </a>
-              <div class=" flex items-center justify-end">
-              <button
-                type="button"
-                class="js-toggle inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-sm font-medium shadow ring-1 ring-black/10 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/60"
-                aria-expanded="true"
-                aria-controls={`reveal-${idx}`}
-              >
-                Cerrar
-                <svg class="js-icon h-4 w-4 rotate-180 transition-transform duration-300" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
+            {/* Capa emergente  */}
+            <div
+              id={`reveal-${idx}`}
+              data-secondary
+              class="pointer-events-none absolute inset-0 z-10 rounded-[28px] bg-white/95 p-10 opacity-0 shadow-lg ring-1 ring-black/5 transition duration-300 backdrop-blur translate-y-2"
+            >
+              {/* FOTOS */}
+              <div data-carousel class="relative mt-0 pointer-events-auto">
+                <div
+                  data-carousel-track
+                  class="flex snap-x snap-mandatory overflow-x-auto scroll-smooth overscroll-x-contain touch-pan-x rounded-xl ring-1 ring-black/5"
+                >
+                  {(card.images ?? []).map((src) => (
+                    <div class="snap-start w-full shrink-0">
+                      <img
+                        src={src}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        class="h-60 w-full rounded-xl object-cover shadow-sm"
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Controles */}
+                <button
+                  type="button"
+                  data-carousel-btn="prev"
+                  class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow ring-1 ring-black/10 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/60"
+                  aria-label="Anterior"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    class="h-5 w-5"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M15 6l-6 6 6 6"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                <button
+                  type="button"
+                  data-carousel-btn="next"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow ring-1 ring-black/10 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/60"
+                  aria-label="Siguiente"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    class="h-5 w-5"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M9 6l6 6-6 6"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {/* TEXTO */}
+              <div class="mt-5">
+                <h4 class="text-lg font-semibold">{card.title}</h4>
+                <div class="absolute bottom-1 md:bottom-3 lg:bottom-5 gap-10 md:gap-120 lg:gap-60 flex items-center justify-between">
+                  {/* Desde aqui */}
+                  <a
+                    href={card.ctaHref}
+                    class="flex text-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-800"
+                  >
+                    {card.ctaLabel}
+                    <svg
+                      viewBox="0 0 24 24"
+                      class="mt-1 h-4 w-4"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M5 12h14M13 5l7 7-7 7"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </a>
+                  <div class="flex items-center justify-end">
+                    <button
+                      type="button"
+                      class="js-toggle inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-2 text-sm font-medium shadow ring-1 ring-black/10 backdrop-blur hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/60"
+                      aria-expanded="true"
+                      aria-controls={`reveal-${idx}`}
+                    >
+                      Cerrar
+                      <svg
+                        class="js-icon h-4 w-4 rotate-180 transition-transform duration-300"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M6 9l6 6 6-6"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                {/* hasta aqui */}
+              </div>
             </div>
-            </div>
-            </div>
-          </div>
-        </article>
-      ))}
+          </article>
+        ))
+      }
     </div>
   </div>
-
 </section>
 
 <style is:global>
-    [data-card][data-open="true"] [data-primary] {
-      opacity: 0;
-      transform: translateY(-4px);
-      pointer-events: none;
-    }
-    [data-card][data-open="true"] [data-secondary] {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-    [data-card][data-open="true"] .js-icon {
-      transform: rotate(180deg);
-    }
-  </style>
+  [data-card][data-open="true"] [data-primary] {
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+  }
+  [data-card][data-open="true"] [data-secondary] {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  [data-card][data-open="true"] .js-icon {
+    transform: rotate(180deg);
+  }
+</style>
 
-  <script is:inline>
-
-    (() => {
-      const cards = Array.from(document.querySelectorAll('[data-card]'));
-      cards.forEach(card => {
-        const toggles = card.querySelectorAll('.js-toggle');
-        const btns = Array.from(toggles);
-        btns.forEach(btn => {
-          btn.addEventListener('click', () => {
-            const open = card.getAttribute('data-open') === 'true';
-            const next = !open;
-            card.setAttribute('data-open', String(next));
-            btns.forEach(b => b.setAttribute('aria-expanded', String(next)));
-          });
+<script is:inline>
+  (() => {
+    const cards = Array.from(document.querySelectorAll("[data-card]"));
+    cards.forEach((card) => {
+      const toggles = card.querySelectorAll(".js-toggle");
+      const btns = Array.from(toggles);
+      btns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const open = card.getAttribute("data-open") === "true";
+          const next = !open;
+          card.setAttribute("data-open", String(next));
+          btns.forEach((b) => b.setAttribute("aria-expanded", String(next)));
         });
       });
-    })();
-  </script>
+    });
+  })();
+</script>
+
+<script is:inline>
+(() => {
+  document.querySelectorAll('[data-carousel]').forEach((root) => {
+    const track = root.querySelector('[data-carousel-track]');
+    const prev  = root.querySelector('[data-carousel-btn="prev"]');
+    const next  = root.querySelector('[data-carousel-btn="next"]');
+    if (!track) return;
+    const N = track.children.length; if (N < 2) return;
+
+    const W = () => track.clientWidth;
+    const cur = () => Math.round(track.scrollLeft / W());
+    const step = (i) => track.scrollTo({ left: i * W(), behavior: 'smooth' });
+
+    const jump = (i) => {
+      const snap = track.style.scrollSnapType;
+      const beh  = track.style.scrollBehavior;
+      track.style.scrollSnapType = 'none';
+      track.style.scrollBehavior = 'auto';
+      track.scrollLeft = i * W();
+      void track.offsetWidth;
+      track.style.scrollSnapType = snap;
+      track.style.scrollBehavior = beh;
+    };
+
+    const wrapAnim = (fromIdx, toIdx, dir) => {
+      if (getComputedStyle(root).position === 'static') root.style.position = 'relative';
+      const layer = document.createElement('div');
+      layer.style.position = 'absolute';
+      layer.style.inset = '0';
+      layer.style.overflow = 'hidden';
+      layer.style.pointerEvents = 'none';
+      layer.style.zIndex = '50';
+      layer.style.borderRadius = getComputedStyle(track).borderRadius;
+      const ghost = track.children[fromIdx].cloneNode(true);
+      ghost.style.width = '100%';
+      ghost.style.height = '100%';
+      ghost.style.transform = 'translateX(0)';
+      ghost.style.willChange = 'transform';
+      layer.appendChild(ghost);
+      root.appendChild(layer);
+
+      jump(toIdx);
+
+      const D = 320;
+      const E = 'cubic-bezier(0.22,0.61,0.36,1)';
+      ghost.animate(
+        [{ transform: 'translateX(0)' }, { transform: `translateX(${dir > 0 ? '-100%' : '100%'})` }],
+        { duration: D, easing: E }
+      ).finished.finally(() => layer.remove());
+    };
+
+    next?.addEventListener('click', () => {
+      const i = cur();
+      if (i >= N - 1) wrapAnim(N - 1, 0, +1);
+      else step(i + 1);
+    });
+
+    prev?.addEventListener('click', () => {
+      const i = cur();
+      if (i <= 0) wrapAnim(0, N - 1, -1);
+      else step(i - 1);
+    });
+
+    window.addEventListener('resize', () => track.scrollLeft = cur() * W());
+  });
+})();
+</script>
+
+
+
 
