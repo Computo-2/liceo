@@ -93,7 +93,7 @@ const {
       {
         items.map((card, idx) => (
           <article
-            class={`${card.bgColor} group relative isolate flex min-h-[25rem] flex-col rounded-[28px] p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] ring-1 ring-black/5`}
+            class={`${card.bgColor} group relative isolate flex min-h-[25rem] flex-col rounded-[28px] p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] ring-1 ring-black/5 touch-pan-y`}
             data-card
             data-open="false"
           >
@@ -176,7 +176,7 @@ const {
               <div data-carousel class="relative mt-0 pointer-events-auto">
                 <div
                   data-carousel-track
-                  class="flex snap-x snap-mandatory overflow-x-auto scroll-smooth overscroll-x-contain touch-pan-x rounded-xl ring-1 ring-black/5"
+                  class="flex snap-x snap-mandatory overflow-x-auto scroll-smooth overscroll-x-contain touch-auto md:touch-pan-x rounded-xl ring-1 ring-black/5"
                 >
                   {(card.images ?? []).map((src) => (
                     <div class="snap-start w-full shrink-0">
